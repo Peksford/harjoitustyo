@@ -1,0 +1,9 @@
+POST http://localhost:3001/api/albums
+Content-Type: application/json
+
+{
+    "artist": "The beatles",
+    "title": "Revolver",
+    "url": "revolverurl.fi",
+    "year": 1966
+}

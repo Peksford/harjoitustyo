@@ -1,23 +1,47 @@
-var Discogs = require('disconnect').Client;
+const Discogs = require('disconnect').Client;
 // const app = express();
 require('dotenv').config();
+const { Sequelize, Model, DataTypes } = require('sequelize');
+const express = require('express');
+const app = express();
+const middleware = require('./util/middleware');
 
-console.log('hehaeshafseh');
+const { PORT } = require('./util/config');
+const { connectToDatabase } = require('./util/db');
+
+const albumRouter = require('./controllers/albums');
+const usersRouter = require('./controllers/users');
+
+app.use(express.json());
+
+app.use('/api/albums', albumRouter);
+app.use('/api/users', usersRouter);
+
+app.use(middleware.errorHandler);
+
+const start = async () => {
+  await connectToDatabase();
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+};
+
+start();
 
 // var db = new Discogs().database();
 // db.getRelease(176126, function (err, data) {
 //   console.log(data);
 // });
 
-var dis = new Discogs({
-  consumerKey: process.env.CONSUMER_KEY,
-  consumerSecret: process.env.CONSUMER_SECRET,
-});
+// var dis = new Discogs({
+//   consumerKey: process.env.CONSUMER_KEY,
+//   consumerSecret: process.env.CONSUMER_SECRET,
+// });
 
-const db = dis.database();
+// const db = dis.database();
 
-console.log('test', dis.database());
+// console.log('test', dis.database());
 
-db.search('beatles - a hard days night', function (err, data) {
-  console.log(data.results[0]);
-});
+// db.search('beatles - a hard days night', function (err, data) {
+//   console.log(data.results[0]);
+// });
