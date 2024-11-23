@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Album } = require('../models');
+const { Album, User } = require('../models');
 
 router.get('/', async (req, res) => {
   const albums = await Album.findAll({});
@@ -9,9 +9,10 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res, next) => {
   try {
+    const user = await User.findByPk(2);
     const album = await Album.create({
       ...req.body,
-      userId: 2,
+      userId: user.id,
     });
     res.json(album);
   } catch (error) {

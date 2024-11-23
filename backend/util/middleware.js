@@ -1,6 +1,7 @@
 const logger = require('./logger');
+const jwt = require('jsonwebtoken');
 
-const { User, Session } = require('../models');
+const { User } = require('../models');
 const { SECRET } = require('../util/config');
 
 const errorHandler = (error, request, response, next) => {
@@ -20,6 +21,58 @@ const errorHandler = (error, request, response, next) => {
   }
 };
 
+const tokenExtractor = async (req, res, next) => {
+  const authorization = req.get('authorization');
+
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    try {
+      console.log(authorization.substring(7));
+      req.decodedToken = jwt.verify(authorization.substring(7), SECRET);
+
+      const user = await User.findOne({
+        where: {
+          id: req.decodedToken.id,
+        },
+      });
+
+      if (!user) {
+        return res.status(401).json({
+          error: 'User not found',
+        });
+      }
+
+      if (user.disabled) {
+        await Session.update(
+          { session: false },
+          { where: { userId: user.id } }
+        );
+
+        return res.status(401).json({
+          error: 'account disabled, please contact admin',
+        });
+      }
+      const sessionActive = await Session.findOne({
+        where: {
+          userId: req.decodedToken.id,
+          token: authorization.substring(7),
+          session: true,
+        },
+      });
+
+      if (!sessionActive) {
+        return res.status(401).json({ error: 'Session invalid' });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(401).json({ error: error.message });
+    }
+  } else {
+    return res.status(401).json({ error: 'token missing' });
+  }
+  next();
+};
+
 module.exports = {
   errorHandler,
+  tokenExtractor,
 };

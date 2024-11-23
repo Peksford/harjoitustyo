@@ -3,6 +3,7 @@ const Discogs = require('disconnect').Client;
 require('dotenv').config();
 const { Sequelize, Model, DataTypes } = require('sequelize');
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const middleware = require('./util/middleware');
 
@@ -11,11 +12,14 @@ const { connectToDatabase } = require('./util/db');
 
 const albumRouter = require('./controllers/albums');
 const usersRouter = require('./controllers/users');
+const loginRouter = require('./controllers/login');
 
+app.use(cors());
 app.use(express.json());
 
 app.use('/api/albums', albumRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/login', loginRouter);
 
 app.use(middleware.errorHandler);
 

@@ -2,8 +2,9 @@ POST http://localhost:3001/api/albums
 Content-Type: application/json
 
 {
-    "artist": "The beatles",
-    "title": "Revolver",
-    "url": "revolverurl.fi",
-    "year": 1966
+    "artist": "The Beatles",
+    "title": "Abbey Road",
+    "url": "discogs.com",
+    "year": 1969,
+    "rating": 10
 }
