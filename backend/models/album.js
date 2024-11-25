@@ -28,7 +28,23 @@ Album.init(
     },
     rating: {
       type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    thumbnail: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    whole_title: {
+      type: DataTypes.TEXT,
       allowNull: false,
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'users',
+        key: 'id',
+      },
     },
   },
   {
@@ -36,6 +52,12 @@ Album.init(
     underscored: true,
     timestamps: true,
     modelName: 'album',
+    indexes: [
+      {
+        unique: true,
+        fields: ['whole_title', 'user_id'],
+      },
+    ],
   }
 );
 

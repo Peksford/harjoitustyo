@@ -6,4 +6,9 @@ const getAll = async () => {
   return response.data;
 };
 
-export default { getAll };
+const getUserAlbums = async (id) => {
+  const response = await axios.get(`${baseUrl}/${id}`);
+  return response.data.albums;
+};
+
+export default { getAll, getUserAlbums };

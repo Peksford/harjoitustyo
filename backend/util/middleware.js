@@ -51,17 +51,6 @@ const tokenExtractor = async (req, res, next) => {
           error: 'account disabled, please contact admin',
         });
       }
-      const sessionActive = await Session.findOne({
-        where: {
-          userId: req.decodedToken.id,
-          token: authorization.substring(7),
-          session: true,
-        },
-      });
-
-      if (!sessionActive) {
-        return res.status(401).json({ error: 'Session invalid' });
-      }
     } catch (error) {
       console.log(error);
       return res.status(401).json({ error: error.message });

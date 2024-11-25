@@ -11,6 +11,7 @@ import userService from '../services/users';
 import Home from '../components/Home';
 import AlbumSearch from '../components/AlbumSearch';
 import LoginForm from '../components/LoginForm';
+import MyList from '../components/MyList';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../reducers/loginReducer';
 
@@ -37,18 +38,20 @@ const App = () => {
     }
   }, [dispatch]);
 
-  console.log('User', user);
+  console.log('User info', user);
+
   useEffect(() => {
-    const getAlbums = async () => {
-      try {
-        const albumsData = await albumService.getAll();
-        setAlbums(albumsData);
-      } catch (error) {
-        console.error('error fetching albums: ', error);
-      }
+    const fetchUserAlbums = async () => {
+      if (user && user.username)
+        try {
+          const userAlbumsData = await userService.getUserAlbums(user.id);
+          setAlbums(userAlbumsData);
+        } catch (error) {
+          console.error('error fetching albums: ', error);
+        }
     };
-    getAlbums();
-  }, []);
+    fetchUserAlbums();
+  }, [user]);
 
   const handleLogout = async (event) => {
     event.preventDefault();
@@ -57,6 +60,11 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogappUser', JSON.stringify(user));
 
     dispatch(setUser(null));
+  };
+
+  const createAlbum = async (albumObject) => {
+    const newAlbum = await albumService.create(albumObject);
+    setAlbums([...albums, newAlbum]);
   };
 
   return (
@@ -74,12 +82,21 @@ const App = () => {
               login
             </Link>
           )}
+          {user && (
+            <Link style={padding} to="/list">
+              my list
+            </Link>
+          )}
           {user && <button onClick={handleLogout}> Logout</button>}
         </div>
         <Routes>
-          <Route path="/" element={<Home albums={albums} />} />
-          <Route path="/search" element={<AlbumSearch />} />
+          <Route path="/" element={<Home albums={albums} user={user} />} />
+          <Route
+            path="/search"
+            element={<AlbumSearch createAlbum={createAlbum} />}
+          />
           <Route path="/login" element={<LoginForm />} />
+          <Route path="/list" element={<MyList albums={albums} />} />
         </Routes>
       </Router>
     </div>

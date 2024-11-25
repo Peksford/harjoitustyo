@@ -56,12 +56,20 @@ module.exports = {
         type: DataTypes.DATE,
         allowNull: false,
       },
+      whole_title: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
     });
 
     await queryInterface.addColumn('albums', 'user_id', {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: { model: 'users', key: 'id' },
+    });
+
+    await queryInterface.addIndex('albums', ['whole_title', 'user_id'], {
+      unique: true,
     });
   },
   down: async ({ context: queryInterface }) => {

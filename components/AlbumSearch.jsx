@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import React from 'react';
 
 const styles = {
   albumContainer: {
@@ -11,9 +12,18 @@ const styles = {
     flexDirection: 'column',
   },
   thumbnail: {
-    // width: '100px',
-    // height: '100px',
+    width: '200px',
+    height: '200px',
     marginRight: '1rem',
+  },
+  buttonContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+  },
+  separator: {
+    border: 'px solid #ccc',
+    margin: '10px 0',
   },
 };
 
@@ -83,32 +93,52 @@ const useAlbum = (name) => {
   return albumSearched;
 };
 
-const Album = ({ albumSearched }) => {
+const Album = ({ albumSearched, createAlbum }) => {
   if (albumSearched === null || albumSearched === undefined) {
     return <div>not found</div>;
   }
+
+  const createNew = ({ album }) => {
+    createAlbum({
+      artist: album.title.split(' - ')[0].trim(),
+      title: album.title.split(' - ')[1].trim(),
+      url: album.uri,
+      year: album.year,
+      thumbnail: album.cover_image,
+      whole_title: album.title,
+    });
+  };
 
   return (
     <div>
       <h4>
         {albumSearched.map((album) => (
-          <div key={album.id} style={styles.albumContainer}>
-            <img src={album.thumb} style={styles.thumbnail} />
-            <div style={styles.albumInfo}>
-              <p>{album.title}</p>
-              {album.year && <p>Year: {album.year}</p>}
-              {album.uri && (
-                <p>
-                  <a
-                    href={`https://www.discogs.com${album.uri}`}
-                    target="blank"
-                    rel="noopener noreferrer"
-                  >
-                    Discogs
-                  </a>
-                </p>
-              )}
+          <div key={album.id}>
+            <div style={styles.albumContainer}>
+              <img src={album.cover_image} style={styles.thumbnail} />
+              <div style={styles.albumInfo}>
+                <p>{album.title}</p>
+                {album.year && <p>Year: {album.year}</p>}
+                {album.uri && (
+                  <p>
+                    <a
+                      href={`https://www.discogs.com${album.uri}`}
+                      target="blank"
+                      rel="noopener noreferrer"
+                    >
+                      Discogs
+                    </a>
+                  </p>
+                )}
+              </div>
+              <div style={styles.buttonContainer}>
+                <button onClick={() => createNew({ album })}>
+                  Add to My List
+                </button>
+                <button>Review</button>
+              </div>
             </div>
+            <hr style={styles.separator} />
           </div>
         ))}
       </h4>
@@ -116,25 +146,15 @@ const Album = ({ albumSearched }) => {
   );
 };
 
-const AlbumSearch = () => {
+const AlbumSearch = ({ createAlbum }) => {
   const albumInput = useField('text');
-  // const [albumName, setAlbumName] = useState('');
   const debouncedAlbum = useDebounce(albumInput.value, 500);
   const album = useAlbum(debouncedAlbum);
 
-  // const fetch = (e) => {
-  //   e.preventDefault();
-  //   setAlbumName(albumInput.value);
-  // };
-
   return (
     <div>
-      {/* <form onSubmit={fetch}>
-        <input {...albumInput} />
-        <button>find</button>
-      </form> */}
       <input {...albumInput} placeholder="Search for an album" />
-      <Album albumSearched={album} />
+      <Album albumSearched={album} createAlbum={createAlbum} />
     </div>
   );
 };

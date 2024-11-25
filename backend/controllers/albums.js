@@ -1,18 +1,25 @@
 const router = require('express').Router();
 const { Album, User } = require('../models');
+const jwt = require('jsonwebtoken');
+const { tokenExtractor } = require('../util/middleware');
 
 router.get('/', async (req, res) => {
-  const albums = await Album.findAll({});
+  const albums = await Album.findAll({
+    include: {
+      model: User,
+      attributes: ['username'],
+    },
+  });
 
   res.json(albums);
 });
 
-router.post('/', async (req, res, next) => {
+router.post('/', tokenExtractor, async (req, res, next) => {
   try {
-    const user = await User.findByPk(2);
+    const user = await User.findByPk(req.decodedToken.id);
     const album = await Album.create({
       ...req.body,
-      userId: user.id,
+      user_id: user.id,
     });
     res.json(album);
   } catch (error) {
