@@ -4,7 +4,13 @@
 // import './App.css';
 // import ReactDOM from 'react-dom/client';
 
-import { BrowserRouter as Router, Link, Routes, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Link,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import albumService from '../services/albums';
 import userService from '../services/users';
@@ -12,6 +18,7 @@ import Home from '../components/Home';
 import AlbumSearch from '../components/AlbumSearch';
 import LoginForm from '../components/LoginForm';
 import MyList from '../components/MyList';
+import Album from '../components/Album';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../reducers/loginReducer';
 
@@ -44,7 +51,7 @@ const App = () => {
     const fetchUserAlbums = async () => {
       if (user && user.username)
         try {
-          const userAlbumsData = await userService.getUserAlbums(user.id);
+          const userAlbumsData = await userService.getUserAlbums(user.username);
           setAlbums(userAlbumsData);
         } catch (error) {
           console.error('error fetching albums: ', error);
@@ -96,7 +103,15 @@ const App = () => {
             element={<AlbumSearch createAlbum={createAlbum} />}
           />
           <Route path="/login" element={<LoginForm />} />
-          <Route path="/list" element={<MyList albums={albums} />} />
+          {user ? (
+            <Route
+              path="/list"
+              element={<MyList albums={albums} user={user} />}
+            />
+          ) : (
+            <Route path="/list" element={<Navigate to="/login" />} />
+          )}
+          <Route path="/list/:username/:id" element={<Album user={user} />} />
         </Routes>
       </Router>
     </div>

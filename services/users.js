@@ -6,8 +6,8 @@ const getAll = async () => {
   return response.data;
 };
 
-const getUserAlbums = async (id) => {
-  const response = await axios.get(`${baseUrl}/${id}`);
+const getUserAlbums = async (username) => {
+  const response = await axios.get(`${baseUrl}/${username}`);
   return response.data.albums;
 };
 

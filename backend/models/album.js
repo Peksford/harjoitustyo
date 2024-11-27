@@ -27,7 +27,7 @@ Album.init(
       allowNull: true,
     },
     rating: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: true,
     },
     thumbnail: {
