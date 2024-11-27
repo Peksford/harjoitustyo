@@ -37,7 +37,6 @@ router.get('/:username', async (req, res, next) => {
         },
       ],
     });
-    console.log('username', user);
     if (user) {
       res.json(user);
     } else {

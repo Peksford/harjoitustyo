@@ -87,7 +87,7 @@ const Album = ({ user }) => {
       <div style={styles.thumbNailContainer}>
         <img src={albumData.thumbnail} style={styles.thumbnail} />
         <div style={styles.circle}>
-          <span style={styles.circleText}>{albumData.rating}/10</span>
+          <span style={styles.circleText}>{albumData.rating}</span>
         </div>
       </div>
     </div>

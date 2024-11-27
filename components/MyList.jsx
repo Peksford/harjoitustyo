@@ -12,6 +12,7 @@ const styles = {
     textAlign: 'center',
     borderRadius: '5px',
     position: 'relative',
+    marginBottom: '50px',
   },
   thumbnail: {
     width: '150px',
@@ -54,7 +55,7 @@ const MyList = ({ albums, user }) => {
             <img src={album.thumbnail} style={styles.thumbnail} />
           </Link>
           <div style={styles.circle}>
-            <span style={styles.circleText}>{album.rating}/10</span>
+            <span style={styles.circleText}>{album.rating}</span>
           </div>
         </div>
       ))}

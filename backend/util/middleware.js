@@ -1,7 +1,7 @@
 const logger = require('./logger');
 const jwt = require('jsonwebtoken');
 
-const { User } = require('../models');
+const { User, Session } = require('../models');
 const { SECRET } = require('../util/config');
 
 const errorHandler = (error, request, response, next) => {
@@ -50,6 +50,18 @@ const tokenExtractor = async (req, res, next) => {
         return res.status(401).json({
           error: 'account disabled, please contact admin',
         });
+      }
+      const sessionActive = await Session.findOne({
+        where: {
+          userId: req.decodedToken.id,
+          token: authorization.substring(7),
+          session: true,
+          username: req.decodedToken.username,
+        },
+      });
+
+      if (!sessionActive) {
+        return res.status(401).json({ error: 'Session invalid' });
       }
     } catch (error) {
       console.log(error);

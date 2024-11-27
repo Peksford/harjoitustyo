@@ -135,7 +135,6 @@ const Album = ({ albumSearched, createAlbum }) => {
                 <button onClick={() => createNew({ album })}>
                   Add to My List
                 </button>
-                <button>Review</button>
               </div>
             </div>
             <hr style={styles.separator} />

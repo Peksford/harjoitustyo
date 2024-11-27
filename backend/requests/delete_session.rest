@@ -1,0 +1,6 @@
+DELETE http://localhost:3001/api/logout
+Content-Type: application/json
+
+{
+   "username": "Testi"
+}

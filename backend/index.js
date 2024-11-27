@@ -13,6 +13,7 @@ const { connectToDatabase } = require('./util/db');
 const albumRouter = require('./controllers/albums');
 const usersRouter = require('./controllers/users');
 const loginRouter = require('./controllers/login');
+const logoutRouter = require('./controllers/logout');
 
 app.use(cors());
 app.use(express.json());
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use('/api/albums', albumRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);
+app.use('/api/logout', logoutRouter);
 
 app.use(middleware.errorHandler);
 

@@ -14,6 +14,8 @@ import {
 import { useState, useEffect } from 'react';
 import albumService from '../services/albums';
 import userService from '../services/users';
+import logoutService from '../services/logout';
+
 import Home from '../components/Home';
 import AlbumSearch from '../components/AlbumSearch';
 import LoginForm from '../components/LoginForm';
@@ -22,8 +24,14 @@ import Album from '../components/Album';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../reducers/loginReducer';
 
-const padding = {
-  padding: 3,
+const styles = {
+  padding: {
+    padding: 3,
+  },
+  container: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
 };
 
 const App = () => {
@@ -63,6 +71,11 @@ const App = () => {
   const handleLogout = async (event) => {
     event.preventDefault();
     console.log('logging out with', user);
+    try {
+      await logoutService.logout(user.username);
+    } catch (error) {
+      console.error(error);
+    }
 
     window.localStorage.removeItem('loggedBlogappUser', JSON.stringify(user));
 
@@ -77,41 +90,56 @@ const App = () => {
   return (
     <div>
       <Router>
-        <div>
-          <Link style={padding} to="/">
-            home
-          </Link>
-          <Link style={padding} to="/search">
+        <div style={styles.container}>
+          {user ? (
+            <Link style={styles.padding} to="/">
+              {user.username}
+            </Link>
+          ) : (
+            <Link style={styles.padding} to="/">
+              home
+            </Link>
+          )}
+          <Link style={styles.padding} to="/search">
             search
           </Link>
           {!user && (
-            <Link style={padding} to="/login">
+            <Link style={styles.padding} to="/login">
               login
             </Link>
           )}
           {user && (
-            <Link style={padding} to="/list">
+            <Link style={styles.padding} to="/list">
               my list
             </Link>
           )}
           {user && <button onClick={handleLogout}> Logout</button>}
         </div>
         <Routes>
-          <Route path="/" element={<Home albums={albums} user={user} />} />
-          <Route
-            path="/search"
-            element={<AlbumSearch createAlbum={createAlbum} />}
-          />
-          <Route path="/login" element={<LoginForm />} />
-          {user ? (
-            <Route
-              path="/list"
-              element={<MyList albums={albums} user={user} />}
-            />
+          {user === undefined || user === null ? (
+            <Route path="*" element={<div>Loading...</div>} />
           ) : (
-            <Route path="/list" element={<Navigate to="/login" />} />
+            <>
+              <Route path="/" element={<Home albums={albums} user={user} />} />
+              <Route
+                path="/search"
+                element={<AlbumSearch createAlbum={createAlbum} />}
+              />
+              <Route path="/login" element={<LoginForm />} />
+              {user ? (
+                <Route
+                  path="/list"
+                  element={<MyList albums={albums} user={user} />}
+                />
+              ) : (
+                <Route path="/list" element={<Navigate to="/login" />} />
+              )}
+              <Route
+                path="/list/:username/:id"
+                element={<Album user={user} />}
+              />
+            </>
           )}
-          <Route path="/list/:username/:id" element={<Album user={user} />} />
         </Routes>
       </Router>
     </div>
