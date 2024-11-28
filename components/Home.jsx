@@ -1,28 +1,29 @@
+import SignUp from './SignUp';
+
 const Home = ({ user, albums }) => {
   if (!albums || albums.length === 0) {
-    return <h2>Loading</h2>;
+    return <h2>No albums rated yet!</h2>;
   }
-
+  console.log('Albums here', albums);
   if (user) {
     return (
       <div>
         <h2>
           {user.username} has reviewed{' '}
           {albums.length > 1 ? (
-            <div>{albums.length} albums</div>
+            <div>{albums.length} albums</div>
           ) : (
             <div>{albums.length} album</div>
           )}
           with average rating of{' '}
-          {albums.rating.reduce((sum, currentValue) => sum + currentValue, 0) /
-            albums.length}
+          {albums.reduce((a, b) => a + b.rating, 0) / albums.length}
         </h2>
       </div>
     );
   }
   return (
     <div>
-      <h2>Welcome to MusicBox!</h2>
+      <SignUp />
     </div>
   );
 };

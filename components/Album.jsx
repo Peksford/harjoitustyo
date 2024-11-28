@@ -4,6 +4,7 @@ import userService from '../services/users';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StarRatings from 'react-star-ratings';
+import axios from 'axios';
 
 const Album = ({ user }) => {
   //   if (!albums || albums.length === 0) {
@@ -13,6 +14,8 @@ const Album = ({ user }) => {
   console.log('id', id);
   const [albumData, setAlbumData] = useState('');
   const [rating, setRating] = useState(0);
+
+  console.log('Discogs id', albumData.discogs_id);
 
   // useEffect(() => {
   //   if (albumData && albumData.rating !== undefined) {
@@ -51,13 +54,43 @@ const Album = ({ user }) => {
     fetchAlbum();
   }, [id, user]);
 
-  console.log('album data', albumData.rating);
+  const [tracklist, setTracklist] = useState([]);
+
+  useEffect(() => {
+    const releaseInfo = async () => {
+      const token = import.meta.env.VITE_TOKEN;
+      try {
+        const data = await axios.get(
+          `https://api.discogs.com/releases/${albumData.discogs_id}`,
+          {
+            headers: {
+              Authorization: `Discogs token=${token}`,
+            },
+          }
+        );
+        console.log('what data here', data);
+        const fetchedTracklist = data.data.tracklist;
+        setTracklist(fetchedTracklist);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    releaseInfo();
+  }, [albumData.discogs_id]);
+
+  console.log('album track list', tracklist);
 
   return (
     <div style={styles.albumContainer}>
       <div style={styles.albumInfo}>
         <h2>{albumData.whole_title}</h2>
-        <h2>{albumData.year}</h2>
+        <h3>{albumData.year}</h3>
+        <ol>
+          {tracklist.map((track) => (
+            <li key={track.title}>{track.title}</li>
+          ))}
+        </ol>
+
         <div style={styles.sliderContainer}>
           <label htmlFor="rating-slider">Your Rating</label>
           <input

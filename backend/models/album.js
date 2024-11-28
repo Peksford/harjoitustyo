@@ -46,6 +46,10 @@ Album.init(
         key: 'id',
       },
     },
+    discogs_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   },
   {
     sequelize,

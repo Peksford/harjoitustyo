@@ -99,6 +99,7 @@ const Album = ({ albumSearched, createAlbum }) => {
   }
 
   const createNew = ({ album }) => {
+    console.log('Testing album', album.id);
     createAlbum({
       artist: album.title.split(' - ')[0].trim(),
       title: album.title.split(' - ')[1].trim(),
@@ -106,6 +107,7 @@ const Album = ({ albumSearched, createAlbum }) => {
       year: album.year,
       thumbnail: album.cover_image,
       whole_title: album.title,
+      discogs_id: album.id,
     });
   };
 

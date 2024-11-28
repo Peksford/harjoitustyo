@@ -21,6 +21,7 @@ import AlbumSearch from '../components/AlbumSearch';
 import LoginForm from '../components/LoginForm';
 import MyList from '../components/MyList';
 import Album from '../components/Album';
+import SignUp from '../components/SignUp';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../reducers/loginReducer';
 
@@ -96,7 +97,7 @@ const App = () => {
               {user.username}
             </Link>
           ) : (
-            <Link style={styles.padding} to="/">
+            <Link style={styles.padding} to="/signup">
               home
             </Link>
           )}
@@ -116,30 +117,26 @@ const App = () => {
           {user && <button onClick={handleLogout}> Logout</button>}
         </div>
         <Routes>
-          {user === undefined || user === null ? (
+          {/* {user === undefined || user === null ? (
             <Route path="*" element={<div>Loading...</div>} />
+          ) : ( */}
+
+          <Route path="/" element={<Home albums={albums} user={user} />} />
+          <Route
+            path="/search"
+            element={<AlbumSearch createAlbum={createAlbum} />}
+          />
+          <Route path="/login" element={<LoginForm />} />
+          {user ? (
+            <Route
+              path="/list"
+              element={<MyList albums={albums} user={user} />}
+            />
           ) : (
-            <>
-              <Route path="/" element={<Home albums={albums} user={user} />} />
-              <Route
-                path="/search"
-                element={<AlbumSearch createAlbum={createAlbum} />}
-              />
-              <Route path="/login" element={<LoginForm />} />
-              {user ? (
-                <Route
-                  path="/list"
-                  element={<MyList albums={albums} user={user} />}
-                />
-              ) : (
-                <Route path="/list" element={<Navigate to="/login" />} />
-              )}
-              <Route
-                path="/list/:username/:id"
-                element={<Album user={user} />}
-              />
-            </>
+            <Route path="/list" element={<Navigate to="/login" />} />
           )}
+          <Route path="/list/:username/:id" element={<Album user={user} />} />
+          <Route path="/signup" element={<SignUp />} />
         </Routes>
       </Router>
     </div>
