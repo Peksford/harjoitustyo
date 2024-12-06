@@ -12,7 +12,7 @@ const getAll = async () => {
   return response.data;
 };
 
-const getAlbum = async (id, token) => {
+const getAlbum = async (id) => {
   const response = await axios.get(`${baseUrl}/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,

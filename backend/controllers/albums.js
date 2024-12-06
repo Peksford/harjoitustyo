@@ -28,9 +28,9 @@ router.post('/', tokenExtractor, async (req, res, next) => {
   }
 });
 
-router.get('/:id', tokenExtractor, async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
   try {
-    const user = await User.findByPk(req.decodedToken.id);
+    // const user = await User.findByPk(req.decodedToken.id);
     const album = await Album.findByPk(req.params.id);
 
     // console.log('user', user);
@@ -47,6 +47,12 @@ router.put('/:id', tokenExtractor, async (req, res, next) => {
   try {
     const user = await User.findByPk(req.decodedToken.id);
     const album = await Album.findByPk(req.params.id);
+
+    if (album.user_id !== req.decodedToken.id) {
+      return res
+        .status(404)
+        .json({ error: 'Not authorized to change the rating.' });
+    }
     const { rating } = req.body;
 
     console.log('ALBUM', rating);

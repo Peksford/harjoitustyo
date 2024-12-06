@@ -2,12 +2,12 @@ const { DataTypes } = require('sequelize');
 
 module.exports = {
   up: async ({ context: queryInterface }) => {
-    await queryInterface.addColumn('albums', 'discogs_id', {
-      type: DataTypes.INTEGER,
+    await queryInterface.addColumn('users', 'password_hash', {
+      type: DataTypes.STRING,
       allowNull: false,
     });
   },
   down: async ({ context: queryInterface }) => {
-    await queryInterface.removeColumn('albums', 'discogs_id');
+    await queryInterface.removeColumn('users', 'password_hash');
   },
 };

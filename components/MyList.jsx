@@ -54,9 +54,11 @@ const MyList = ({ albums, user }) => {
           <Link to={`${user.username}/${album.id}`}>
             <img src={album.thumbnail} style={styles.thumbnail} />
           </Link>
-          <div style={styles.circle}>
-            <span style={styles.circleText}>{album.rating}</span>
-          </div>
+          {album.rating ? (
+            <div style={styles.circle}>
+              <span style={styles.circleText}>{album.rating}</span>
+            </div>
+          ) : null}
         </div>
       ))}
     </div>

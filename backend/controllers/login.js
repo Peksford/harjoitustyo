@@ -1,20 +1,26 @@
 const jwt = require('jsonwebtoken');
 const router = require('express').Router();
+const bcrypt = require('bcrypt');
 
 const { SECRET } = require('../util/config');
 const User = require('../models/user');
 const Session = require('../models/session');
 
 router.post('/', async (request, response) => {
-  const body = request.body;
+  const { username, password } = request.body;
 
   const user = await User.findOne({
     where: {
-      username: body.username,
+      username: username,
     },
   });
 
-  const passwordCorrect = body.password === 'salainen';
+  console.log('Login controller', user);
+
+  // const passwordCorrect = body.password === 'salainen';
+
+  const passwordCorrect =
+    user === null ? false : await bcrypt.compare(password, user.password_hash);
 
   if (!(user && passwordCorrect)) {
     return response.status(401).json({

@@ -14,16 +14,9 @@ const Album = ({ user }) => {
   console.log('id', id);
   const [albumData, setAlbumData] = useState('');
   const [rating, setRating] = useState(0);
+  const [trackListFetched, setTrackListFetched] = useState(false);
 
-  console.log('Discogs id', albumData.discogs_id);
-
-  // useEffect(() => {
-  //   if (albumData && albumData.rating !== undefined) {
-  //     setRating(albumData.rating);
-  //   }
-  // }, [albumData]);
-
-  console.log(id);
+  console.log('album data', albumData);
 
   const changeRating = async (newRating) => {
     setRating(newRating);
@@ -42,9 +35,10 @@ const Album = ({ user }) => {
   };
 
   useEffect(() => {
+    if (!user) return;
     const fetchAlbum = async () => {
       try {
-        const data = await albumService.getAlbum(id, user.token);
+        const data = await albumService.getAlbum(id);
         setAlbumData(data);
         setRating(data.rating);
       } catch (error) {
@@ -58,27 +52,32 @@ const Album = ({ user }) => {
 
   useEffect(() => {
     const releaseInfo = async () => {
+      if (trackListFetched) return;
       const token = import.meta.env.VITE_TOKEN;
       try {
-        const data = await axios.get(
-          `https://api.discogs.com/releases/${albumData.discogs_id}`,
-          {
-            headers: {
-              Authorization: `Discogs token=${token}`,
-            },
-          }
-        );
-        console.log('what data here', data);
-        const fetchedTracklist = data.data.tracklist;
-        setTracklist(fetchedTracklist);
+        if (albumData) {
+          const data = await axios.get(
+            `https://api.discogs.com/releases/${albumData.discogs_id}`,
+            {
+              headers: {
+                Authorization: `Discogs token=${token}`,
+              },
+            }
+          );
+          console.log('what data here', data);
+          const fetchedTracklist = data.data.tracklist;
+          setTracklist(fetchedTracklist);
+          setTrackListFetched(true);
+        }
       } catch (error) {
         console.error(error);
       }
     };
     releaseInfo();
-  }, [albumData.discogs_id]);
+  }, [albumData, trackListFetched]);
 
-  console.log('album track list', tracklist);
+  // console.log('album track list', tracklist);
+  // console.log('user id', user);
 
   return (
     <div style={styles.albumContainer}>
@@ -90,38 +89,36 @@ const Album = ({ user }) => {
             <li key={track.title}>{track.title}</li>
           ))}
         </ol>
-
-        <div style={styles.sliderContainer}>
-          <label htmlFor="rating-slider">Your Rating</label>
-          <input
-            type="range"
-            min="0"
-            max="10"
-            step="0.1"
-            value={rating || 0}
-            onChange={(e) => changeRating(parseFloat(e.target.value))}
-            style={styles.slider}
-          />
-          <div style={styles.silderNumbers}>
-            <span>1</span>
-            <span>5</span>
-            <span>10</span>
+        {albumData.user_id === (user?.id || 0) ? (
+          <div style={styles.sliderContainer}>
+            <label htmlFor="rating-slider">Your Rating</label>
+            <input
+              type="range"
+              min="0"
+              max="10"
+              step="0.1"
+              value={rating || 0}
+              onChange={(e) => changeRating(parseFloat(e.target.value))}
+              style={styles.slider}
+            />
+            <div style={styles.silderNumbers}>
+              <span>1</span>
+              <span>5</span>
+              <span>10</span>
+            </div>
           </div>
-          {/* <span>{rating}/10</span> */}
-          {/* // <StarRatings
-          rating={rating}
-          changeRating={changeRating}
-          starRatedColor="gold"
-          numberOfStars={10}
-          name="rating"
-        /> */}
-        </div>
+        ) : null}
       </div>
       <div style={styles.thumbNailContainer}>
         <img src={albumData.thumbnail} style={styles.thumbnail} />
-        <div style={styles.circle}>
-          <span style={styles.circleText}>{albumData.rating}</span>
-        </div>
+        {albumData.rating ? (
+          <div>
+            {/* {albumData.user_id}'s rating */}
+            <div style={styles.circle}>
+              <span style={styles.circleText}>{albumData.rating}</span>
+            </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );

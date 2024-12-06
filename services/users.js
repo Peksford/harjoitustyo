@@ -11,4 +11,10 @@ const getUserAlbums = async (username) => {
   return response.data.albums;
 };
 
-export default { getAll, getUserAlbums };
+const newUser = async ({ username, name, password }) => {
+  console.log('tulostuuko tunnukset?', username, name, password);
+  const response = await axios.post(`${baseUrl}`, { username, name, password });
+  return response.data;
+};
+
+export default { getAll, getUserAlbums, newUser };

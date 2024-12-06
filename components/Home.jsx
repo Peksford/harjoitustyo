@@ -10,13 +10,19 @@ const Home = ({ user, albums }) => {
       <div>
         <h2>
           {user.username} has reviewed{' '}
-          {albums.length > 1 ? (
-            <div>{albums.length} albums</div>
-          ) : (
-            <div>{albums.length} album</div>
-          )}
-          with average rating of{' '}
-          {albums.reduce((a, b) => a + b.rating, 0) / albums.length}
+          <ul>
+            <li>
+              {albums.length > 1 ? (
+                <div>{albums.length} albums</div>
+              ) : (
+                <div>{albums.length} album</div>
+              )}
+            </li>
+            <li>
+              with average rating of{' '}
+              {albums.reduce((a, b) => a + b.rating, 0) / albums.length}
+            </li>
+          </ul>
         </h2>
       </div>
     );
