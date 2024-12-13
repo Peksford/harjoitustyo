@@ -15,9 +15,11 @@ import { useState, useEffect } from 'react';
 import albumService from '../services/albums';
 import userService from '../services/users';
 import logoutService from '../services/logout';
+import bookService from '../services/books';
 
 import Home from '../components/Home';
 import AlbumSearch from '../components/AlbumSearch';
+import BookSearch from '../components/BookSearch';
 import LoginForm from '../components/LoginForm';
 import MyList from '../components/MyList';
 import Album from '../components/Album';
@@ -88,6 +90,11 @@ const App = () => {
     setAlbums([...albums, newAlbum]);
   };
 
+  const createBook = async (bookObject) => {
+    const newBook = await bookService.create(bookObject);
+    setAlbums([...books, newBook]);
+  };
+
   return (
     <div>
       <Router>
@@ -102,7 +109,10 @@ const App = () => {
             </Link>
           )}
           <Link style={styles.padding} to="/search">
-            search
+            AlbumSearch
+          </Link>
+          <Link style={styles.padding} to="/bookSearch">
+            BookSearch
           </Link>
           {!user && (
             <Link style={styles.padding} to="/login">
@@ -110,8 +120,8 @@ const App = () => {
             </Link>
           )}
           {user && (
-            <Link style={styles.padding} to="/list">
-              my list
+            <Link style={styles.padding} to="/albums">
+              albums
             </Link>
           )}
           {user && <button onClick={handleLogout}> Logout</button>}
@@ -126,16 +136,20 @@ const App = () => {
             path="/search"
             element={<AlbumSearch createAlbum={createAlbum} />}
           />
+          <Route
+            path="/bookSearch"
+            element={<BookSearch createBook={createBook} />}
+          />
           <Route path="/login" element={<LoginForm />} />
           {user ? (
             <Route
-              path="/list"
+              path="/albums"
               element={<MyList albums={albums} user={user} />}
             />
           ) : (
-            <Route path="/list" element={<Navigate to="/login" />} />
+            <Route path="/albums" element={<Navigate to="/login" />} />
           )}
-          <Route path="/list/:username/:id" element={<Album user={user} />} />
+          <Route path="/albums/:username/:id" element={<Album user={user} />} />
           <Route path="/signup" element={<SignUp />} />
         </Routes>
       </Router>
