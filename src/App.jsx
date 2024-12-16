@@ -18,10 +18,10 @@ import logoutService from '../services/logout';
 import bookService from '../services/books';
 
 import Home from '../components/Home';
-import AlbumSearch from '../components/AlbumSearch';
-import BookSearch from '../components/BookSearch';
+import Search from '../components/Search';
 import LoginForm from '../components/LoginForm';
 import MyList from '../components/MyList';
+import MyListBooks from '../components/MyListBooks';
 import Album from '../components/Album';
 import SignUp from '../components/SignUp';
 import { useDispatch, useSelector } from 'react-redux';
@@ -39,6 +39,7 @@ const styles = {
 
 const App = () => {
   const [albums, setAlbums] = useState([]);
+  const [books, setBooks] = useState([]);
   const user = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
@@ -50,6 +51,7 @@ const App = () => {
         const user = JSON.parse(loggedUserJSON);
         dispatch(setUser(user));
         albumService.setToken(user.token);
+        bookService.setToken(user.token);
       } catch (error) {
         console.error('Error', error);
       }
@@ -69,6 +71,20 @@ const App = () => {
         }
     };
     fetchUserAlbums();
+  }, [user]);
+
+  useEffect(() => {
+    const fetchUserBooks = async () => {
+      if (user && user.username)
+        try {
+          const userBooksData = await userService.getUserBooks(user.username);
+          console.log('userbbdfokbdfs', userBooksData);
+          setBooks(userBooksData);
+        } catch (error) {
+          console.error('error fetching albums: ', error);
+        }
+    };
+    fetchUserBooks();
   }, [user]);
 
   const handleLogout = async (event) => {
@@ -92,8 +108,10 @@ const App = () => {
 
   const createBook = async (bookObject) => {
     const newBook = await bookService.create(bookObject);
-    setAlbums([...books, newBook]);
+    setBooks([...books, newBook]);
   };
+
+  console.log('user books', books);
 
   return (
     <div>
@@ -109,10 +127,7 @@ const App = () => {
             </Link>
           )}
           <Link style={styles.padding} to="/search">
-            AlbumSearch
-          </Link>
-          <Link style={styles.padding} to="/bookSearch">
-            BookSearch
+            Search
           </Link>
           {!user && (
             <Link style={styles.padding} to="/login">
@@ -124,21 +139,20 @@ const App = () => {
               albums
             </Link>
           )}
+          {user && (
+            <Link style={styles.padding} to="/books">
+              books
+            </Link>
+          )}
           {user && <button onClick={handleLogout}> Logout</button>}
         </div>
         <Routes>
-          {/* {user === undefined || user === null ? (
-            <Route path="*" element={<div>Loading...</div>} />
-          ) : ( */}
-
           <Route path="/" element={<Home albums={albums} user={user} />} />
           <Route
             path="/search"
-            element={<AlbumSearch createAlbum={createAlbum} />}
-          />
-          <Route
-            path="/bookSearch"
-            element={<BookSearch createBook={createBook} />}
+            element={
+              <Search createAlbum={createAlbum} createBook={createBook} />
+            }
           />
           <Route path="/login" element={<LoginForm />} />
           {user ? (
@@ -148,6 +162,14 @@ const App = () => {
             />
           ) : (
             <Route path="/albums" element={<Navigate to="/login" />} />
+          )}
+          {user ? (
+            <Route
+              path="/books"
+              element={<MyListBooks books={books} user={user} />}
+            />
+          ) : (
+            <Route path="/books" element={<Navigate to="/login" />} />
           )}
           <Route path="/albums/:username/:id" element={<Album user={user} />} />
           <Route path="/signup" element={<SignUp />} />

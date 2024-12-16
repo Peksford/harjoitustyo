@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true,
       },
-      artist: {
+      author: {
         type: DataTypes.TEXT,
         allowNull: false,
       },
@@ -24,6 +24,10 @@ module.exports = {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
+      thumbnail: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
       created_at: {
         type: DataTypes.DATE,
         allowNull: false,
@@ -35,6 +39,10 @@ module.exports = {
       whole_title: {
         type: DataTypes.TEXT,
         allowNull: false,
+      },
+      rating: {
+        type: DataTypes.FLOAT,
+        allownull: true,
       },
     });
 

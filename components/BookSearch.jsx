@@ -67,7 +67,7 @@ const useBook = (name) => {
           'http://localhost:3001/api/books/search-book',
           {
             params: {
-              name: encodeURIComponent(name),
+              name: name,
             },
           }
         );
@@ -91,7 +91,7 @@ const Book = ({ bookSearched, createBook }) => {
   }
 
   const createNew = ({ book }) => {
-    console.log('Testing album', book.id);
+    console.log('Testing album', book);
     createBook({
       author: book.author_name?.[0] || 'Unknown',
       title: book.title || 'Untitled',
@@ -107,12 +107,13 @@ const Book = ({ bookSearched, createBook }) => {
       <h4>
         {bookSearched.map((book) => (
           <div key={book.key}>
-            {console.log('DOES THIS PRINT', book)}
             <div style={styles.bookContainer}>
-              <img
-                src={`https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`}
-                style={styles.thumbnail}
-              />
+              {book.cover_i && (
+                <img
+                  src={`https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`}
+                  style={styles.thumbnail}
+                />
+              )}
               <div style={styles.bookInfo}>
                 <p>{book.title}</p>
                 {book.publish_year?.[0] && <p>Year: {book.publish_year[0]}</p>}

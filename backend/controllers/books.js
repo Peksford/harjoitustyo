@@ -16,10 +16,10 @@ router.get('/search-book', async (req, res) => {
       },
       params: {
         q: name,
-        page: 1,
-        limit: 10,
+        limit: 100,
       },
     });
+    console.log('response', response);
     res.json(response.data);
   } catch (error) {
     console.error(error);
@@ -39,7 +39,9 @@ router.get('/', async (req, res) => {
 
 router.post('/', tokenExtractor, async (req, res, next) => {
   try {
+    console.log('Post request', req.body);
     const user = await User.findByPk(req.decodedToken.id);
+    console.log('user', user);
     const book = await Book.create({
       ...req.body,
       user_id: user.id,
