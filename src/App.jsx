@@ -23,6 +23,7 @@ import LoginForm from '../components/LoginForm';
 import MyList from '../components/MyList';
 import MyListBooks from '../components/MyListBooks';
 import Album from '../components/Album';
+import Book from '../components/Book';
 import SignUp from '../components/SignUp';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../reducers/loginReducer';
@@ -73,6 +74,14 @@ const App = () => {
     fetchUserAlbums();
   }, [user]);
 
+  const albumRatingUpdate = (updatedAlbum) => {
+    setAlbums((preAlbums) =>
+      preAlbums.map((album) =>
+        album.id === updatedAlbum.id ? updatedAlbum : album
+      )
+    );
+  };
+
   useEffect(() => {
     const fetchUserBooks = async () => {
       if (user && user.username)
@@ -86,6 +95,12 @@ const App = () => {
     };
     fetchUserBooks();
   }, [user]);
+
+  const BookRatingUpdate = (updatedBook) => {
+    setBooks((preBooks) =>
+      preBooks.map((book) => (book.id === updatedBook.id ? updatedBook : book))
+    );
+  };
 
   const handleLogout = async (event) => {
     event.preventDefault();
@@ -171,7 +186,20 @@ const App = () => {
           ) : (
             <Route path="/books" element={<Navigate to="/login" />} />
           )}
-          <Route path="/albums/:username/:id" element={<Album user={user} />} />
+          <Route
+            path="/albums/:username/:id"
+            element={
+              <Album
+                user={user}
+                albums={albums}
+                onUpdateAlbum={albumRatingUpdate}
+              />
+            }
+          />
+          <Route
+            path="/books/:username/:id"
+            element={<Book user={user} onUpdateBook={BookRatingUpdate} />}
+          />
           <Route path="/signup" element={<SignUp />} />
         </Routes>
       </Router>

@@ -6,47 +6,49 @@ import { useNavigate } from 'react-router-dom';
 import StarRatings from 'react-star-ratings';
 import axios from 'axios';
 
-const Album = ({ user }) => {
-  //   if (!albums || albums.length === 0) {
-  //     return <h2>No albums added yet</h2>;
-  //   }
+const Album = ({ user, albums, onUpdateAlbum }) => {
   const { id } = useParams();
-  console.log('id', id);
   const [albumData, setAlbumData] = useState('');
   const [rating, setRating] = useState(0);
   const [trackListFetched, setTrackListFetched] = useState(false);
 
-  console.log('album data', albumData);
+  useEffect(() => {
+    const album = albums.find((album) => album.id === Number(id));
+    if (album) {
+      setAlbumData(album);
+      setRating(album.rating || 0);
+    }
+  }, [albums, id]);
 
   const changeRating = async (newRating) => {
     setRating(newRating);
-
     try {
       const updatedRating = await albumService.updatedAlbum(albumData.id, {
         ...albumData,
         rating: newRating,
       });
       setAlbumData(updatedRating);
+      if (onUpdateAlbum) {
+        onUpdateAlbum(updatedRating);
+      }
     } catch (error) {
       console.error(error);
     }
-
-    console.log(newRating);
   };
 
-  useEffect(() => {
-    if (!user) return;
-    const fetchAlbum = async () => {
-      try {
-        const data = await albumService.getAlbum(id);
-        setAlbumData(data);
-        setRating(data.rating);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchAlbum();
-  }, [id, user]);
+  // useEffect(() => {
+  //   if (!user) return;
+  //   const fetchAlbum = async () => {
+  //     try {
+  //       const data = await albumService.getAlbum(id);
+  //       setAlbumData(data);
+  //       setRating(data.rating);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  //   fetchAlbum();
+  // }, [id, user]);
 
   const [tracklist, setTracklist] = useState([]);
 
@@ -76,13 +78,11 @@ const Album = ({ user }) => {
     releaseInfo();
   }, [albumData, trackListFetched]);
 
-  // console.log('album track list', tracklist);
-  // console.log('user id', user);
-
   return (
     <div style={styles.albumContainer}>
       <div style={styles.albumInfo}>
         <h2>{albumData.whole_title}</h2>
+
         <h3>{albumData.year}</h3>
         <ol>
           {tracklist.map((track) => (
@@ -110,10 +110,18 @@ const Album = ({ user }) => {
         ) : null}
       </div>
       <div style={styles.thumbNailContainer}>
+        <p>
+          <a
+            href={`https://www.discogs.com${albumData.url}`}
+            target="blank"
+            rel="noopener noreferrer"
+          >
+            Discogs
+          </a>
+        </p>
         <img src={albumData.thumbnail} style={styles.thumbnail} />
         {albumData.rating ? (
           <div>
-            {/* {albumData.user_id}'s rating */}
             <div style={styles.circle}>
               <span style={styles.circleText}>{albumData.rating}</span>
             </div>

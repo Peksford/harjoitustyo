@@ -38,6 +38,10 @@ Book.init(
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    key: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,

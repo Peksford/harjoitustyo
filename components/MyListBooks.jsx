@@ -59,6 +59,8 @@ const MyListBooks = ({ books, user }) => {
                 style={styles.thumbnail}
               />
             )}
+            <div>{book.title}</div>
+
             {/* <img src={book.thumbnail} style={styles.thumbnail} /> */}
           </Link>
 
@@ -67,7 +69,6 @@ const MyListBooks = ({ books, user }) => {
               <span style={styles.circleText}>{book.rating}</span>
             </div>
           ) : null}
-          {book.title}
         </div>
       ))}
     </div>

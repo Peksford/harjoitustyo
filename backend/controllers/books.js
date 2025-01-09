@@ -16,7 +16,7 @@ router.get('/search-book', async (req, res) => {
       },
       params: {
         q: name,
-        limit: 100,
+        limit: 50,
       },
     });
     console.log('response', response);

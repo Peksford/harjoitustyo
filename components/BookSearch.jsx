@@ -3,23 +3,32 @@ import { useState, useEffect } from 'react';
 import React from 'react';
 
 const styles = {
-  BookContainer: {
+  bookContainer: {
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    gap: '16px',
   },
-  BookInfo: {
+  BookInfoAndButtons: {
     display: 'flex',
     flexDirection: 'column',
+    flex: 1,
+  },
+  bookInfo: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
   },
   thumbnail: {
-    width: '250px',
-    height: '300px',
-    marginRight: '1rem',
+    width: '200px',
+    height: '250px',
+    objectFit: 'cover',
   },
   buttonContainer: {
     display: 'flex',
     flexDirection: 'column',
     gap: '8px',
+    marginTop: '8px',
   },
   separator: {
     border: 'px solid #ccc',
@@ -91,7 +100,7 @@ const Book = ({ bookSearched, createBook }) => {
   }
 
   const createNew = ({ book }) => {
-    console.log('Testing album', book);
+    console.log('Testing book', book);
     createBook({
       author: book.author_name?.[0] || 'Unknown',
       title: book.title || 'Untitled',
@@ -99,6 +108,7 @@ const Book = ({ bookSearched, createBook }) => {
       year: book.publish_year?.[0] || 'Unknown Year',
       thumbnail: book.cover_i,
       whole_title: book.author_name[0] + ' - ' + book.title,
+      key: book.key,
     });
   };
 
@@ -114,25 +124,29 @@ const Book = ({ bookSearched, createBook }) => {
                   style={styles.thumbnail}
                 />
               )}
-              <div style={styles.bookInfo}>
-                <p>{book.title}</p>
-                {book.publish_year?.[0] && <p>Year: {book.publish_year[0]}</p>}
-                {book.key && (
-                  <p>
-                    <a
-                      href={`https://openlibrary.org${book.key}`}
-                      target="blank"
-                      rel="noopener noreferrer"
-                    >
-                      Open Library
-                    </a>
-                  </p>
-                )}
-              </div>
-              <div style={styles.buttonContainer}>
-                <button onClick={() => createNew({ book })}>
-                  Add to My List
-                </button>
+              <div style={styles.BookInfoAndButtons}>
+                <div style={styles.bookInfo}>
+                  <p>{book.title}</p>
+                  {book.publish_year?.[0] && (
+                    <p>Year: {book.publish_year[0]}</p>
+                  )}
+                  {book.key && (
+                    <p>
+                      <a
+                        href={`https://openlibrary.org${book.key}`}
+                        target="blank"
+                        rel="noopener noreferrer"
+                      >
+                        Open Library
+                      </a>
+                    </p>
+                  )}
+                </div>
+                <div style={styles.buttonContainer}>
+                  <button onClick={() => createNew({ book })}>
+                    Add to My List
+                  </button>
+                </div>
               </div>
             </div>
             <hr style={styles.separator} />
