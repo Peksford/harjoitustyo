@@ -8,7 +8,7 @@ const { tokenExtractor } = require('../util/middleware');
 router.get('/search-book', async (req, res) => {
   const { name } = req.query;
   const userAgent = 'RateApp (jonksu4@hotmail.com)';
-  console.log('searching', name);
+  // console.log('searching', name);
   try {
     const response = await axios.get('https://openlibrary.org/search.json', {
       headers: {
@@ -19,7 +19,7 @@ router.get('/search-book', async (req, res) => {
         limit: 50,
       },
     });
-    console.log('response', response);
+    // console.log('response', response);
     res.json(response.data);
   } catch (error) {
     console.error(error);

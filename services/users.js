@@ -11,9 +11,14 @@ const getUserAlbums = async (username) => {
   return response.data.albums;
 };
 
+const getUserMovies = async (username) => {
+  const response = await axios.get(`${baseUrl}/${username}`);
+  console.log('response user movies', response);
+  return response.data.movies;
+};
+
 const getUserBooks = async (username) => {
   const response = await axios.get(`${baseUrl}/${username}`);
-  console.log('response user books', response);
   return response.data.books;
 };
 
@@ -23,4 +28,4 @@ const newUser = async ({ username, name, password }) => {
   return response.data;
 };
 
-export default { getAll, getUserAlbums, newUser, getUserBooks };
+export default { getAll, getUserAlbums, newUser, getUserBooks, getUserMovies };
