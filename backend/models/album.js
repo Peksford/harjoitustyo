@@ -50,6 +50,10 @@ Album.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    heart: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
   },
   {
     sequelize,

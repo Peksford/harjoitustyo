@@ -44,6 +44,10 @@ module.exports = {
         type: DataTypes.FLOAT,
         allownull: true,
       },
+      heart: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
     });
 
     await queryInterface.addColumn('books', 'user_id', {

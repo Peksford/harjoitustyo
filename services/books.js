@@ -38,4 +38,17 @@ const updatedBook = async (id, updatedData) => {
   return response.data;
 };
 
-export default { getAll, setToken, create, getBook, updatedBook };
+const heartClick = async (id, updatedData) => {
+  const config = {
+    headers: { Authorization: token },
+  };
+  console.log('book heart click', updatedData);
+  const response = await axios.put(
+    `${baseUrl}/heart/${id}`,
+    updatedData,
+    config
+  );
+  return response.data;
+};
+
+export default { getAll, setToken, create, getBook, updatedBook, heartClick };

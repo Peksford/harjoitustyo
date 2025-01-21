@@ -54,6 +54,10 @@ Movie.init(
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    heart: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
   },
   {
     sequelize,

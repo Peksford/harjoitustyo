@@ -60,6 +60,10 @@ module.exports = {
         type: DataTypes.TEXT,
         allowNull: false,
       },
+      heart: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
     });
 
     await queryInterface.addColumn('albums', 'user_id', {

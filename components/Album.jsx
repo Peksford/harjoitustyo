@@ -5,20 +5,42 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StarRatings from 'react-star-ratings';
 import axios from 'axios';
+import Heart from 'react-heart';
 
 const Album = ({ user, albums, onUpdateAlbum }) => {
   const { id } = useParams();
   const [albumData, setAlbumData] = useState('');
   const [rating, setRating] = useState(0);
   const [trackListFetched, setTrackListFetched] = useState(false);
+  const [active, setActive] = useState(false);
 
   useEffect(() => {
     const album = albums.find((album) => album.id === Number(id));
     if (album) {
       setAlbumData(album);
+      setActive(album.heart || false);
       setRating(album.rating || 0);
     }
   }, [albums, id]);
+
+  const handleHeartClick = async () => {
+    try {
+      const updatedHeart = await albumService.heartClick(albumData.id, {
+        ...albumData,
+        heart: true,
+      });
+
+      console.log('The response of the heart ', updatedHeart);
+      setAlbumData(updatedHeart);
+      setActive(updatedHeart.heart);
+
+      if (onUpdateAlbum) {
+        onUpdateAlbum(updatedHeart);
+      }
+    } catch (error) {
+      console.error('error pressing heart', error);
+    }
+  };
 
   const changeRating = async (newRating) => {
     setRating(newRating);
@@ -35,20 +57,6 @@ const Album = ({ user, albums, onUpdateAlbum }) => {
       console.error(error);
     }
   };
-
-  // useEffect(() => {
-  //   if (!user) return;
-  //   const fetchAlbum = async () => {
-  //     try {
-  //       const data = await albumService.getAlbum(id);
-  //       setAlbumData(data);
-  //       setRating(data.rating);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-  //   fetchAlbum();
-  // }, [id, user]);
 
   const [tracklist, setTracklist] = useState([]);
 
@@ -82,7 +90,9 @@ const Album = ({ user, albums, onUpdateAlbum }) => {
     <div style={styles.albumContainer}>
       <div style={styles.albumInfo}>
         <h2>{albumData.whole_title}</h2>
-
+        <p style={{ width: '4rem' }}>
+          <Heart isActive={active || false} onClick={handleHeartClick} />
+        </p>
         <h3>{albumData.year}</h3>
         <ol>
           {tracklist.map((track) => (

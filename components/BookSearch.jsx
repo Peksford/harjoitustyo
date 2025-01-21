@@ -109,6 +109,7 @@ const Book = ({ bookSearched, createBook }) => {
       thumbnail: book.cover_i,
       whole_title: book.author_name[0] + ' - ' + book.title,
       key: book.key,
+      heart: false,
     });
   };
 

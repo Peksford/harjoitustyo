@@ -82,7 +82,7 @@ const App = () => {
   const albumRatingUpdate = (updatedAlbum) => {
     setAlbums((preAlbums) =>
       preAlbums.map((album) =>
-        album.id === updatedAlbum.id ? updatedAlbum : album
+        album.id === updatedAlbum.id ? updatedAlbum : { ...album, heart: false }
       )
     );
   };
@@ -100,6 +100,8 @@ const App = () => {
     };
     fetchUserBooks();
   }, [user]);
+
+  console.log('ARE the albums updated for the heart', albums);
 
   const bookRatingUpdate = (updatedBook) => {
     setBooks((preBooks) =>
@@ -165,7 +167,7 @@ const App = () => {
       <Router>
         <div style={styles.container}>
           {user ? (
-            <Link style={styles.padding} to="/">
+            <Link style={styles.padding} to={`/${user.username}`}>
               {user.username}
             </Link>
           ) : (
@@ -183,23 +185,28 @@ const App = () => {
           )}
           {user && (
             <Link style={styles.padding} to="/albums">
-              albums
+              My albums
             </Link>
           )}
           {user && (
             <Link style={styles.padding} to="/books">
-              books
+              My books
             </Link>
           )}
           {user && (
             <Link style={styles.padding} to="/movies">
-              movies
+              My movies/TV
             </Link>
           )}
           {user && <button onClick={handleLogout}> Logout</button>}
         </div>
         <Routes>
-          <Route path="/" element={<Home albums={albums} user={user} />} />
+          <Route
+            path="/:username"
+            element={
+              <Home albums={albums} user={user} movies={movies} books={books} />
+            }
+          />
           <Route
             path="/search"
             element={

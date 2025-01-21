@@ -35,6 +35,8 @@ const tokenExtractor = async (req, res, next) => {
         },
       });
 
+      console.log('does it find the user?', user);
+
       if (!user) {
         return res.status(401).json({
           error: 'User not found',

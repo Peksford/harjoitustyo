@@ -52,6 +52,10 @@ module.exports = {
         type: DataTypes.TEXT,
         allowNull: true,
       },
+      heart: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
     });
 
     await queryInterface.addColumn('movies', 'user_id', {

@@ -4,6 +4,8 @@ import userService from '../services/users';
 import { useDispatch } from 'react-redux';
 import { setUser, userLogin } from '../reducers/loginReducer';
 import albumService from '../services/albums';
+import movieService from '../services/movies';
+import bookService from '../services/books';
 import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
@@ -23,6 +25,8 @@ const SignUp = () => {
       const user = await dispatch(userLogin(username, password));
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user));
       albumService.setToken(user.token);
+      movieService.setToken(user.token);
+      bookService.setToken(user.token);
       dispatch(setUser(user));
       navigate('/');
     } catch (error) {
@@ -44,7 +48,7 @@ const SignUp = () => {
             onChange={({ target }) => setUsername(target.value)}
           />
           <div></div>
-          <Form.Label>name: </Form.Label>
+          {/* <Form.Label>name: </Form.Label>
           <Form.Control
             id="name"
             type="text"
@@ -52,7 +56,7 @@ const SignUp = () => {
             name="Name"
             onChange={({ target }) => setName(target.value)}
           />
-          <div></div>
+          <div></div> */}
           <Form.Label>password: </Form.Label>
           <Form.Control
             id="password"

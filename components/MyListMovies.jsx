@@ -16,7 +16,7 @@ const styles = {
   },
   thumbnail: {
     width: '150px',
-    height: '150px',
+    height: '200px',
     marginRight: '1rem',
     position: 'relative',
   },
@@ -44,7 +44,7 @@ const styles = {
 
 const MyListMovies = ({ movies, user }) => {
   if (!movies || movies.length === 0) {
-    return <h2>No movies added yet</h2>;
+    return <h2>No movies or tv added yet</h2>;
   }
   console.log('mylist', movies);
   return (

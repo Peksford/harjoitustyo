@@ -39,4 +39,16 @@ const updatedMovie = async (id, updatedData) => {
   return response.data;
 };
 
-export default { getAll, setToken, create, getMovie, updatedMovie };
+const heartClick = async (id, updatedData) => {
+  const config = {
+    headers: { Authorization: token },
+  };
+  const response = await axios.put(
+    `${baseUrl}/heart/${id}`,
+    updatedData,
+    config
+  );
+  return response.data;
+};
+
+export default { getAll, setToken, create, getMovie, updatedMovie, heartClick };

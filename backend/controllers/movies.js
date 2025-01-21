@@ -67,4 +67,26 @@ router.put('/:id', tokenExtractor, async (req, res, next) => {
   }
 });
 
+router.put('/heart/:id', tokenExtractor, async (req, res) => {
+  try {
+    const movie = await Movie.findByPk(req.params.id);
+    const user = await User.findByPk(req.decodedToken.id);
+
+    if (movie.user_id !== req.decodedToken.id) {
+      return res
+        .status(404)
+        .json({ error: 'Not authorized to change the heart.' });
+    }
+    await Movie.update({ heart: false }, { where: { user_id: user.id } });
+    await Movie.update({ heart: true }, { where: { id: movie.id } });
+
+    const updatedMovie = await Movie.findByPk(req.params.id);
+
+    res.json(updatedMovie);
+  } catch (error) {
+    console.error('Error updating heart', error);
+    res.status(500).json({ error: 'Failed updating heart' });
+  }
+});
+
 module.exports = router;

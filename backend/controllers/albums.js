@@ -65,4 +65,28 @@ router.put('/:id', tokenExtractor, async (req, res, next) => {
   }
 });
 
+router.put('/heart/:id', tokenExtractor, async (req, res) => {
+  try {
+    const album = await Album.findByPk(req.params.id);
+    const user = await User.findByPk(req.decodedToken.id);
+
+    console.log('what is the user id', user);
+
+    if (album.user_id !== req.decodedToken.id) {
+      return res
+        .status(404)
+        .json({ error: 'Not authorized to change the heart.' });
+    }
+    await Album.update({ heart: false }, { where: { user_id: user.id } });
+    await Album.update({ heart: true }, { where: { id: album.id } });
+
+    const updatedAlbum = await Album.findByPk(req.params.id);
+
+    res.json(updatedAlbum);
+  } catch (error) {
+    console.error('Error updating heart', error);
+    res.status(500).json({ error: 'Failed updating heart' });
+  }
+});
+
 module.exports = router;

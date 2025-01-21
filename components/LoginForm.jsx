@@ -4,6 +4,8 @@ import { setUser, userLogin } from '../reducers/loginReducer';
 import PropTypes from 'prop-types';
 import { Form, Button } from 'react-bootstrap';
 import albumService from '../services/albums';
+import movieService from '../services/movies';
+import bookService from '../services/books';
 import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
@@ -21,6 +23,8 @@ const LoginForm = () => {
       console.log('TOKENI', user.token);
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user));
       albumService.setToken(user.token);
+      movieService.setToken(user.token);
+      bookService.setToken(user.token);
       dispatch(setUser(user));
 
       setUsername('');

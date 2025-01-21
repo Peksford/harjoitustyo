@@ -16,7 +16,7 @@ const styles = {
   },
   thumbnail: {
     width: '150px',
-    height: '150px',
+    height: '200px',
     marginRight: '1rem',
     position: 'relative',
   },

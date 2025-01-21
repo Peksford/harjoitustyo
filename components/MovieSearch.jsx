@@ -130,6 +130,7 @@ const Movie = ({ movieSearched, createMovie }) => {
         tmdb_id: movie.id,
         type: movie.type,
         overview: movie.overview,
+        heart: false,
       });
     } else {
       createMovie({
@@ -141,13 +142,15 @@ const Movie = ({ movieSearched, createMovie }) => {
         tmdb_id: movie.id,
         type: movie.type,
         overview: movie.overview,
+        heart: false,
       });
     }
   };
 
   const formatDate = (inputDate) => {
     const date = new Date(inputDate);
-    return new Intl.DateTimeFormat('fi-FI').format(date);
+    console.log('TIME VALUE', inputDate);
+    if (inputDate) return new Intl.DateTimeFormat('fi-FI').format(date);
   };
 
   return (

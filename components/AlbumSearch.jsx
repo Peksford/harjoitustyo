@@ -73,7 +73,7 @@ const useAlbum = (name) => {
             },
             params: {
               q: name,
-              per_page: 10,
+              per_page: 40,
               page: 1,
               type: 'release',
             },
@@ -108,6 +108,7 @@ const Album = ({ albumSearched, createAlbum }) => {
       thumbnail: album.cover_image,
       whole_title: album.title,
       discogs_id: album.id,
+      heart: false,
     });
   };
 

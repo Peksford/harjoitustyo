@@ -15,8 +15,8 @@ const styles = {
     marginBottom: '50px',
   },
   thumbnail: {
-    width: '150px',
-    height: '150px',
+    width: '170px',
+    height: '170px',
     marginRight: '1rem',
     position: 'relative',
   },

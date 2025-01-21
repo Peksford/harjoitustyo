@@ -4,12 +4,33 @@ import userService from '../services/users';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Heart from 'react-heart';
 
 const Book = ({ user, onUpdateBook }) => {
   const { id } = useParams();
   const [bookData, setBookData] = useState('');
   const [rating, setRating] = useState(0);
   const [descriptionFetched, setDescriptionFetched] = useState(false);
+  const [active, setActive] = useState(false);
+
+  const handleHeartClick = async () => {
+    try {
+      const updatedHeart = await bookService.heartClick(bookData.id, {
+        ...bookData,
+        heart: true,
+      });
+
+      console.log('The response of the heart ', updatedHeart);
+      setBookData(updatedHeart);
+      setActive(updatedHeart.heart);
+
+      if (onUpdateBook) {
+        onUpdateBook(updatedHeart);
+      }
+    } catch (error) {
+      console.error('error pressing heart', error);
+    }
+  };
 
   const changeRating = async (newRating) => {
     setRating(newRating);
@@ -77,6 +98,9 @@ const Book = ({ user, onUpdateBook }) => {
     <div style={styles.albumContainer}>
       <div style={styles.albumInfo}>
         <h2>{bookData.whole_title}</h2>
+        <p style={{ width: '4rem' }}>
+          <Heart isActive={active || false} onClick={handleHeartClick} />
+        </p>
         <h3>{bookData.year}</h3>
         {description.value ? (
           <p

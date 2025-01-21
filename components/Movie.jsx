@@ -5,11 +5,13 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StarRatings from 'react-star-ratings';
 import axios from 'axios';
+import Heart from 'react-heart';
 
 const Movie = ({ user, movies, onUpdateMovie }) => {
   const { id } = useParams();
   const [movieData, setMovieData] = useState('');
   const [rating, setRating] = useState(0);
+  const [active, setActive] = useState(false);
 
   useEffect(() => {
     console.log('Movie.jsx', movies);
@@ -19,6 +21,25 @@ const Movie = ({ user, movies, onUpdateMovie }) => {
       setRating(movie.rating || 0);
     }
   }, [movies, id]);
+
+  const handleHeartClick = async () => {
+    try {
+      const updatedHeart = await movieService.heartClick(movieData.id, {
+        ...movieData,
+        heart: true,
+      });
+
+      console.log('The response of the heart ', updatedHeart);
+      setMovieData(updatedHeart);
+      setActive(updatedHeart.heart);
+
+      if (onUpdateMovie) {
+        onUpdateMovie(updatedHeart);
+      }
+    } catch (error) {
+      console.error('error pressing heart', error);
+    }
+  };
 
   const changeRating = async (newRating) => {
     setRating(newRating);
@@ -46,7 +67,9 @@ const Movie = ({ user, movies, onUpdateMovie }) => {
     <div style={styles.movieContainer}>
       <div style={styles.movieInfo}>
         <h2>{movieData.whole_title}</h2>
-
+        <p style={{ width: '4rem' }}>
+          <Heart isActive={active || false} onClick={handleHeartClick} />
+        </p>
         <h3>
           {movieData.release_date && (
             <p>{formatDate(movieData.release_date)}</p>
@@ -140,7 +163,7 @@ const styles = {
   },
   thumbnail: {
     width: '300px',
-    height: '300px',
+    height: '450px',
     objectFit: 'cover',
     marginBottom: '8px',
   },

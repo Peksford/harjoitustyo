@@ -59,7 +59,7 @@ router.get('/:id', async (req, res, next) => {
     const book = await Book.findByPk(req.params.id);
 
     // console.log('user', user);
-    // console.log('album', album);
+    // console.log('book', book);
     res.json(book);
   } catch (error) {
     console.log(error);
@@ -87,6 +87,28 @@ router.put('/:id', tokenExtractor, async (req, res, next) => {
     res.json(book);
   } catch (error) {
     next(error);
+  }
+});
+
+router.put('/heart/:id', tokenExtractor, async (req, res) => {
+  try {
+    const book = await Book.findByPk(req.params.id);
+    const user = await User.findByPk(req.decodedToken.id);
+
+    if (book.user_id !== req.decodedToken.id) {
+      return res
+        .status(404)
+        .json({ error: 'Not authorized to change the heart.' });
+    }
+    await Book.update({ heart: false }, { where: { user_id: user.id } });
+    await Book.update({ heart: true }, { where: { id: book.id } });
+
+    const updatedBook = await Book.findByPk(req.params.id);
+
+    res.json(updatedBook);
+  } catch (error) {
+    console.error('Error updating heart', error);
+    res.status(500).json({ error: 'Failed updating heart' });
   }
 });
 
