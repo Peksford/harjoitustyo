@@ -6,21 +6,48 @@ import { useNavigate } from 'react-router-dom';
 import StarRatings from 'react-star-ratings';
 import axios from 'axios';
 import Heart from 'react-heart';
+import { Link } from 'react-router-dom';
 
-const Movie = ({ user, movies, onUpdateMovie }) => {
-  const { id } = useParams();
+const Movie = ({ user, onUpdateMovie }) => {
+  const { username, id } = useParams();
   const [movieData, setMovieData] = useState('');
   const [rating, setRating] = useState(0);
   const [active, setActive] = useState(false);
 
+  console.log('paramssit', username, id);
+
   useEffect(() => {
-    console.log('Movie.jsx', movies);
-    const movie = movies.find((movie) => movie.id === Number(id));
-    if (movie) {
-      setMovieData(movie);
-      setRating(movie.rating || 0);
-    }
-  }, [movies, id]);
+    const fetchMovie = async () => {
+      try {
+        const movie = await movieService.getMovie(id);
+        const user = await userService.getUserMovies(username);
+
+        if (user[0].user_id === movie.user_id) {
+          setMovieData(movie);
+          setActive(movie.heart || false);
+          setRating(movie.rating || 0);
+        } else {
+          return setMovieData(null);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchMovie();
+    console.log('moviei data', movieData);
+    // const movie = movies.find((movie) => movie.id === Number(id));
+  }, [id, username]);
+
+  console.log('moviei data', movieData);
+
+  // useEffect(() => {
+  //   console.log('Movie.jsx', movies);
+  //   const movie = movies.find((movie) => movie.id === Number(id));
+  //   if (movie) {
+  //     setMovieData(movie);
+  //     setRating(movie.rating || 0);
+  //   }
+  // }, [movies, id]);
 
   const handleHeartClick = async () => {
     try {
@@ -63,85 +90,96 @@ const Movie = ({ user, movies, onUpdateMovie }) => {
     return new Intl.DateTimeFormat('fi-FI').format(date);
   };
 
-  return (
-    <div style={styles.movieContainer}>
-      <div style={styles.movieInfo}>
-        <h2>{movieData.whole_title}</h2>
-        <p style={{ width: '4rem' }}>
-          <Heart isActive={active || false} onClick={handleHeartClick} />
-        </p>
-        <h3>
-          {movieData.release_date && (
-            <p>{formatDate(movieData.release_date)}</p>
-          )}
-        </h3>
-        {movieData.overview && (
-          <p
-            style={{
-              fontSize: '14px',
-              maxWidth: '400px',
-              wordWrap: 'break-word',
-            }}
-          >
-            {movieData.overview}
-          </p>
-        )}
-        {movieData.user_id === (user?.id || 0) ? (
-          <div style={styles.sliderContainer}>
-            <label htmlFor="rating-slider">Your Rating</label>
-            <input
-              type="range"
-              min="0"
-              max="10"
-              step="0.1"
-              value={rating || 0}
-              onChange={(e) => changeRating(parseFloat(e.target.value))}
-              style={styles.slider}
+  if (movieData) {
+    return (
+      <>
+        <div>
+          <h10>
+            back to <Link to={`/${username}`}>{username}</Link> home page
+          </h10>
+        </div>
+        <div style={styles.movieContainer}>
+          <div style={styles.movieInfo}>
+            <h2>{movieData.whole_title}</h2>
+            <p style={{ width: '4rem' }}>
+              <Heart isActive={active || false} onClick={handleHeartClick} />
+            </p>
+            <h3>
+              {movieData.release_date && (
+                <p>{formatDate(movieData.release_date)}</p>
+              )}
+            </h3>
+            {movieData.overview && (
+              <p
+                style={{
+                  fontSize: '14px',
+                  maxWidth: '400px',
+                  wordWrap: 'break-word',
+                }}
+              >
+                {movieData.overview}
+              </p>
+            )}
+            {movieData.user_id === (user?.id || 0) ? (
+              <div style={styles.sliderContainer}>
+                <label htmlFor="rating-slider">Your Rating</label>
+                <input
+                  type="range"
+                  min="0"
+                  max="10"
+                  step="0.1"
+                  value={rating || 0}
+                  onChange={(e) => changeRating(parseFloat(e.target.value))}
+                  style={styles.slider}
+                />
+                <div style={styles.silderNumbers}>
+                  <span>1</span>
+                  <span>5</span>
+                  <span>10</span>
+                </div>
+              </div>
+            ) : null}
+          </div>
+          <div style={styles.thumbNailContainer}>
+            {movieData.type === 'movie' ? (
+              <p>
+                <a
+                  href={`https://themoviedb.org/movie/${movieData.tmdb_id}`}
+                  target="blank"
+                  rel="noopener noreferrer"
+                >
+                  The Movie Database
+                </a>
+              </p>
+            ) : (
+              <p>
+                <a
+                  href={`https://themoviedb.org/tv/${movieData.tmdb_id}`}
+                  target="blank"
+                  rel="noopener noreferrer"
+                >
+                  The Movie Database
+                </a>
+              </p>
+            )}
+            <img
+              src={`https://www.themoviedb.org/t/p/w1280/${movieData.thumbnail}`}
+              style={styles.thumbnail}
             />
-            <div style={styles.silderNumbers}>
-              <span>1</span>
-              <span>5</span>
-              <span>10</span>
-            </div>
+            {movieData.rating ? (
+              <div>
+                <div style={styles.circle}>
+                  <span style={styles.circleText}>{movieData.rating}</span>
+                </div>
+              </div>
+            ) : null}
           </div>
-        ) : null}
-      </div>
-      <div style={styles.thumbNailContainer}>
-        {movieData.type === 'movie' ? (
-          <p>
-            <a
-              href={`https://themoviedb.org/movie/${movieData.tmdb_id}`}
-              target="blank"
-              rel="noopener noreferrer"
-            >
-              The Movie Database
-            </a>
-          </p>
-        ) : (
-          <p>
-            <a
-              href={`https://themoviedb.org/tv/${movieData.tmdb_id}`}
-              target="blank"
-              rel="noopener noreferrer"
-            >
-              The Movie Database
-            </a>
-          </p>
-        )}
-        <img
-          src={`https://www.themoviedb.org/t/p/w1280/${movieData.thumbnail}`}
-          style={styles.thumbnail}
-        />
-        {movieData.rating ? (
-          <div>
-            <div style={styles.circle}>
-              <span style={styles.circleText}>{movieData.rating}</span>
-            </div>
-          </div>
-        ) : null}
-      </div>
-    </div>
-  );
+        </div>
+      </>
+    );
+  } else {
+    return <div>Not found</div>;
+  }
 };
 
 const styles = {

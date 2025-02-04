@@ -2,8 +2,9 @@ import { useState } from 'react';
 import AlbumSearch from './AlbumSearch';
 import MovieSearch from './MovieSearch';
 import BookSearch from './BookSearch';
+import GameSearch from './GameSearch';
 
-const Search = ({ createAlbum, createBook, createMovie }) => {
+const Search = ({ createAlbum, createBook, createMovie, createGame }) => {
   const [type, setType] = useState('albums');
 
   const handleTypeChange = (event) => {
@@ -40,10 +41,20 @@ const Search = ({ createAlbum, createBook, createMovie }) => {
           />
           Books
         </label>
+        <label>
+          <input
+            type="radio"
+            value="games"
+            checked={type === 'games'}
+            onChange={handleTypeChange}
+          />
+          Games
+        </label>
       </div>
       {type === 'albums' && <AlbumSearch createAlbum={createAlbum} />}
       {type === 'movies' && <MovieSearch createMovie={createMovie} />}
       {type === 'books' && <BookSearch createBook={createBook} />}
+      {type === 'games' && <GameSearch createGame={createGame} />}
     </div>
   );
 };

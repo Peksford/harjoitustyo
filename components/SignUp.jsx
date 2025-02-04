@@ -18,8 +18,6 @@ const SignUp = () => {
   const handleSignUp = async (event) => {
     event.preventDefault();
 
-    console.log('username', username);
-    console.log('password', password);
     try {
       await userService.newUser({ username, name, password });
       const user = await dispatch(userLogin(username, password));
@@ -36,7 +34,7 @@ const SignUp = () => {
 
   return (
     <div className="container">
-      <h2>Sign Up to MusicBox!</h2>
+      <h2>Sign Up to Peksi's rating app</h2>
       <Form onSubmit={handleSignUp}>
         <Form.Group>
           <Form.Label>username: </Form.Label>

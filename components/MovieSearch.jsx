@@ -226,7 +226,7 @@ const Movie = ({ movieSearched, createMovie }) => {
 
 const MovieSearch = ({ createMovie }) => {
   const movieInput = useField('text');
-  const debouncedMovie = useDebounce(movieInput.value, 500);
+  const debouncedMovie = useDebounce(movieInput.value, 1000);
   const movie = useMovie(debouncedMovie);
 
   return (

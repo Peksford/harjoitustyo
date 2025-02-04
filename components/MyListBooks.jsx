@@ -1,4 +1,7 @@
 import { Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const styles = {
   container: {
@@ -42,37 +45,70 @@ const styles = {
   },
 };
 
-const MyListBooks = ({ books, user }) => {
-  console.log('is ther books?', books);
-  if (!books || books.length === 0) {
-    return <h2>No books added yet</h2>;
-  }
-  console.log('mylist', books);
-  return (
-    <div style={styles.container}>
-      {books.map((book) => (
-        <div key={book.id} style={styles.card}>
-          <Link to={`${user.username}/${book.id}`}>
-            {book.thumbnail && (
-              <img
-                src={`https://covers.openlibrary.org/b/id/${book.thumbnail}-L.jpg`}
-                style={styles.thumbnail}
-              />
-            )}
-            <div>{book.title}</div>
+const MyListBooks = ({ user }) => {
+  const { username } = useParams();
+  const [userData, setUserData] = useState(null);
 
-            {/* <img src={book.thumbnail} style={styles.thumbnail} /> */}
-          </Link>
+  // if (!books || books.length === 0) {
+  //   return <h2>No books added yet</h2>;
+  // }
 
-          {book.rating ? (
-            <div style={styles.circle}>
-              <span style={styles.circleText}>{book.rating}</span>
-            </div>
-          ) : null}
+  useEffect(() => {
+    console.log('does this render', username);
+    const fetchUser = async () => {
+      try {
+        console.log('testing');
+        const response = await axios.get(
+          `http://localhost:3001/api/users/${username}`
+        );
+        console.log('reponse', response);
+        setUserData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchUser();
+  }, [username]);
+
+  console.log('userdata', userData);
+
+  if (userData) {
+    return (
+      <>
+        <div>
+          <h2>
+            <Link to={`/${userData.username}`}>{userData.username}</Link> books
+          </h2>
         </div>
-      ))}
-    </div>
-  );
+        <div style={styles.container}>
+          {userData.books.map((book) => (
+            <div key={book.id} style={styles.card}>
+              <Link to={`/${userData.username}/books/${book.id}`}>
+                {book.thumbnail && (
+                  <img
+                    src={`https://covers.openlibrary.org/b/id/${book.thumbnail}-L.jpg`}
+                    style={styles.thumbnail}
+                  />
+                )}
+                <div>{book.title}</div>
+
+                {/* <img src={book.thumbnail} style={styles.thumbnail} /> */}
+              </Link>
+
+              {book.rating ? (
+                <div style={styles.circle}>
+                  <span style={styles.circleText}>{book.rating}</span>
+                </div>
+              ) : null}
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  } else {
+    // eslint-disable-next-line react/no-unescaped-entities
+    return <div>No books yet :'(</div>;
+  }
 };
 
 export default MyListBooks;

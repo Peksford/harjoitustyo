@@ -1,3 +1,7 @@
-GET https://api.test.bookbrainz.org/1/search?q=mark%20twain
-# Content-Type: application/json
+@client_id = {{VITE_TWITCH_CLIENT_ID}}
+@client_secret={{VITE_TWITCH_CLIENT_SECRET}}
+POST https://id.twitch.tv/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+
+client_id={{client_id}}&client_secret={{client_secret}}&grant_type=peksford
 

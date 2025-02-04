@@ -18,8 +18,8 @@ const styles = {
     marginBottom: '50px',
   },
   thumbnail: {
-    width: '170px',
-    height: '170px',
+    width: '160px',
+    height: '200px',
     marginRight: '1rem',
     position: 'relative',
   },
@@ -45,11 +45,11 @@ const styles = {
   },
 };
 
-const MyList = ({ user }) => {
+const MyListGames = ({ user }) => {
   const { username } = useParams();
   const [userData, setUserData] = useState(null);
-  // if (!albums || albums.length === 0) {
-  //   return <h2>No albums added yet</h2>;
+  // if (!games || games.length === 0) {
+  //   return <h2>No games added yet</h2>;
   // }
 
   console.log('MYLIST', username);
@@ -77,18 +77,21 @@ const MyList = ({ user }) => {
       <>
         <div>
           <h2>
-            <Link to={`/${userData.username}`}>{userData.username}</Link> albums
+            <Link to={`/${userData.username}`}>{userData.username}</Link> games
           </h2>
         </div>
         <div style={styles.container}>
-          {userData.albums.map((album) => (
-            <div key={album.id} style={styles.card}>
-              <Link to={`/${username}/albums/${album.id}`}>
-                <img src={album.thumbnail} style={styles.thumbnail} />
+          {userData.games.map((game) => (
+            <div key={game.id} style={styles.card}>
+              <Link to={`/${username}/games/${game.id}`}>
+                <img
+                  src={game.thumbnail.replace(/t_thumb/, 't_cover_big')}
+                  style={styles.thumbnail}
+                />
               </Link>
-              {album.rating ? (
+              {game.rating ? (
                 <div style={styles.circle}>
-                  <span style={styles.circleText}>{album.rating}</span>
+                  <span style={styles.circleText}>{game.rating}</span>
                 </div>
               ) : null}
             </div>
@@ -98,8 +101,8 @@ const MyList = ({ user }) => {
     );
   } else {
     // eslint-disable-next-line react/no-unescaped-entities
-    return <div>No albums yet :'(</div>;
+    return <div>No games yet :'(</div>;
   }
 };
 
-export default MyList;
+export default MyListGames;

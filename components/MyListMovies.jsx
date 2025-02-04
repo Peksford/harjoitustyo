@@ -1,4 +1,7 @@
 import { Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const styles = {
   container: {
@@ -42,30 +45,65 @@ const styles = {
   },
 };
 
-const MyListMovies = ({ movies, user }) => {
-  if (!movies || movies.length === 0) {
-    return <h2>No movies or tv added yet</h2>;
-  }
-  console.log('mylist', movies);
-  return (
-    <div style={styles.container}>
-      {movies.map((movie) => (
-        <div key={movie.id} style={styles.card}>
-          <Link to={`${user.username}/${movie.id}`}>
-            <img
-              src={`https://www.themoviedb.org/t/p/w1280/${movie.thumbnail}`}
-              style={styles.thumbnail}
-            />
-          </Link>
-          {movie.rating ? (
-            <div style={styles.circle}>
-              <span style={styles.circleText}>{movie.rating}</span>
-            </div>
-          ) : null}
+const MyListMovies = ({ user }) => {
+  const { username } = useParams();
+  const [userData, setUserData] = useState(null);
+  // if (!movies || movies.length === 0) {
+  //   return <h2>No movies added yet</h2>;
+  // }
+
+  console.log('MYLIST', username);
+  useEffect(() => {
+    console.log('does this render', username);
+    const fetchUser = async () => {
+      try {
+        console.log('testing');
+        const response = await axios.get(
+          `http://localhost:3001/api/users/${username}`
+        );
+        console.log('reponse', response);
+        setUserData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchUser();
+  }, [username]);
+
+  console.log('user data', userData);
+
+  if (userData) {
+    return (
+      <>
+        <div>
+          <h2>
+            <Link to={`/${userData.username}`}>{userData.username}</Link>{' '}
+            movies/tv
+          </h2>
         </div>
-      ))}
-    </div>
-  );
+        <div style={styles.container}>
+          {userData.movies.map((movie) => (
+            <div key={movie.id} style={styles.card}>
+              <Link to={`/${username}/movies/${movie.id}`}>
+                <img
+                  src={`https://www.themoviedb.org/t/p/w1280/${movie.thumbnail}`}
+                  style={styles.thumbnail}
+                />
+              </Link>
+              {movie.rating ? (
+                <div style={styles.circle}>
+                  <span style={styles.circleText}>{movie.rating}</span>
+                </div>
+              ) : null}
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  } else {
+    // eslint-disable-next-line react/no-unescaped-entities
+    return <div>No movies yet :'(</div>;
+  }
 };
 
 export default MyListMovies;

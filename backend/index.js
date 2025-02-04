@@ -16,6 +16,7 @@ const loginRouter = require('./controllers/login');
 const logoutRouter = require('./controllers/logout');
 const booksRouter = require('./controllers/books');
 const moviesRouter = require('./controllers/movies');
+const gamesRouter = require('./controllers/games');
 
 app.use(cors());
 app.use(express.json());
@@ -26,6 +27,7 @@ app.use('/api/login', loginRouter);
 app.use('/api/logout', logoutRouter);
 app.use('/api/books', booksRouter);
 app.use('/api/movies', moviesRouter);
+app.use('/api/games', gamesRouter);
 
 app.use(middleware.errorHandler);
 

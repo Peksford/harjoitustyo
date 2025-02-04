@@ -42,7 +42,7 @@ const LoginForm = () => {
 
   return (
     <div className="container">
-      <h2>Log in to MusicBox!</h2>
+      <h2>Log in to Peksi's web</h2>
       <Form onSubmit={handleLogin}>
         <Form.Group>
           <Form.Label>username: </Form.Label>

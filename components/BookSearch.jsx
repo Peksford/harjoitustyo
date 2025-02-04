@@ -105,7 +105,7 @@ const Book = ({ bookSearched, createBook }) => {
       author: book.author_name?.[0] || 'Unknown',
       title: book.title || 'Untitled',
       url: book.key,
-      year: book.publish_year?.[0] || 'Unknown Year',
+      year: book.publish_year?.[0] || null,
       thumbnail: book.cover_i,
       whole_title: book.author_name[0] + ' - ' + book.title,
       key: book.key,
@@ -160,7 +160,7 @@ const Book = ({ bookSearched, createBook }) => {
 
 const BookSearch = ({ createBook }) => {
   const bookInput = useField('text');
-  const debouncedBook = useDebounce(bookInput.value, 500);
+  const debouncedBook = useDebounce(bookInput.value, 1000);
   const book = useBook(debouncedBook);
 
   return (

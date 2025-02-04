@@ -1,4 +1,8 @@
 import SignUp from './SignUp';
+import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const styles = {
   container: {
@@ -30,11 +34,32 @@ const styles = {
   },
 };
 
-const Home = ({ user, albums, movies, books }) => {
-  console.log('user', user);
+const Home = () => {
+  const { username } = useParams();
+  console.log('user', username);
   // if (!albums || albums.length === 0) {
   //   return <h2>{`${user.username} has not reviewed anything yet`}!</h2>;
   // }
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    console.log('does this render', username);
+    const fetchUser = async () => {
+      try {
+        console.log('testing');
+        const response = await axios.get(
+          `http://localhost:3001/api/users/${username}`
+        );
+        console.log('reponse', response);
+        setUserData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchUser();
+  }, [username]);
+
+  console.log('user data', userData);
 
   const currentMonth = () => {
     const currentDate = new Date();
@@ -56,30 +81,53 @@ const Home = ({ user, albums, movies, books }) => {
     return months[currentDate.getMonth()];
   };
 
-  console.log('albums here', albums);
-  const heartAlbum = albums.find((album) => album.heart === true);
-  const heartMovie = movies.find((movie) => movie.heart === true);
-  const heartBook = books.find((book) => book.heart === true);
+  // console.log('albums here', userData.albums);
+  const heartAlbum = userData
+    ? userData.albums.find((album) => album.heart === true)
+    : null;
+  const heartMovie = userData
+    ? userData.movies.find((movie) => movie.heart === true)
+    : null;
+  const heartBook = userData
+    ? userData.books.find((book) => book.heart === true)
+    : null;
+  const heartGame = userData
+    ? userData.games.find((game) => game.heart === true)
+    : null;
 
-  if (user) {
+  if (userData) {
     return (
       <>
-        <h2>
-          {user.username}'s top picks for {currentMonth()}!
-        </h2>
-
+        <h1>{username}</h1>
+        <div className="links-container">
+          <div>
+            <Link to={`/${username}/albums`}>albums</Link>
+          </div>
+          <div>
+            <Link to={`/${username}/books`}>books</Link>
+          </div>
+          <div>
+            <Link to={`/${username}/movies`}>movies</Link>
+          </div>
+          <div>
+            <Link to={`/${username}/games`}>games</Link>
+          </div>
+        </div>
+        <h2>Recommendations</h2>
         <div>
-          {heartAlbum || heartMovie || heartBook ? (
+          {heartAlbum || heartMovie || heartBook || heartGame ? (
             <div>
               <div style={styles.container}>
                 {heartAlbum ? (
                   <div style={styles.item}>
                     <div style={{ textAlign: 'center' }}>
                       <p>
-                        <img
-                          src={heartAlbum.thumbnail}
-                          style={{ width: '170px' }}
-                        />
+                        <Link to={`/${username}/albums/${heartAlbum.id}`}>
+                          <img
+                            src={heartAlbum.thumbnail}
+                            style={{ width: '170px' }}
+                          />
+                        </Link>
                       </p>
                       <div>{heartAlbum.title}</div>
                       {heartAlbum.rating ? (
@@ -100,10 +148,12 @@ const Home = ({ user, albums, movies, books }) => {
                   <div style={styles.item}>
                     <div style={{ textAlign: 'center' }}>
                       <p>
-                        <img
-                          src={`https://www.themoviedb.org/t/p/w1280/${heartMovie.thumbnail}`}
-                          style={{ width: '150px' }}
-                        />
+                        <Link to={`/${username}/movies/${heartMovie.id}`}>
+                          <img
+                            src={`https://www.themoviedb.org/t/p/w1280/${heartMovie.thumbnail}`}
+                            style={{ width: '150px' }}
+                          />
+                        </Link>
                       </p>
                       <div>{heartMovie.whole_title}</div>
                       {heartMovie.rating ? (
@@ -124,10 +174,12 @@ const Home = ({ user, albums, movies, books }) => {
                   <div style={styles.item}>
                     <div style={{ textAlign: 'center' }}>
                       <p>
-                        <img
-                          src={`https://covers.openlibrary.org/b/id/${heartBook.thumbnail}-L.jpg`}
-                          style={{ width: '140px' }}
-                        />
+                        <Link to={`/${username}/books/${heartBook.id}`}>
+                          <img
+                            src={`https://covers.openlibrary.org/b/id/${heartBook.thumbnail}-L.jpg`}
+                            style={{ width: '140px' }}
+                          />
+                        </Link>
                       </p>
                       <div>{heartBook.title}</div>
                       {heartBook.rating ? (
@@ -144,10 +196,39 @@ const Home = ({ user, albums, movies, books }) => {
                 ) : (
                   <div>{null}</div>
                 )}
+                {heartGame ? (
+                  <div style={styles.item}>
+                    <div style={{ textAlign: 'center' }}>
+                      <p>
+                        <Link to={`/${username}/games/${heartGame.id}`}>
+                          <img
+                            src={heartGame.thumbnail.replace(
+                              /t_thumb/,
+                              't_cover_big'
+                            )}
+                            style={{ width: '150px' }}
+                          />
+                        </Link>
+                      </p>
+                      <div>{heartGame.title}</div>
+                      {heartGame.rating ? (
+                        <p style={styles.circle}>
+                          <span style={styles.circleText}>
+                            {heartGame.rating}
+                          </span>
+                        </p>
+                      ) : (
+                        <div>{null}</div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div>{null}</div>
+                )}
               </div>
             </div>
           ) : (
-            <div>{user.username} has not reviewed anything yet!</div>
+            <div>{username} has not reviewed anything yet!</div>
           )}
           {/* {user.username} has reviewed{' '}
           <ul>
@@ -166,12 +247,9 @@ const Home = ({ user, albums, movies, books }) => {
         </div>
       </>
     );
+  } else {
+    return <div>Not found</div>;
   }
-  return (
-    <div>
-      <SignUp />
-    </div>
-  );
 };
 
 export default Home;

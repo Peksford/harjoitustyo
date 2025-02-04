@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const router = require('express').Router();
 
-const { User, Album, Book, Movie } = require('../models');
+const { User, Album, Book, Movie, Game, Follow } = require('../models');
 
 router.get('/', async (req, res) => {
   const users = await User.findAll({
@@ -16,6 +16,20 @@ router.get('/', async (req, res) => {
       },
       {
         model: Movie,
+        attributes: { exclude: ['userId'] },
+      },
+      {
+        model: Game,
+        attributes: { exclude: ['userId'] },
+      },
+      {
+        model: Follow,
+        as: 'followers',
+        attributes: { exclude: ['userId'] },
+      },
+      {
+        model: Follow,
+        as: 'followed',
         attributes: { exclude: ['userId'] },
       },
     ],
@@ -66,6 +80,26 @@ router.get('/:username', async (req, res, next) => {
         },
         {
           model: Movie,
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'userId'],
+          },
+        },
+        {
+          model: Game,
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'userId'],
+          },
+        },
+        {
+          model: Follow,
+          as: 'followers',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'userId'],
+          },
+        },
+        {
+          model: Follow,
+          as: 'followed',
           attributes: {
             exclude: ['createdAt', 'updatedAt', 'userId'],
           },

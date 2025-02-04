@@ -3,7 +3,9 @@
 // import viteLogo from '/vite.svg';
 // import './App.css';
 // import ReactDOM from 'react-dom/client';
-
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   BrowserRouter as Router,
   Link,
@@ -17,6 +19,7 @@ import movieService from '../services/movies';
 import userService from '../services/users';
 import logoutService from '../services/logout';
 import bookService from '../services/books';
+import gameService from '../services/games';
 
 import Home from '../components/Home';
 import Search from '../components/Search';
@@ -24,9 +27,11 @@ import LoginForm from '../components/LoginForm';
 import MyList from '../components/MyList';
 import MyListBooks from '../components/MyListBooks';
 import MyListMovies from '../components/MyListMovies';
+import MyListGames from '../components/MyListGames';
 import Album from '../components/Album';
 import Movie from '../components/Movie';
 import Book from '../components/Book';
+import Game from '../components/Game';
 import SignUp from '../components/SignUp';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../reducers/loginReducer';
@@ -45,6 +50,8 @@ const App = () => {
   const [albums, setAlbums] = useState([]);
   const [books, setBooks] = useState([]);
   const [movies, setMovies] = useState([]);
+  const [games, setGames] = useState([]);
+  const [open, setOpen] = useState(false);
   const user = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
@@ -58,13 +65,12 @@ const App = () => {
         albumService.setToken(user.token);
         bookService.setToken(user.token);
         movieService.setToken(user.token);
+        gameService.setToken(user.token);
       } catch (error) {
         console.error('Error', error);
       }
     }
   }, [dispatch]);
-
-  console.log('User info', user);
 
   useEffect(() => {
     const fetchUserAlbums = async () => {
@@ -101,8 +107,6 @@ const App = () => {
     fetchUserBooks();
   }, [user]);
 
-  console.log('ARE the albums updated for the heart', albums);
-
   const bookRatingUpdate = (updatedBook) => {
     setBooks((preBooks) =>
       preBooks.map((book) => (book.id === updatedBook.id ? updatedBook : book))
@@ -127,6 +131,25 @@ const App = () => {
       preMovies.map((movie) =>
         movie.id === updatedMovie.id ? updatedMovie : movie
       )
+    );
+  };
+
+  useEffect(() => {
+    const fetchUserGames = async () => {
+      if (user && user.username)
+        try {
+          const userGamesData = await userService.getUserGames(user.username);
+          setMovies(userGamesData);
+        } catch (error) {
+          console.error('error fetching movies: ', error);
+        }
+    };
+    fetchUserGames();
+  }, [user]);
+
+  const gameRatingUpdate = (updatedGame) => {
+    setMovies((preGames) =>
+      preGames.map((game) => (game.id === updatedGame.id ? updatedGame : game))
     );
   };
 
@@ -160,7 +183,22 @@ const App = () => {
     setBooks([...books, newBook]);
   };
 
-  console.log('user books', books);
+  const createGame = async (gameObject) => {
+    console.log('game object', gameObject);
+    const newGame = await gameService.create(gameObject);
+    setGames([...books, newGame]);
+  };
+
+  const handleOpen = () => {
+    setOpen(!open);
+  };
+
+  const handleMenuMyAlbums = () => {
+    <Link style={styles.padding} to="/albums">
+      My albums
+    </Link>;
+    setOpen(false);
+  };
 
   return (
     <div>
@@ -172,7 +210,7 @@ const App = () => {
             </Link>
           ) : (
             <Link style={styles.padding} to="/signup">
-              home
+              Sign up
             </Link>
           )}
           <Link style={styles.padding} to="/search">
@@ -184,10 +222,23 @@ const App = () => {
             </Link>
           )}
           {user && (
-            <Link style={styles.padding} to="/albums">
-              My albums
-            </Link>
+            <DropdownButton id="dropdown-basic-button" title={user.username}>
+              <Dropdown.Item as={Link} to={`/${user.username}/albums`}>
+                My albums
+              </Dropdown.Item>
+              <Dropdown.Item as={Link} to={`/${user.username}/movies`}>
+                My movies
+              </Dropdown.Item>
+              <Dropdown.Item as={Link} to={`/${user.username}/books`}>
+                My books
+              </Dropdown.Item>
+              <Dropdown.Item as={Link} to={`/${user.username}/games`}>
+                My games
+              </Dropdown.Item>
+            </DropdownButton>
           )}
+
+          {/* 
           {user && (
             <Link style={styles.padding} to="/books">
               My books
@@ -197,16 +248,10 @@ const App = () => {
             <Link style={styles.padding} to="/movies">
               My movies/TV
             </Link>
-          )}
+          )} */}
           {user && <button onClick={handleLogout}> Logout</button>}
         </div>
         <Routes>
-          <Route
-            path="/:username"
-            element={
-              <Home albums={albums} user={user} movies={movies} books={books} />
-            }
-          />
           <Route
             path="/search"
             element={
@@ -214,36 +259,50 @@ const App = () => {
                 createAlbum={createAlbum}
                 createBook={createBook}
                 createMovie={createMovie}
+                createGame={createGame}
               />
             }
           />
           <Route path="/login" element={<LoginForm />} />
           {user ? (
-            <Route
-              path="/albums"
-              element={<MyList albums={albums} user={user} />}
-            />
-          ) : (
-            <Route path="/albums" element={<Navigate to="/login" />} />
-          )}
+            <Route path="/:username/albums" element={<MyList user={user} />} />
+          ) : // <Route path="/albums" element={<Navigate to="/login" />} />
+          null}
           {user ? (
             <Route
-              path="/books"
+              path="/:username/books"
               element={<MyListBooks books={books} user={user} />}
             />
-          ) : (
-            <Route path="/books" element={<Navigate to="/login" />} />
-          )}
+          ) : // <Route path="/books" element={<Navigate to="/login" />} />
+          null}
           {user ? (
             <Route
-              path="/movies"
-              element={<MyListMovies movies={movies} user={user} />}
+              path="/:username/movies"
+              element={
+                user ? (
+                  <MyListMovies movies={movies} user={user} />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
             />
-          ) : (
-            <Route path="/books" element={<Navigate to="/login" />} />
-          )}
+          ) : // <Route path="/movies" element={<Navigate to="/login" />} />
+          null}
+          {user ? (
+            <Route
+              path="/:username/games"
+              element={
+                user ? (
+                  <MyListGames games={games} user={user} />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+          ) : // <Route path="/movies" element={<Navigate to="/login" />} />
+          null}
           <Route
-            path="/albums/:username/:id"
+            path="/:username/albums/:id"
             element={
               <Album
                 user={user}
@@ -253,11 +312,11 @@ const App = () => {
             }
           />
           <Route
-            path="/books/:username/:id"
+            path="/:username/books/:id"
             element={<Book user={user} onUpdateBook={bookRatingUpdate} />}
           />
           <Route
-            path="/movies/:username/:id"
+            path="/:username/movies/:id"
             element={
               <Movie
                 user={user}
@@ -266,6 +325,13 @@ const App = () => {
               />
             }
           />
+          <Route
+            path="/:username/games/:id"
+            element={
+              <Game user={user} games={games} onUpdateGame={gameRatingUpdate} />
+            }
+          />
+          <Route path="/:username" element={<Home />} />
           <Route path="/signup" element={<SignUp />} />
         </Routes>
       </Router>

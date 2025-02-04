@@ -1,16 +1,14 @@
 import { useParams } from 'react-router-dom';
-import albumService from '../services/albums';
+import gameService from '../services/games';
 import userService from '../services/users';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import StarRatings from 'react-star-ratings';
 import axios from 'axios';
 import Heart from 'react-heart';
 import { Link } from 'react-router-dom';
 
-const Album = ({ user, onUpdateAlbum }) => {
+const Game = ({ user, onUpdateGame }) => {
   const { username, id } = useParams();
-  const [albumData, setAlbumData] = useState('');
+  const [gameData, setGameData] = useState('');
   const [rating, setRating] = useState(0);
   const [trackListFetched, setTrackListFetched] = useState(false);
   const [active, setActive] = useState(false);
@@ -18,42 +16,42 @@ const Album = ({ user, onUpdateAlbum }) => {
   console.log('paramssit', username, id);
 
   useEffect(() => {
-    const fetchAlbum = async () => {
+    const fetchGame = async () => {
       try {
-        const album = await albumService.getAlbum(id);
-        const user = await userService.getUserAlbums(username);
+        const game = await gameService.getGame(id);
+        const user = await userService.getUserGames(username);
 
-        if (user[0].user_id === album.user_id) {
-          setAlbumData(album);
-          setActive(album.heart || false);
-          setRating(album.rating || 0);
+        if (user[0].user_id === game.user_id) {
+          setGameData(game);
+          setActive(game.heart || false);
+          setRating(game.rating || 0);
         } else {
-          return setAlbumData(null);
+          return setGameData(null);
         }
       } catch (error) {
         console.error(error);
       }
     };
-    fetchAlbum();
-    console.log('albumi data', albumData);
-    // const album = albums.find((album) => album.id === Number(id));
+    fetchGame();
+    console.log('gamei data', gameData);
+    // const game = games.find((game) => game.id === Number(id));
   }, [id, username]);
 
-  console.log('albumi data', albumData);
+  console.log('gamei data', gameData);
 
   const handleHeartClick = async () => {
     try {
-      const updatedHeart = await albumService.heartClick(albumData.id, {
-        ...albumData,
+      const updatedHeart = await gameService.heartClick(gameData.id, {
+        ...gameData,
         heart: true,
       });
 
       console.log('The response of the heart ', updatedHeart);
-      setAlbumData(updatedHeart);
+      setGameData(updatedHeart);
       setActive(updatedHeart.heart);
 
-      if (onUpdateAlbum) {
-        onUpdateAlbum(updatedHeart);
+      if (onUpdateGame) {
+        onUpdateGame(updatedHeart);
       }
     } catch (error) {
       console.error('error pressing heart', error);
@@ -63,48 +61,20 @@ const Album = ({ user, onUpdateAlbum }) => {
   const changeRating = async (newRating) => {
     setRating(newRating);
     try {
-      const updatedRating = await albumService.updatedAlbum(albumData.id, {
-        ...albumData,
+      const updatedRating = await gameService.updatedGame(gameData.id, {
+        ...gameData,
         rating: newRating,
       });
-      setAlbumData(updatedRating);
-      if (onUpdateAlbum) {
-        onUpdateAlbum(updatedRating);
+      setGameData(updatedRating);
+      if (onUpdateGame) {
+        onUpdateGame(updatedRating);
       }
     } catch (error) {
       console.error(error);
     }
   };
 
-  const [tracklist, setTracklist] = useState([]);
-
-  useEffect(() => {
-    const releaseInfo = async () => {
-      if (!albumData || trackListFetched) return;
-      const token = import.meta.env.VITE_TOKEN;
-      try {
-        if (albumData) {
-          const data = await axios.get(
-            `https://api.discogs.com/releases/${albumData.discogs_id}`,
-            {
-              headers: {
-                Authorization: `Discogs token=${token}`,
-              },
-            }
-          );
-          console.log('what data here', data);
-          const fetchedTracklist = data.data.tracklist;
-          setTracklist(fetchedTracklist);
-          setTrackListFetched(true);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    releaseInfo();
-  }, [albumData]);
-
-  if (albumData) {
+  if (gameData) {
     return (
       <>
         <div>
@@ -112,19 +82,31 @@ const Album = ({ user, onUpdateAlbum }) => {
             back to <Link to={`/${username}`}>{username}</Link> home page
           </h10>
         </div>
-        <div style={styles.albumContainer}>
-          <div style={styles.albumInfo}>
-            <h2>{albumData.whole_title}</h2>
+        <div style={styles.gameContainer}>
+          <div style={styles.gameInfo}>
+            <h2>{gameData.whole_title}</h2>
+
             <p style={{ width: '4rem' }}>
               <Heart isActive={active || false} onClick={handleHeartClick} />
             </p>
-            <h3>{albumData.year}</h3>
-            <ol>
-              {tracklist.map((track) => (
-                <li key={track.title}>{track.title}</li>
-              ))}
-            </ol>
-            {albumData.user_id === (user?.id || 0) ? (
+            {gameData.genres && <h3>Genres: {gameData.genres}</h3>}
+            <h3>
+              {new Date(gameData.release_date * 1000).toLocaleDateString()}
+            </h3>
+
+            {gameData.summary && (
+              <p
+                style={{
+                  fontSize: '14px',
+                  maxWidth: '400px',
+                  wordWrap: 'break-word',
+                }}
+              >
+                {gameData.summary}
+              </p>
+            )}
+
+            {gameData.user_id === (user?.id || 0) ? (
               <div style={styles.sliderContainer}>
                 <label htmlFor="rating-slider">Your Rating</label>
                 <input
@@ -146,19 +128,18 @@ const Album = ({ user, onUpdateAlbum }) => {
           </div>
           <div style={styles.thumbNailContainer}>
             <p>
-              <a
-                href={`https://www.discogs.com${albumData.url}`}
-                target="blank"
-                rel="noopener noreferrer"
-              >
-                Discogs
+              <a href={gameData.url} target="blank" rel="noopener noreferrer">
+                IGDB
               </a>
             </p>
-            <img src={albumData.thumbnail} style={styles.thumbnail} />
-            {albumData.rating ? (
+            <img
+              src={gameData.thumbnail.replace(/t_thumb/, 't_cover_big')}
+              style={styles.thumbnail}
+            />
+            {gameData.rating ? (
               <div>
                 <div style={styles.circle}>
-                  <span style={styles.circleText}>{albumData.rating}</span>
+                  <span style={styles.circleText}>{gameData.rating}</span>
                 </div>
               </div>
             ) : null}
@@ -172,13 +153,13 @@ const Album = ({ user, onUpdateAlbum }) => {
 };
 
 const styles = {
-  albumContainer: {
+  gameContainer: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '16px',
   },
-  albumInfo: {
+  gameInfo: {
     display: 'flex',
     flexDirection: 'column',
     marginRight: '100px',
@@ -189,7 +170,7 @@ const styles = {
     alignItems: 'center',
   },
   thumbnail: {
-    width: '300px',
+    width: '250px',
     height: '300px',
     objectFit: 'cover',
     marginBottom: '8px',
@@ -236,4 +217,4 @@ const styles = {
   },
 };
 
-export default Album;
+export default Game;

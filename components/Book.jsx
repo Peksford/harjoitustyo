@@ -5,9 +5,10 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Heart from 'react-heart';
+import { Link } from 'react-router-dom';
 
 const Book = ({ user, onUpdateBook }) => {
-  const { id } = useParams();
+  const { username, id } = useParams();
   const [bookData, setBookData] = useState('');
   const [rating, setRating] = useState(0);
   const [descriptionFetched, setDescriptionFetched] = useState(false);
@@ -54,7 +55,13 @@ const Book = ({ user, onUpdateBook }) => {
     const fetchBook = async () => {
       try {
         const data = await bookService.getBook(id);
-        setBookData(data);
+        const user = await userService.getUserAlbums(username);
+
+        if (user[0].user_id === data.user_id) {
+          setBookData(data);
+        } else {
+          return null;
+        }
         setRating(data.rating);
       } catch (error) {
         console.error(error);
@@ -95,78 +102,85 @@ const Book = ({ user, onUpdateBook }) => {
   // console.log('user id', user);
 
   return (
-    <div style={styles.albumContainer}>
-      <div style={styles.albumInfo}>
-        <h2>{bookData.whole_title}</h2>
-        <p style={{ width: '4rem' }}>
-          <Heart isActive={active || false} onClick={handleHeartClick} />
-        </p>
-        <h3>{bookData.year}</h3>
-        {description.value ? (
-          <p
-            style={{
-              fontSize: '14px',
-              maxWidth: '400px',
-              wordWrap: 'break-word',
-            }}
-          >
-            {description.value}
-          </p>
-        ) : (
-          <p
-            style={{
-              fontSize: '14px',
-              maxWidth: '400px',
-              wordWrap: 'break-end',
-            }}
-          >
-            {description}
-          </p>
-        )}
-        {bookData.user_id === (user?.id || 0) ? (
-          <div style={styles.sliderContainer}>
-            <label htmlFor="rating-slider">Your Rating</label>
-            <input
-              type="range"
-              min="0"
-              max="10"
-              step="0.1"
-              value={rating || 0}
-              onChange={(e) => changeRating(parseFloat(e.target.value))}
-              style={styles.slider}
-            />
-            <div style={styles.silderNumbers}>
-              <span>1</span>
-              <span>5</span>
-              <span>10</span>
-            </div>
-          </div>
-        ) : null}
+    <>
+      <div>
+        <h10>
+          back to <Link to={`/${username}`}>{username}</Link> Home page
+        </h10>
       </div>
-      <div style={styles.thumbNailContainer}>
-        <p>
-          <a
-            href={`https://openlibrary.org${bookData.key}`}
-            target="blank"
-            rel="noopener noreferrer"
-          >
-            Open Library
-          </a>
-        </p>
-        <img
-          src={`https://covers.openlibrary.org/b/id/${bookData.thumbnail}-L.jpg`}
-          style={styles.thumbnail}
-        />
-        {bookData.rating ? (
-          <div>
-            {/* {albumData.user_id}'s rating */}
-            <div style={styles.circle}>
-              <span style={styles.circleText}>{bookData.rating}</span>
+      <div style={styles.albumContainer}>
+        <div style={styles.albumInfo}>
+          <h2>{bookData.whole_title}</h2>
+          <p style={{ width: '4rem' }}>
+            <Heart isActive={active || false} onClick={handleHeartClick} />
+          </p>
+          <h3>{bookData.year}</h3>
+          {description.value ? (
+            <p
+              style={{
+                fontSize: '14px',
+                maxWidth: '400px',
+                wordWrap: 'break-word',
+              }}
+            >
+              {description.value}
+            </p>
+          ) : (
+            <p
+              style={{
+                fontSize: '14px',
+                maxWidth: '400px',
+                wordWrap: 'break-end',
+              }}
+            >
+              {description}
+            </p>
+          )}
+          {bookData.user_id === (user?.id || 0) ? (
+            <div style={styles.sliderContainer}>
+              <label htmlFor="rating-slider">Your Rating</label>
+              <input
+                type="range"
+                min="0"
+                max="10"
+                step="0.1"
+                value={rating || 0}
+                onChange={(e) => changeRating(parseFloat(e.target.value))}
+                style={styles.slider}
+              />
+              <div style={styles.silderNumbers}>
+                <span>1</span>
+                <span>5</span>
+                <span>10</span>
+              </div>
             </div>
-          </div>
-        ) : null}
+          ) : null}
+        </div>
+        <div style={styles.thumbNailContainer}>
+          <p>
+            <a
+              href={`https://openlibrary.org${bookData.key}`}
+              target="blank"
+              rel="noopener noreferrer"
+            >
+              Open Library
+            </a>
+          </p>
+          <img
+            src={`https://covers.openlibrary.org/b/id/${bookData.thumbnail}-L.jpg`}
+            style={styles.thumbnail}
+          />
+          {bookData.rating ? (
+            <div>
+              {/* {albumData.user_id}'s rating */}
+              <div style={styles.circle}>
+                <span style={styles.circleText}>{bookData.rating}</span>
+              </div>
+            </div>
+          ) : null}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

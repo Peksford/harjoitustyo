@@ -22,10 +22,21 @@ const getUserBooks = async (username) => {
   return response.data.books;
 };
 
+const getUserGames = async (username) => {
+  const response = await axios.get(`${baseUrl}/${username}`);
+  return response.data.games;
+};
+
 const newUser = async ({ username, name, password }) => {
-  console.log('tulostuuko tunnukset?', username, name, password);
   const response = await axios.post(`${baseUrl}`, { username, name, password });
   return response.data;
 };
 
-export default { getAll, getUserAlbums, newUser, getUserBooks, getUserMovies };
+export default {
+  getAll,
+  getUserAlbums,
+  newUser,
+  getUserBooks,
+  getUserMovies,
+  getUserGames,
+};

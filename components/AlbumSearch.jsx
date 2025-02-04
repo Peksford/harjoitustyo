@@ -150,7 +150,7 @@ const Album = ({ albumSearched, createAlbum }) => {
 
 const AlbumSearch = ({ createAlbum }) => {
   const albumInput = useField('text');
-  const debouncedAlbum = useDebounce(albumInput.value, 500);
+  const debouncedAlbum = useDebounce(albumInput.value, 1000);
   const album = useAlbum(debouncedAlbum);
 
   return (
