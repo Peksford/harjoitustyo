@@ -27,6 +27,22 @@ module.exports = {
         type: DataTypes.DATE,
         allowNull: true,
       },
+      created_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      updated_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      followed_username: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
+      follower_username: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
     });
     await queryInterface.addConstraint('follows', {
       fields: ['follower_id', 'followed_id'],

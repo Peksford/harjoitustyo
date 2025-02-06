@@ -1,8 +1,4 @@
-// import { useState } from 'react';
-// import reactLogo from './assets/react.svg';
-// import viteLogo from '/vite.svg';
-// import './App.css';
-// import ReactDOM from 'react-dom/client';
+import React from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -20,6 +16,7 @@ import userService from '../services/users';
 import logoutService from '../services/logout';
 import bookService from '../services/books';
 import gameService from '../services/games';
+import followService from '../services/follow';
 
 import Home from '../components/Home';
 import Search from '../components/Search';
@@ -32,6 +29,8 @@ import Album from '../components/Album';
 import Movie from '../components/Movie';
 import Book from '../components/Book';
 import Game from '../components/Game';
+import Followers from '../components/Followers';
+import Following from '../components/Following';
 import SignUp from '../components/SignUp';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../reducers/loginReducer';
@@ -66,6 +65,7 @@ const App = () => {
         bookService.setToken(user.token);
         movieService.setToken(user.token);
         gameService.setToken(user.token);
+        followService.setToken(user.token);
       } catch (error) {
         console.error('Error', error);
       }
@@ -189,17 +189,6 @@ const App = () => {
     setGames([...books, newGame]);
   };
 
-  const handleOpen = () => {
-    setOpen(!open);
-  };
-
-  const handleMenuMyAlbums = () => {
-    <Link style={styles.padding} to="/albums">
-      My albums
-    </Link>;
-    setOpen(false);
-  };
-
   return (
     <div>
       <Router>
@@ -301,6 +290,24 @@ const App = () => {
             />
           ) : // <Route path="/movies" element={<Navigate to="/login" />} />
           null}
+          {user ? (
+            <Route
+              path="/:username/followers"
+              element={
+                user ? <Followers user={user} /> : <Navigate to="/login" />
+              }
+            />
+          ) : // <Route path="/movies" element={<Navigate to="/login" />} />
+          null}
+          {user ? (
+            <Route
+              path="/:username/following"
+              element={
+                user ? <Following user={user} /> : <Navigate to="/login" />
+              }
+            />
+          ) : // <Route path="/movies" element={<Navigate to="/login" />} />
+          null}
           <Route
             path="/:username/albums/:id"
             element={
@@ -331,7 +338,7 @@ const App = () => {
               <Game user={user} games={games} onUpdateGame={gameRatingUpdate} />
             }
           />
-          <Route path="/:username" element={<Home />} />
+          <Route path="/:username" element={<Home user={user} />} />
           <Route path="/signup" element={<SignUp />} />
         </Routes>
       </Router>

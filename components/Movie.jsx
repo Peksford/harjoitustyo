@@ -1,10 +1,8 @@
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import movieService from '../services/movies';
 import userService from '../services/users';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import StarRatings from 'react-star-ratings';
-import axios from 'axios';
 import Heart from 'react-heart';
 import { Link } from 'react-router-dom';
 

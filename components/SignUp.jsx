@@ -1,5 +1,6 @@
+import React from 'react';
 import { Form, Button } from 'react-bootstrap';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import userService from '../services/users';
 import { useDispatch } from 'react-redux';
 import { setUser, userLogin } from '../reducers/loginReducer';
@@ -12,7 +13,6 @@ const SignUp = () => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
   const navigate = useNavigate();
 
   const handleSignUp = async (event) => {
@@ -34,7 +34,7 @@ const SignUp = () => {
 
   return (
     <div className="container">
-      <h2>Sign Up to Peksi's rating app</h2>
+      <h2>Sign Up to Peksi&apos;s rating app</h2>
       <Form onSubmit={handleSignUp}>
         <Form.Group>
           <Form.Label>username: </Form.Label>
@@ -46,15 +46,6 @@ const SignUp = () => {
             onChange={({ target }) => setUsername(target.value)}
           />
           <div></div>
-          {/* <Form.Label>name: </Form.Label>
-          <Form.Control
-            id="name"
-            type="text"
-            value={name}
-            name="Name"
-            onChange={({ target }) => setName(target.value)}
-          />
-          <div></div> */}
           <Form.Label>password: </Form.Label>
           <Form.Control
             id="password"

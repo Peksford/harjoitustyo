@@ -1,9 +1,9 @@
 const { Model, DataTypes } = require('sequelize');
 const { sequelize } = require('../util/db');
 
-class Movie extends Model {}
+class Game extends Model {}
 
-Movie.init(
+Game.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -73,4 +73,4 @@ Movie.init(
   }
 );
 
-module.exports = Movie;
+module.exports = Game;

@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import AlbumSearch from './AlbumSearch';
 import MovieSearch from './MovieSearch';

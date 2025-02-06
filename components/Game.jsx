@@ -1,8 +1,8 @@
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import gameService from '../services/games';
 import userService from '../services/users';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import Heart from 'react-heart';
 import { Link } from 'react-router-dom';
 
@@ -10,7 +10,6 @@ const Game = ({ user, onUpdateGame }) => {
   const { username, id } = useParams();
   const [gameData, setGameData] = useState('');
   const [rating, setRating] = useState(0);
-  const [trackListFetched, setTrackListFetched] = useState(false);
   const [active, setActive] = useState(false);
 
   console.log('paramssit', username, id);

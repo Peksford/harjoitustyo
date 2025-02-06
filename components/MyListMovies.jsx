@@ -1,7 +1,9 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import UserMenu from './UserMenu';
 
 const styles = {
   container: {
@@ -75,11 +77,9 @@ const MyListMovies = ({ user }) => {
   if (userData) {
     return (
       <>
+        <UserMenu user={user} />
         <div>
-          <h2>
-            <Link to={`/${userData.username}`}>{userData.username}</Link>{' '}
-            movies/tv
-          </h2>
+          <h2>Movies/tv</h2>
         </div>
         <div style={styles.container}>
           {userData.movies.map((movie) => (

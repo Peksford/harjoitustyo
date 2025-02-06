@@ -32,6 +32,14 @@ Follow.init(
       type: DataTypes.DATE,
       allowNull: true,
     },
+    followed_username: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    follower_username: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
   },
   {
     sequelize,

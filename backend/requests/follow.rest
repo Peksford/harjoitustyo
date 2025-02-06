@@ -1,0 +1,7 @@
+POST http://localhost:3001/api/follow
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlBla2tpc0JvaSIsImlkIjoxLCJpYXQiOjE3Mzg3NTA3MDV9.l47txeiUNoT9zrJ5Uq5_nnVmwBGdVxbe_XtyD8Lqf3E
+
+{
+    "followed_id": 1
+}

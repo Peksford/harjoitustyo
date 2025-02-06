@@ -1,9 +1,8 @@
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import albumService from '../services/albums';
 import userService from '../services/users';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import StarRatings from 'react-star-ratings';
 import axios from 'axios';
 import Heart from 'react-heart';
 import { Link } from 'react-router-dom';
@@ -115,6 +114,10 @@ const Album = ({ user, onUpdateAlbum }) => {
         <div style={styles.albumContainer}>
           <div style={styles.albumInfo}>
             <h2>{albumData.whole_title}</h2>
+            <h8>
+              {username} added this on{' '}
+              {new Date(albumData.createdAt).toLocaleDateString()}
+            </h8>
             <p style={{ width: '4rem' }}>
               <Heart isActive={active || false} onClick={handleHeartClick} />
             </p>

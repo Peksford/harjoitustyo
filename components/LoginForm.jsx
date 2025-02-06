@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUser, userLogin } from '../reducers/loginReducer';
@@ -42,7 +43,7 @@ const LoginForm = () => {
 
   return (
     <div className="container">
-      <h2>Log in to Peksi's web</h2>
+      <h2>Log in to Peksi&apo;s web</h2>
       <Form onSubmit={handleLogin}>
         <Form.Group>
           <Form.Label>username: </Form.Label>

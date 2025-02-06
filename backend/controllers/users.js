@@ -5,6 +5,7 @@ const { User, Album, Book, Movie, Game, Follow } = require('../models');
 
 router.get('/', async (req, res) => {
   const users = await User.findAll({
+    attributes: ['id', 'username'],
     include: [
       {
         model: Album,
@@ -34,6 +35,7 @@ router.get('/', async (req, res) => {
       },
     ],
   });
+  console.log('Checking if user has id ffield', users);
   res.json(users);
 });
 
@@ -64,7 +66,7 @@ router.get('/:username', async (req, res, next) => {
       where: {
         username: req.params.username,
       },
-      attributes: ['name', 'username'],
+      attributes: ['name', 'username', 'id'],
       include: [
         {
           model: Album,
