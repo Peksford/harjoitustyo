@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 const styles = {
   albumContainer: {
@@ -79,7 +80,7 @@ const useAlbum = (name) => {
             },
           }
         );
-        console.log('Release data works?', response.data);
+
         setAlbumSearched(response.data.results);
       } catch (error) {
         console.error(error);
@@ -89,7 +90,6 @@ const useAlbum = (name) => {
     searchAlbum();
   }, [name]);
 
-  console.log('what happens here', albumSearched);
   return albumSearched;
 };
 
@@ -97,9 +97,7 @@ const Album = ({ albumSearched, createAlbum }) => {
   if (albumSearched === null || albumSearched === undefined) {
     return <div>not found</div>;
   }
-
   const createNew = ({ album }) => {
-    console.log('Testing album', album.id);
     createAlbum({
       artist: album.title.split(' - ')[0].trim(),
       title: album.title.split(' - ')[1].trim(),
@@ -155,10 +153,23 @@ const AlbumSearch = ({ createAlbum }) => {
 
   return (
     <div>
-      <input {...albumInput} placeholder="Search for an album" />
+      <input
+        className="search-input"
+        {...albumInput}
+        placeholder="Search for an album"
+      />
       <Album albumSearched={album} createAlbum={createAlbum} />
     </div>
   );
+};
+
+Album.propTypes = {
+  albumSearched: PropTypes.array.isRequired,
+  createAlbum: PropTypes.func.isRequired,
+};
+
+AlbumSearch.propTypes = {
+  createAlbum: PropTypes.func.isRequired,
 };
 
 export default AlbumSearch;

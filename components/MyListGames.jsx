@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import UserMenu from './UserMenu';
+import PropTypes from 'prop-types';
 
 const styles = {
   container: {
@@ -50,20 +51,14 @@ const styles = {
 const MyListGames = ({ user }) => {
   const { username } = useParams();
   const [userData, setUserData] = useState(null);
-  // if (!games || games.length === 0) {
-  //   return <h2>No games added yet</h2>;
-  // }
 
-  console.log('MYLIST', username);
   useEffect(() => {
-    console.log('does this render', username);
     const fetchUser = async () => {
       try {
-        console.log('testing');
         const response = await axios.get(
           `http://localhost:3001/api/users/${username}`
         );
-        console.log('reponse', response);
+
         setUserData(response.data);
       } catch (error) {
         console.error(error);
@@ -71,8 +66,6 @@ const MyListGames = ({ user }) => {
     };
     fetchUser();
   }, [username]);
-
-  console.log('user data', userData);
 
   if (userData) {
     return (
@@ -101,9 +94,14 @@ const MyListGames = ({ user }) => {
       </>
     );
   } else {
-    // eslint-disable-next-line react/no-unescaped-entities
-    return <div>No games yet :'(</div>;
+    return null;
   }
+};
+
+MyListGames.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+  }),
 };
 
 export default MyListGames;

@@ -8,11 +8,26 @@ import albumService from '../services/albums';
 import movieService from '../services/movies';
 import bookService from '../services/books';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
+
+import {
+  notificationHide,
+  notificationShow,
+} from '../reducers/notificationReducer';
+
+const ErrorMessage = ({ message }) => {
+  if (message === null) {
+    return null;
+  }
+
+  return <div className="error">{message}</div>;
+};
 
 const SignUp = () => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState(null);
   const navigate = useNavigate();
 
   const handleSignUp = async (event) => {
@@ -26,15 +41,25 @@ const SignUp = () => {
       movieService.setToken(user.token);
       bookService.setToken(user.token);
       dispatch(setUser(user));
+
+      dispatch(notificationShow(`Welcome ${user.name}!`));
+
+      setTimeout(() => dispatch(notificationHide('')), 5000);
+
       navigate('/');
     } catch (error) {
       console.error(error);
+      setErrorMessage('This username is already taken');
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
     }
   };
 
   return (
     <div className="container">
-      <h2>Sign Up to Peksi&apos;s rating app</h2>
+      <h2>Sign Up to rating app</h2>
+      <ErrorMessage message={errorMessage} />
       <Form onSubmit={handleSignUp}>
         <Form.Group>
           <Form.Label>username: </Form.Label>
@@ -62,6 +87,10 @@ const SignUp = () => {
       </Form>
     </div>
   );
+};
+
+ErrorMessage.propTypes = {
+  message: PropTypes.string,
 };
 
 export default SignUp;

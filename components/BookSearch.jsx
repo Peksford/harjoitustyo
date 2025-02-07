@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 const styles = {
   bookContainer: {
@@ -165,10 +166,23 @@ const BookSearch = ({ createBook }) => {
 
   return (
     <div>
-      <input {...bookInput} placeholder="Search for a book" />
+      <input
+        className="search-input"
+        {...bookInput}
+        placeholder="Search for a book"
+      />
       <Book bookSearched={book} createBook={createBook} />
     </div>
   );
+};
+
+Book.propTypes = {
+  bookSearched: PropTypes.array.isRequired,
+  createBook: PropTypes.func.isRequired,
+};
+
+BookSearch.propTypes = {
+  createBook: PropTypes.func.isRequired,
 };
 
 export default BookSearch;

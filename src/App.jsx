@@ -12,12 +12,11 @@ import {
 import { useState, useEffect } from 'react';
 import albumService from '../services/albums';
 import movieService from '../services/movies';
-import userService from '../services/users';
 import logoutService from '../services/logout';
 import bookService from '../services/books';
 import gameService from '../services/games';
 import followService from '../services/follow';
-
+import Notification from '../components/Notification';
 import Home from '../components/Home';
 import Search from '../components/Search';
 import LoginForm from '../components/LoginForm';
@@ -34,6 +33,8 @@ import Following from '../components/Following';
 import SignUp from '../components/SignUp';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../reducers/loginReducer';
+import { setNotification } from '../reducers/notificationReducer';
+import { useNavigate } from 'react-router-dom';
 
 const styles = {
   padding: {
@@ -50,10 +51,10 @@ const App = () => {
   const [books, setBooks] = useState([]);
   const [movies, setMovies] = useState([]);
   const [games, setGames] = useState([]);
-  const [open, setOpen] = useState(false);
   const user = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser');
@@ -72,19 +73,6 @@ const App = () => {
     }
   }, [dispatch]);
 
-  useEffect(() => {
-    const fetchUserAlbums = async () => {
-      if (user && user.username)
-        try {
-          const userAlbumsData = await userService.getUserAlbums(user.username);
-          setAlbums(userAlbumsData);
-        } catch (error) {
-          console.error('error fetching albums: ', error);
-        }
-    };
-    fetchUserAlbums();
-  }, [user]);
-
   const albumRatingUpdate = (updatedAlbum) => {
     setAlbums((preAlbums) =>
       preAlbums.map((album) =>
@@ -93,38 +81,11 @@ const App = () => {
     );
   };
 
-  useEffect(() => {
-    const fetchUserBooks = async () => {
-      if (user && user.username)
-        try {
-          const userBooksData = await userService.getUserBooks(user.username);
-          console.log('userbbdfokbdfs', userBooksData);
-          setBooks(userBooksData);
-        } catch (error) {
-          console.error('error fetching albums: ', error);
-        }
-    };
-    fetchUserBooks();
-  }, [user]);
-
   const bookRatingUpdate = (updatedBook) => {
     setBooks((preBooks) =>
       preBooks.map((book) => (book.id === updatedBook.id ? updatedBook : book))
     );
   };
-
-  useEffect(() => {
-    const fetchUserMovies = async () => {
-      if (user && user.username)
-        try {
-          const userMoviesData = await userService.getUserMovies(user.username);
-          setMovies(userMoviesData);
-        } catch (error) {
-          console.error('error fetching movies: ', error);
-        }
-    };
-    fetchUserMovies();
-  }, [user]);
 
   const movieRatingUpdate = (updatedMovie) => {
     setMovies((preMovies) =>
@@ -134,19 +95,6 @@ const App = () => {
     );
   };
 
-  useEffect(() => {
-    const fetchUserGames = async () => {
-      if (user && user.username)
-        try {
-          const userGamesData = await userService.getUserGames(user.username);
-          setMovies(userGamesData);
-        } catch (error) {
-          console.error('error fetching movies: ', error);
-        }
-    };
-    fetchUserGames();
-  }, [user]);
-
   const gameRatingUpdate = (updatedGame) => {
     setMovies((preGames) =>
       preGames.map((game) => (game.id === updatedGame.id ? updatedGame : game))
@@ -155,7 +103,7 @@ const App = () => {
 
   const handleLogout = async (event) => {
     event.preventDefault();
-    console.log('logging out with', user);
+
     try {
       await logoutService.logout(user.username);
     } catch (error) {
@@ -165,6 +113,8 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogappUser', JSON.stringify(user));
 
     dispatch(setUser(null));
+    dispatch(setNotification(`Logged out user ${user.username}`, 5));
+    navigate('/login');
   };
 
   const createAlbum = async (albumObject) => {
@@ -173,7 +123,6 @@ const App = () => {
   };
 
   const createMovie = async (movieObject) => {
-    console.log('Movie object', movieObject);
     const newMovie = await movieService.create(movieObject);
     setMovies([...movies, newMovie]);
   };
@@ -184,164 +133,146 @@ const App = () => {
   };
 
   const createGame = async (gameObject) => {
-    console.log('game object', gameObject);
     const newGame = await gameService.create(gameObject);
     setGames([...books, newGame]);
   };
 
   return (
     <div>
-      <Router>
-        <div style={styles.container}>
-          {user ? (
-            <Link style={styles.padding} to={`/${user.username}`}>
-              {user.username}
-            </Link>
-          ) : (
-            <Link style={styles.padding} to="/signup">
-              Sign up
-            </Link>
-          )}
-          <Link style={styles.padding} to="/search">
-            Search
-          </Link>
-          {!user && (
-            <Link style={styles.padding} to="/login">
-              login
-            </Link>
-          )}
-          {user && (
-            <DropdownButton id="dropdown-basic-button" title={user.username}>
-              <Dropdown.Item as={Link} to={`/${user.username}/albums`}>
-                My albums
-              </Dropdown.Item>
-              <Dropdown.Item as={Link} to={`/${user.username}/movies`}>
-                My movies
-              </Dropdown.Item>
-              <Dropdown.Item as={Link} to={`/${user.username}/books`}>
-                My books
-              </Dropdown.Item>
-              <Dropdown.Item as={Link} to={`/${user.username}/games`}>
-                My games
-              </Dropdown.Item>
-            </DropdownButton>
-          )}
+      <Notification />
 
-          {/* 
-          {user && (
-            <Link style={styles.padding} to="/books">
+      <div style={styles.container}>
+        {user ? (
+          <Link style={styles.padding} to={`/${user.username}`}>
+            {user.username}
+          </Link>
+        ) : (
+          <Link style={styles.padding} to="/signup">
+            Sign up
+          </Link>
+        )}
+        <Link style={styles.padding} to="/search">
+          Search
+        </Link>
+        {!user && (
+          <Link style={styles.padding} to="/login">
+            login
+          </Link>
+        )}
+        {user && (
+          <DropdownButton id="dropdown-basic-button" title={user.username}>
+            <Dropdown.Item as={Link} to={`/${user.username}/albums`}>
+              My albums
+            </Dropdown.Item>
+            <Dropdown.Item as={Link} to={`/${user.username}/movies`}>
+              My movies
+            </Dropdown.Item>
+            <Dropdown.Item as={Link} to={`/${user.username}/books`}>
               My books
-            </Link>
-          )}
-          {user && (
-            <Link style={styles.padding} to="/movies">
-              My movies/TV
-            </Link>
-          )} */}
-          {user && <button onClick={handleLogout}> Logout</button>}
-        </div>
-        <Routes>
+            </Dropdown.Item>
+            <Dropdown.Item as={Link} to={`/${user.username}/games`}>
+              My games
+            </Dropdown.Item>
+          </DropdownButton>
+        )}
+        {user && <button onClick={handleLogout}> Logout</button>}
+      </div>
+      <Routes>
+        <Route path="/" element={user ? <Home /> : <Navigate to="/signup" />} />
+        <Route
+          path="/search"
+          element={
+            <Search
+              createAlbum={createAlbum}
+              createBook={createBook}
+              createMovie={createMovie}
+              createGame={createGame}
+            />
+          }
+        />
+        <Route path="/login" element={<LoginForm />} />
+        {user ? (
+          <Route path="/:username/albums" element={<MyList user={user} />} />
+        ) : null}
+        {user ? (
           <Route
-            path="/search"
+            path="/:username/books"
+            element={<MyListBooks books={books} user={user} />}
+          />
+        ) : null}
+        {user ? (
+          <Route
+            path="/:username/movies"
             element={
-              <Search
-                createAlbum={createAlbum}
-                createBook={createBook}
-                createMovie={createMovie}
-                createGame={createGame}
-              />
+              user ? (
+                <MyListMovies movies={movies} user={user} />
+              ) : (
+                <Navigate to="/login" />
+              )
             }
           />
-          <Route path="/login" element={<LoginForm />} />
-          {user ? (
-            <Route path="/:username/albums" element={<MyList user={user} />} />
-          ) : // <Route path="/albums" element={<Navigate to="/login" />} />
-          null}
-          {user ? (
-            <Route
-              path="/:username/books"
-              element={<MyListBooks books={books} user={user} />}
-            />
-          ) : // <Route path="/books" element={<Navigate to="/login" />} />
-          null}
-          {user ? (
-            <Route
-              path="/:username/movies"
-              element={
-                user ? (
-                  <MyListMovies movies={movies} user={user} />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
-            />
-          ) : // <Route path="/movies" element={<Navigate to="/login" />} />
-          null}
-          {user ? (
-            <Route
-              path="/:username/games"
-              element={
-                user ? (
-                  <MyListGames games={games} user={user} />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
-            />
-          ) : // <Route path="/movies" element={<Navigate to="/login" />} />
-          null}
-          {user ? (
-            <Route
-              path="/:username/followers"
-              element={
-                user ? <Followers user={user} /> : <Navigate to="/login" />
-              }
-            />
-          ) : // <Route path="/movies" element={<Navigate to="/login" />} />
-          null}
-          {user ? (
-            <Route
-              path="/:username/following"
-              element={
-                user ? <Following user={user} /> : <Navigate to="/login" />
-              }
-            />
-          ) : // <Route path="/movies" element={<Navigate to="/login" />} />
-          null}
+        ) : null}
+        {user ? (
           <Route
-            path="/:username/albums/:id"
+            path="/:username/games"
             element={
-              <Album
-                user={user}
-                albums={albums}
-                onUpdateAlbum={albumRatingUpdate}
-              />
+              user ? (
+                <MyListGames games={games} user={user} />
+              ) : (
+                <Navigate to="/login" />
+              )
             }
           />
+        ) : null}
+        {user ? (
           <Route
-            path="/:username/books/:id"
-            element={<Book user={user} onUpdateBook={bookRatingUpdate} />}
-          />
-          <Route
-            path="/:username/movies/:id"
+            path="/:username/followers"
             element={
-              <Movie
-                user={user}
-                movies={movies}
-                onUpdateMovie={movieRatingUpdate}
-              />
+              user ? <Followers user={user} /> : <Navigate to="/login" />
             }
           />
+        ) : null}
+        {user ? (
           <Route
-            path="/:username/games/:id"
+            path="/:username/following"
             element={
-              <Game user={user} games={games} onUpdateGame={gameRatingUpdate} />
+              user ? <Following user={user} /> : <Navigate to="/login" />
             }
           />
-          <Route path="/:username" element={<Home user={user} />} />
-          <Route path="/signup" element={<SignUp />} />
-        </Routes>
-      </Router>
+        ) : null}
+        <Route
+          path="/:username/albums/:id"
+          element={
+            <Album
+              user={user}
+              albums={albums}
+              onUpdateAlbum={albumRatingUpdate}
+            />
+          }
+        />
+        <Route
+          path="/:username/books/:id"
+          element={<Book user={user} onUpdateBook={bookRatingUpdate} />}
+        />
+        <Route
+          path="/:username/movies/:id"
+          element={
+            <Movie
+              user={user}
+              movies={movies}
+              onUpdateMovie={movieRatingUpdate}
+            />
+          }
+        />
+        <Route
+          path="/:username/games/:id"
+          element={
+            <Game user={user} games={games} onUpdateGame={gameRatingUpdate} />
+          }
+        />
+        <Route path="/:username" element={<Home user={user} />} />
+        <Route path="/signup" element={<SignUp />} />
+      </Routes>
     </div>
   );
 };

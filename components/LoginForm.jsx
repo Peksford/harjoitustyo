@@ -7,32 +7,48 @@ import { Form, Button } from 'react-bootstrap';
 import albumService from '../services/albums';
 import movieService from '../services/movies';
 import bookService from '../services/books';
+import gameService from '../services/games';
 import { useNavigate } from 'react-router-dom';
+
+import { setNotification } from '../reducers/notificationReducer';
+
+const ErrorMessage = ({ message }) => {
+  if (message === null) {
+    return null;
+  }
+
+  return <div className="error">{message}</div>;
+};
 
 const LoginForm = () => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState(null);
   const navigate = useNavigate();
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    console.log('logging in with', username, password);
 
     try {
       const user = await dispatch(userLogin(username, password));
-      console.log('TOKENI', user.token);
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user));
       albumService.setToken(user.token);
       movieService.setToken(user.token);
       bookService.setToken(user.token);
+      gameService.setToken(user.token);
       dispatch(setUser(user));
 
       setUsername('');
       setPassword('');
-      navigate('/');
+      navigate(`/${username}`);
+      dispatch(setNotification(`Welcome ${user.username}!`, 5));
     } catch (exception) {
       console.error(exception);
+      setErrorMessage(exception.response.data.error);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
     }
   };
 
@@ -41,9 +57,14 @@ const LoginForm = () => {
     password: PropTypes.string.isRequired,
   };
 
+  ErrorMessage.propTypes = {
+    message: PropTypes.string,
+  };
+
   return (
     <div className="container">
-      <h2>Log in to Peksi&apo;s web</h2>
+      <h2>Log in to page</h2>
+      <ErrorMessage message={errorMessage} />
       <Form onSubmit={handleLogin}>
         <Form.Group>
           <Form.Label>username: </Form.Label>

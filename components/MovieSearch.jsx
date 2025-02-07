@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 const styles = {
   movieContainer: {
@@ -98,7 +99,6 @@ const useMovie = (name) => {
           })),
         ];
 
-        console.log('TMDB search data', movieAndTvCombined);
         setMovieSearched(movieAndTvCombined);
       } catch (error) {
         console.error(error);
@@ -108,7 +108,6 @@ const useMovie = (name) => {
     searchMovie();
   }, [name]);
 
-  console.log('what happens here', movieSearched);
   return movieSearched;
 };
 
@@ -118,8 +117,6 @@ const Movie = ({ movieSearched, createMovie }) => {
   }
 
   const createNew = ({ movie }) => {
-    console.log('Testing movie', movie.id);
-
     if (movie.type === 'movie') {
       createMovie({
         title: movie.title,
@@ -149,7 +146,6 @@ const Movie = ({ movieSearched, createMovie }) => {
 
   const formatDate = (inputDate) => {
     const date = new Date(inputDate);
-    console.log('TIME VALUE', inputDate);
     if (inputDate) return new Intl.DateTimeFormat('fi-FI').format(date);
   };
 
@@ -231,10 +227,23 @@ const MovieSearch = ({ createMovie }) => {
 
   return (
     <div>
-      <input {...movieInput} placeholder="Search for an movie" />
+      <input
+        className="search-input"
+        {...movieInput}
+        placeholder="Search for an movie"
+      />
       <Movie movieSearched={movie} createMovie={createMovie} />
     </div>
   );
+};
+
+Movie.propTypes = {
+  movieSearched: PropTypes.array.isRequired,
+  createMovie: PropTypes.func.isRequired,
+};
+
+MovieSearch.propTypes = {
+  createMovie: PropTypes.func.isRequired,
 };
 
 export default MovieSearch;

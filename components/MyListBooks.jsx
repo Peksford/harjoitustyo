@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import UserMenu from './UserMenu';
+import PropTypes from 'prop-types';
 
 const styles = {
   container: {
@@ -56,14 +57,12 @@ const MyListBooks = ({ user }) => {
   // }
 
   useEffect(() => {
-    console.log('does this render', username);
     const fetchUser = async () => {
       try {
-        console.log('testing');
         const response = await axios.get(
           `http://localhost:3001/api/users/${username}`
         );
-        console.log('reponse', response);
+
         setUserData(response.data);
       } catch (error) {
         console.error(error);
@@ -71,8 +70,6 @@ const MyListBooks = ({ user }) => {
     };
     fetchUser();
   }, [username]);
-
-  console.log('userdata', userData);
 
   if (userData) {
     return (
@@ -107,9 +104,14 @@ const MyListBooks = ({ user }) => {
       </>
     );
   } else {
-    // eslint-disable-next-line react/no-unescaped-entities
-    return <div>No books yet :'(</div>;
+    return null;
   }
+};
+
+MyListBooks.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+  }),
 };
 
 export default MyListBooks;

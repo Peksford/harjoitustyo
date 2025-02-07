@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import UserMenu from './UserMenu';
+import PropTypes from 'prop-types';
 
 const styles = {
   container: {
@@ -50,20 +51,14 @@ const styles = {
 const MyList = ({ user }) => {
   const { username } = useParams();
   const [userData, setUserData] = useState(null);
-  // if (!albums || albums.length === 0) {
-  //   return <h2>No albums added yet</h2>;
-  // }
 
-  console.log('MYLIST', username);
   useEffect(() => {
-    console.log('does this render', username);
     const fetchUser = async () => {
       try {
-        console.log('testing');
         const response = await axios.get(
           `http://localhost:3001/api/users/${username}`
         );
-        console.log('reponse', response);
+
         setUserData(response.data);
       } catch (error) {
         console.error(error);
@@ -71,8 +66,6 @@ const MyList = ({ user }) => {
     };
     fetchUser();
   }, [username]);
-
-  console.log('user data', userData);
 
   if (userData) {
     return (
@@ -98,9 +91,14 @@ const MyList = ({ user }) => {
       </>
     );
   } else {
-    // eslint-disable-next-line react/no-unescaped-entities
-    return <div>No albums yet :'(</div>;
+    return null;
   }
+};
+
+MyList.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+  }),
 };
 
 export default MyList;

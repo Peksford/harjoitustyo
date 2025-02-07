@@ -10,7 +10,6 @@ const CLIENT_SECRET = process.env.VITE_TWITCH_CLIENT_SECRET;
 let accessToken = '';
 
 const getAccessToken = async () => {
-  // console.log('searching', name);
   try {
     const response = await axios.post(
       'https://id.twitch.tv/oauth2/token',
@@ -33,11 +32,9 @@ const getAccessToken = async () => {
 
 router.get('/search-game', async (req, res) => {
   const { name } = req.query;
-  console.log('name', name);
+
   try {
     if (!accessToken) await getAccessToken();
-
-    console.log('accessToken', accessToken);
 
     const query = `
     search "${name}";
@@ -52,7 +49,7 @@ router.get('/search-game', async (req, res) => {
         Accept: 'application/json',
       },
     });
-    console.log('what data prints', response.data);
+
     res.json(response.data);
   } catch (error) {
     console.error(error);
@@ -72,9 +69,8 @@ router.get('/', async (req, res) => {
 
 router.post('/', tokenExtractor, async (req, res, next) => {
   try {
-    console.log('Post request', req.body);
     const user = await User.findByPk(req.decodedToken.id);
-    console.log('user', user);
+
     const game = await Game.create({
       ...req.body,
       user_id: user.id,
@@ -90,12 +86,8 @@ router.get('/:id', async (req, res, next) => {
   try {
     // const user = await User.findByPk(req.decodedToken.id);
     const game = await Game.findByPk(req.params.id);
-
-    // console.log('user', user);
-    // console.log('game', game);
     res.json(game);
   } catch (error) {
-    console.log(error);
     next(error);
     return res.status(400).json({ error });
   }
@@ -112,8 +104,6 @@ router.put('/:id', tokenExtractor, async (req, res, next) => {
         .json({ error: 'Not authorized to change the rating.' });
     }
     const { rating } = req.body;
-
-    console.log('BOOK', rating);
 
     game.rating = rating;
     await game.save();

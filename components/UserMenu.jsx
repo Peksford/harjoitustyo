@@ -10,7 +10,6 @@ const UserMenu = (user) => {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    console.log('does this render', username);
     const fetchUser = async () => {
       try {
         const response = await axios.get(

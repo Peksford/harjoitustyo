@@ -9,17 +9,13 @@ const Following = (user) => {
   const { username } = useParams();
   const [userData, setUserData] = useState(null);
 
-  console.log('usernameanfadf', username);
-
   useEffect(() => {
-    console.log('does this render', username);
     const fetchUser = async () => {
       try {
-        console.log('testing');
         const response = await axios.get(
           `http://localhost:3001/api/users/${username}`
         );
-        console.log('reponse', response);
+
         setUserData(response.data);
       } catch (error) {
         console.error(error);
@@ -27,7 +23,7 @@ const Following = (user) => {
     };
     fetchUser();
   }, [username]);
-  console.log('Following', userData);
+
   return (
     <div>
       <UserMenu user={user} />

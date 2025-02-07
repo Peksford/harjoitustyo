@@ -4,6 +4,7 @@ import AlbumSearch from './AlbumSearch';
 import MovieSearch from './MovieSearch';
 import BookSearch from './BookSearch';
 import GameSearch from './GameSearch';
+import PropTypes from 'prop-types';
 
 const Search = ({ createAlbum, createBook, createMovie, createGame }) => {
   const [type, setType] = useState('albums');
@@ -14,8 +15,8 @@ const Search = ({ createAlbum, createBook, createMovie, createGame }) => {
 
   return (
     <div>
-      <div>
-        <label>
+      <div className="radio-group">
+        <label style={{ marginRight: '10px' }}>
           <input
             type="radio"
             value="albums"
@@ -24,7 +25,7 @@ const Search = ({ createAlbum, createBook, createMovie, createGame }) => {
           />
           Albums
         </label>
-        <label>
+        <label style={{ marginRight: '10px' }}>
           <input
             type="radio"
             value="movies"
@@ -33,7 +34,7 @@ const Search = ({ createAlbum, createBook, createMovie, createGame }) => {
           />
           Movies
         </label>
-        <label>
+        <label style={{ marginRight: '10px' }}>
           <input
             type="radio"
             value="books"
@@ -42,7 +43,7 @@ const Search = ({ createAlbum, createBook, createMovie, createGame }) => {
           />
           Books
         </label>
-        <label>
+        <label style={{ marginRight: '1Thanks0px' }}>
           <input
             type="radio"
             value="games"
@@ -58,6 +59,13 @@ const Search = ({ createAlbum, createBook, createMovie, createGame }) => {
       {type === 'games' && <GameSearch createGame={createGame} />}
     </div>
   );
+};
+
+Search.propTypes = {
+  createAlbum: PropTypes.func.isRequired,
+  createBook: PropTypes.func.isRequired,
+  createMovie: PropTypes.func.isRequired,
+  createGame: PropTypes.func.isRequired,
 };
 
 export default Search;

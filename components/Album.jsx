@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Heart from 'react-heart';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const Album = ({ user, onUpdateAlbum }) => {
   const { username, id } = useParams();
@@ -13,8 +14,6 @@ const Album = ({ user, onUpdateAlbum }) => {
   const [rating, setRating] = useState(0);
   const [trackListFetched, setTrackListFetched] = useState(false);
   const [active, setActive] = useState(false);
-
-  console.log('paramssit', username, id);
 
   useEffect(() => {
     const fetchAlbum = async () => {
@@ -34,11 +33,7 @@ const Album = ({ user, onUpdateAlbum }) => {
       }
     };
     fetchAlbum();
-    console.log('albumi data', albumData);
-    // const album = albums.find((album) => album.id === Number(id));
   }, [id, username]);
-
-  console.log('albumi data', albumData);
 
   const handleHeartClick = async () => {
     try {
@@ -47,7 +42,6 @@ const Album = ({ user, onUpdateAlbum }) => {
         heart: true,
       });
 
-      console.log('The response of the heart ', updatedHeart);
       setAlbumData(updatedHeart);
       setActive(updatedHeart.heart);
 
@@ -91,7 +85,6 @@ const Album = ({ user, onUpdateAlbum }) => {
               },
             }
           );
-          console.log('what data here', data);
           const fetchedTracklist = data.data.tracklist;
           setTracklist(fetchedTracklist);
           setTrackListFetched(true);
@@ -107,17 +100,17 @@ const Album = ({ user, onUpdateAlbum }) => {
     return (
       <>
         <div>
-          <h10>
+          <div>
             back to <Link to={`/${username}`}>{username}</Link> home page
-          </h10>
+          </div>
         </div>
         <div style={styles.albumContainer}>
           <div style={styles.albumInfo}>
             <h2>{albumData.whole_title}</h2>
-            <h8>
+            <div>
               {username} added this on{' '}
               {new Date(albumData.createdAt).toLocaleDateString()}
-            </h8>
+            </div>
             <p style={{ width: '4rem' }}>
               <Heart isActive={active || false} onClick={handleHeartClick} />
             </p>
@@ -237,6 +230,13 @@ const styles = {
   circleText: {
     margin: 0,
   },
+};
+
+Album.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+  }),
+  onUpdateAlbum: PropTypes.func,
 };
 
 export default Album;

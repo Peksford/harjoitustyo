@@ -57,7 +57,7 @@ router.put('/:id', tokenExtractor, async (req, res, next) => {
     }
     const { rating } = req.body;
 
-    console.log('ALBUM', rating);
+    console.log('MOVIE', rating);
 
     movie.rating = rating;
     await movie.save();

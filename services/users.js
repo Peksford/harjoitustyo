@@ -13,7 +13,6 @@ const getUserAlbums = async (username) => {
 
 const getUserMovies = async (username) => {
   const response = await axios.get(`${baseUrl}/${username}`);
-  console.log('response user movies', response);
   return response.data.movies;
 };
 

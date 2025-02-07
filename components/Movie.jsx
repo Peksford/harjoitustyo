@@ -5,14 +5,13 @@ import userService from '../services/users';
 import { useState, useEffect } from 'react';
 import Heart from 'react-heart';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const Movie = ({ user, onUpdateMovie }) => {
   const { username, id } = useParams();
   const [movieData, setMovieData] = useState('');
   const [rating, setRating] = useState(0);
   const [active, setActive] = useState(false);
-
-  console.log('paramssit', username, id);
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -32,20 +31,7 @@ const Movie = ({ user, onUpdateMovie }) => {
       }
     };
     fetchMovie();
-    console.log('moviei data', movieData);
-    // const movie = movies.find((movie) => movie.id === Number(id));
   }, [id, username]);
-
-  console.log('moviei data', movieData);
-
-  // useEffect(() => {
-  //   console.log('Movie.jsx', movies);
-  //   const movie = movies.find((movie) => movie.id === Number(id));
-  //   if (movie) {
-  //     setMovieData(movie);
-  //     setRating(movie.rating || 0);
-  //   }
-  // }, [movies, id]);
 
   const handleHeartClick = async () => {
     try {
@@ -53,8 +39,6 @@ const Movie = ({ user, onUpdateMovie }) => {
         ...movieData,
         heart: true,
       });
-
-      console.log('The response of the heart ', updatedHeart);
       setMovieData(updatedHeart);
       setActive(updatedHeart.heart);
 
@@ -84,7 +68,6 @@ const Movie = ({ user, onUpdateMovie }) => {
 
   const formatDate = (inputDate) => {
     const date = new Date(inputDate);
-    console.log(inputDate);
     return new Intl.DateTimeFormat('fi-FI').format(date);
   };
 
@@ -92,13 +75,17 @@ const Movie = ({ user, onUpdateMovie }) => {
     return (
       <>
         <div>
-          <h10>
+          <div>
             back to <Link to={`/${username}`}>{username}</Link> home page
-          </h10>
+          </div>
         </div>
         <div style={styles.movieContainer}>
           <div style={styles.movieInfo}>
             <h2>{movieData.whole_title}</h2>
+            <div>
+              {username} added this on{' '}
+              {new Date(movieData.createdAt).toLocaleDateString()}
+            </div>
             <p style={{ width: '4rem' }}>
               <Heart isActive={active || false} onClick={handleHeartClick} />
             </p>
@@ -243,6 +230,13 @@ const styles = {
   circleText: {
     margin: 0,
   },
+};
+
+Movie.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+  }),
+  onUpdateMovie: PropTypes.func,
 };
 
 export default Movie;

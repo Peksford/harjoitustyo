@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Heart from 'react-heart';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const Book = ({ user, onUpdateBook }) => {
   const { username, id } = useParams();
@@ -54,15 +55,16 @@ const Book = ({ user, onUpdateBook }) => {
     if (!user) return;
     const fetchBook = async () => {
       try {
-        const data = await bookService.getBook(id);
+        const book = await bookService.getBook(id);
         const user = await userService.getUserAlbums(username);
 
-        if (user[0].user_id === data.user_id) {
-          setBookData(data);
+        if (user[0].user_id === book.user_id) {
+          setBookData(book);
+          setActive(book.heart || false);
         } else {
           return null;
         }
-        setRating(data.rating);
+        setRating(book.rating);
       } catch (error) {
         console.error(error);
       }
@@ -86,7 +88,6 @@ const Book = ({ user, onUpdateBook }) => {
               //   },
             }
           );
-          console.log('what data here', data);
           const fetchedDescription = data.data.description || '';
           setDescription(fetchedDescription);
           setDescriptionFetched(true);
@@ -98,19 +99,20 @@ const Book = ({ user, onUpdateBook }) => {
     releaseInfo();
   }, [bookData, descriptionFetched]);
 
-  console.log('book description', description);
-  // console.log('user id', user);
-
   return (
     <>
       <div>
-        <h10>
+        <div>
           back to <Link to={`/${username}`}>{username}</Link> Home page
-        </h10>
+        </div>
       </div>
       <div style={styles.albumContainer}>
         <div style={styles.albumInfo}>
           <h2>{bookData.whole_title}</h2>
+          <div>
+            {username} added this on{' '}
+            {new Date(bookData.createdAt).toLocaleDateString()}
+          </div>
           <p style={{ width: '4rem' }}>
             <Heart isActive={active || false} onClick={handleHeartClick} />
           </p>
@@ -202,7 +204,7 @@ const styles = {
     alignItems: 'center',
   },
   thumbnail: {
-    width: '300px',
+    width: '240px',
     height: '300px',
     // objectFit: 'cover',
     marginBottom: '8px',
@@ -247,6 +249,13 @@ const styles = {
   circleText: {
     margin: 0,
   },
+};
+
+Book.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+  }),
+  onUpdateBook: PropTypes.func,
 };
 
 export default Book;

@@ -35,14 +35,12 @@ router.get('/', async (req, res) => {
       },
     ],
   });
-  console.log('Checking if user has id ffield', users);
   res.json(users);
 });
 
 router.post('/', async (req, res, next) => {
   try {
     const { username, name, password } = req.body;
-    console.log('testing', password);
 
     const saltRounds = 10;
     const password_hash = await bcrypt.hash(password, saltRounds);

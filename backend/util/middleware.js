@@ -18,6 +18,9 @@ const errorHandler = (error, request, response, next) => {
   } else if (error.name === 'SequelizeDatabaseError') {
     logger.error(error);
     return response.status(400).send({ error: error.message });
+  } else if (error.name === 'SequelizeUniqueConstraintError') {
+    logger.error(error);
+    return response.status(400).send({ error: error.message });
   }
 };
 
@@ -34,8 +37,6 @@ const tokenExtractor = async (req, res, next) => {
           id: req.decodedToken.id,
         },
       });
-
-      console.log('does it find the user?', user);
 
       if (!user) {
         return res.status(401).json({

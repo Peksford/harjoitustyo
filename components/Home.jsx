@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import followService from '../services/follow';
+import PropTypes from 'prop-types';
 
 const styles = {
   container: {
@@ -37,14 +38,10 @@ const styles = {
 
 const Home = ({ user }) => {
   const { username } = useParams();
-  console.log('logged in user', user);
-  // if (!albums || albums.length === 0) {
-  //   return <h2>{`${user.username} has not reviewed anything yet`}!</h2>;
-  // }
   const [userData, setUserData] = useState(null);
 
+  if (!username) return null;
   useEffect(() => {
-    console.log('does this render', username);
     const fetchUser = async () => {
       try {
         const response = await axios.get(
@@ -59,27 +56,26 @@ const Home = ({ user }) => {
     fetchUser();
   }, [username]);
 
-  const currentMonth = () => {
-    const currentDate = new Date();
-    console.log('Current date', currentDate);
-    const months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-    return months[currentDate.getMonth()];
-  };
+  // const currentMonth = () => {
+  //   const currentDate = new Date();
+  //   console.log('Current date', currentDate);
+  //   const months = [
+  //     'January',
+  //     'February',
+  //     'March',
+  //     'April',
+  //     'May',
+  //     'June',
+  //     'July',
+  //     'August',
+  //     'September',
+  //     'October',
+  //     'November',
+  //     'December',
+  //   ];
+  //   return months[currentDate.getMonth()];
+  // };
 
-  // console.log('albums here', userData.albums);
   const heartAlbum = userData
     ? userData.albums.find((album) => album.heart === true)
     : null;
@@ -93,17 +89,13 @@ const Home = ({ user }) => {
     ? userData.games.find((game) => game.heart === true)
     : null;
 
-  console.log('HOME PAGE USER', userData);
-
   const testi = async (event) => {
     event.preventDefault();
     try {
-      console.log('sending follow data', userData);
       followService.newFollow(user, userData);
     } catch (error) {
       console.error(error);
     }
-    console.log('testing button home page');
   };
 
   if (userData) {
@@ -267,8 +259,14 @@ const Home = ({ user }) => {
       </>
     );
   } else {
-    return <div>Not found</div>;
+    return null;
   }
+};
+
+Home.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+  }),
 };
 
 export default Home;

@@ -5,14 +5,13 @@ import userService from '../services/users';
 import { useState, useEffect } from 'react';
 import Heart from 'react-heart';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const Game = ({ user, onUpdateGame }) => {
   const { username, id } = useParams();
   const [gameData, setGameData] = useState('');
   const [rating, setRating] = useState(0);
   const [active, setActive] = useState(false);
-
-  console.log('paramssit', username, id);
 
   useEffect(() => {
     const fetchGame = async () => {
@@ -32,11 +31,7 @@ const Game = ({ user, onUpdateGame }) => {
       }
     };
     fetchGame();
-    console.log('gamei data', gameData);
-    // const game = games.find((game) => game.id === Number(id));
   }, [id, username]);
-
-  console.log('gamei data', gameData);
 
   const handleHeartClick = async () => {
     try {
@@ -44,8 +39,6 @@ const Game = ({ user, onUpdateGame }) => {
         ...gameData,
         heart: true,
       });
-
-      console.log('The response of the heart ', updatedHeart);
       setGameData(updatedHeart);
       setActive(updatedHeart.heart);
 
@@ -59,6 +52,7 @@ const Game = ({ user, onUpdateGame }) => {
 
   const changeRating = async (newRating) => {
     setRating(newRating);
+
     try {
       const updatedRating = await gameService.updatedGame(gameData.id, {
         ...gameData,
@@ -77,14 +71,17 @@ const Game = ({ user, onUpdateGame }) => {
     return (
       <>
         <div>
-          <h10>
+          <div>
             back to <Link to={`/${username}`}>{username}</Link> home page
-          </h10>
+          </div>
         </div>
         <div style={styles.gameContainer}>
           <div style={styles.gameInfo}>
             <h2>{gameData.whole_title}</h2>
-
+            <div>
+              {username} added this on{' '}
+              {new Date(gameData.createdAt).toLocaleDateString()}
+            </div>
             <p style={{ width: '4rem' }}>
               <Heart isActive={active || false} onClick={handleHeartClick} />
             </p>
@@ -170,7 +167,7 @@ const styles = {
   },
   thumbnail: {
     width: '250px',
-    height: '300px',
+    height: '330px',
     objectFit: 'cover',
     marginBottom: '8px',
   },
@@ -214,6 +211,13 @@ const styles = {
   circleText: {
     margin: 0,
   },
+};
+
+Game.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+  }),
+  onUpdateGame: PropTypes.func,
 };
 
 export default Game;

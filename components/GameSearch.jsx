@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 const styles = {
   gameContainer: {
@@ -181,10 +182,23 @@ const GameSearch = ({ createGame }) => {
 
   return (
     <div>
-      <input {...gameInput} placeholder="Search for a game" />
+      <input
+        className="search-input"
+        {...gameInput}
+        placeholder="Search for a game"
+      />
       <Game gameSearched={game} createGame={createGame} />
     </div>
   );
+};
+
+Game.propTypes = {
+  gameSearched: PropTypes.array.isRequired,
+  createGame: PropTypes.func.isRequired,
+};
+
+GameSearch.propTypes = {
+  createGame: PropTypes.func.isRequired,
 };
 
 export default GameSearch;
