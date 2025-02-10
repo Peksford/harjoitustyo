@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import UserMenu from './UserMenu';
+import PropTypes from 'prop-types';
 
-const Following = (user) => {
+const Following = ({ user }) => {
   const { username } = useParams();
   const [userData, setUserData] = useState(null);
 
@@ -42,6 +43,12 @@ const Following = (user) => {
       ) : null}
     </div>
   );
+};
+
+Following.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+  }),
 };
 
 export default Following;

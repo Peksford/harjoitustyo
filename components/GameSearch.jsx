@@ -81,7 +81,6 @@ const useGame = (name) => {
             },
           }
         );
-        console.log('game data works?', response.data);
         setGameSearched(response.data);
       } catch (error) {
         console.error(error);
@@ -91,7 +90,6 @@ const useGame = (name) => {
     searchGame();
   }, [name]);
 
-  console.log('what happens here', gameSearched);
   return gameSearched;
 };
 
@@ -101,7 +99,6 @@ const Game = ({ gameSearched, createGame }) => {
   }
 
   const createNew = ({ game }) => {
-    console.log('Testing game', game);
     createGame({
       title: game.name || 'Untitled',
       url: game.url,

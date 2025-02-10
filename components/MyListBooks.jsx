@@ -34,7 +34,7 @@ const styles = {
     width: '50px',
     height: '50px',
     borderRadius: '50%',
-    border: '2px solid #646cff',
+    border: '2px solid rgb(255, 255, 255)',
     backgroundColor: 'transparent',
     // color: '#fff',
     display: 'flex',
@@ -45,6 +45,7 @@ const styles = {
   },
   circleText: {
     margin: 0,
+    color: 'black',
   },
 };
 

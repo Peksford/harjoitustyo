@@ -8,6 +8,9 @@ import followService from '../services/follow';
 const UserMenu = (user) => {
   const { username } = useParams();
   const [userData, setUserData] = useState(null);
+  const [follow, setFollow] = useState(false);
+
+  if (!username) return null;
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -17,29 +20,40 @@ const UserMenu = (user) => {
         );
 
         setUserData(response.data);
+
+        const isFollowing = response.data.followers.some(
+          (follower) => follower.follower_id === user.user.id
+        );
+
+        setFollow(isFollowing);
       } catch (error) {
         console.error(error);
       }
     };
     fetchUser();
-  }, [username]);
+  }, [username, user]);
 
-  const testi = async (event) => {
+  const Follow = async (event) => {
     event.preventDefault();
     try {
-      console.log('sending follow data', userData);
-      followService.newFollow(user, userData);
+      if (follow === false) {
+        followService.newFollow(user, userData);
+        setFollow(true);
+      } else {
+        console.log('follow = true');
+        followService.unFollow(user, userData);
+        setFollow(false);
+      }
     } catch (error) {
       console.error(error);
     }
-    console.log('testing button home page');
   };
 
   if (userData) {
     return (
       <>
         <h1>{username}</h1>
-        {user && <button onClick={testi}> Follow</button>}
+        <button onClick={Follow}>{follow ? 'Unfollow' : 'Follow'}</button>
 
         <div className="links-container">
           <div>

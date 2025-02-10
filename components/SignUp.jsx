@@ -7,6 +7,8 @@ import { setUser, userLogin } from '../reducers/loginReducer';
 import albumService from '../services/albums';
 import movieService from '../services/movies';
 import bookService from '../services/books';
+import gameService from '../services/games';
+import followService from '../services/follow';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -40,9 +42,11 @@ const SignUp = () => {
       albumService.setToken(user.token);
       movieService.setToken(user.token);
       bookService.setToken(user.token);
+      gameService.setToken(user.token);
+      followService.setToken(user.token);
       dispatch(setUser(user));
 
-      dispatch(notificationShow(`Welcome ${user.name}!`));
+      dispatch(notificationShow(`Welcome ${user.username}!`));
 
       setTimeout(() => dispatch(notificationHide('')), 5000);
 

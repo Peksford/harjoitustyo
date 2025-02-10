@@ -2,13 +2,7 @@ import React from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {
-  BrowserRouter as Router,
-  Link,
-  Routes,
-  Route,
-  Navigate,
-} from 'react-router-dom';
+import { Link, Routes, Route, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import albumService from '../services/albums';
 import movieService from '../services/movies';
@@ -35,6 +29,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../reducers/loginReducer';
 import { setNotification } from '../reducers/notificationReducer';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const styles = {
   padding: {
@@ -46,12 +41,25 @@ const styles = {
   },
 };
 
+const ErrorMessage = ({ message }) => {
+  if (message === null) {
+    return null;
+  }
+
+  return <div className="error">{message}</div>;
+};
+
+ErrorMessage.propTypes = {
+  message: PropTypes.string,
+};
+
 const App = () => {
   const [albums, setAlbums] = useState([]);
   const [books, setBooks] = useState([]);
   const [movies, setMovies] = useState([]);
   const [games, setGames] = useState([]);
   const user = useSelector((state) => state.user);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -118,29 +126,62 @@ const App = () => {
   };
 
   const createAlbum = async (albumObject) => {
-    const newAlbum = await albumService.create(albumObject);
-    setAlbums([...albums, newAlbum]);
+    try {
+      const newAlbum = await albumService.create(albumObject);
+      setAlbums([...albums, newAlbum]);
+      dispatch(setNotification(`${albumObject.title} added on your list`, 5));
+    } catch (error) {
+      console.error(error);
+      setErrorMessage(`'${albumObject.title}' already added into your list`);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    }
   };
 
   const createMovie = async (movieObject) => {
-    const newMovie = await movieService.create(movieObject);
-    setMovies([...movies, newMovie]);
+    try {
+      const newMovie = await movieService.create(movieObject);
+      setMovies([...movies, newMovie]);
+    } catch (error) {
+      console.error(error);
+      setErrorMessage(`'${movieObject.title}' already added into your list`);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    }
   };
 
   const createBook = async (bookObject) => {
-    const newBook = await bookService.create(bookObject);
-    setBooks([...books, newBook]);
+    try {
+      const newBook = await bookService.create(bookObject);
+      setBooks([...books, newBook]);
+    } catch (error) {
+      console.error(error);
+      setErrorMessage(`'${bookObject.title}' already added into your list`);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    }
   };
 
   const createGame = async (gameObject) => {
-    const newGame = await gameService.create(gameObject);
-    setGames([...books, newGame]);
+    try {
+      const newGame = await gameService.create(gameObject);
+      setGames([...books, newGame]);
+    } catch (error) {
+      console.error(error);
+      setErrorMessage(`'${gameObject.title}' already added into your list`);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    }
   };
 
   return (
     <div>
       <Notification />
-
+      <ErrorMessage message={errorMessage} />
       <div style={styles.container}>
         {user ? (
           <Link style={styles.padding} to={`/${user.username}`}>
@@ -160,25 +201,37 @@ const App = () => {
           </Link>
         )}
         {user && (
-          <DropdownButton id="dropdown-basic-button" title={user.username}>
-            <Dropdown.Item as={Link} to={`/${user.username}/albums`}>
-              My albums
-            </Dropdown.Item>
-            <Dropdown.Item as={Link} to={`/${user.username}/movies`}>
-              My movies
-            </Dropdown.Item>
-            <Dropdown.Item as={Link} to={`/${user.username}/books`}>
-              My books
-            </Dropdown.Item>
-            <Dropdown.Item as={Link} to={`/${user.username}/games`}>
-              My games
-            </Dropdown.Item>
-          </DropdownButton>
+          <div>
+            <DropdownButton
+              id="dropdown-secondary-button"
+              title={user.username}
+            >
+              <Dropdown.Item as={Link} to={`/${user.username}/albums`}>
+                My albums
+              </Dropdown.Item>
+              <Dropdown.Item as={Link} to={`/${user.username}/movies`}>
+                My movies
+              </Dropdown.Item>
+              <Dropdown.Item as={Link} to={`/${user.username}/books`}>
+                My books
+              </Dropdown.Item>
+              <Dropdown.Item as={Link} to={`/${user.username}/games`}>
+                My games
+              </Dropdown.Item>
+            </DropdownButton>
+          </div>
         )}
-        {user && <button onClick={handleLogout}> Logout</button>}
+        {user && (
+          <button style={{ marginLeft: '5px' }} onClick={handleLogout}>
+            {' '}
+            Logout
+          </button>
+        )}
       </div>
       <Routes>
-        <Route path="/" element={user ? <Home /> : <Navigate to="/signup" />} />
+        {user ? (
+          <Route path="/" element={<Navigate to={`/${user.username}`} />} />
+        ) : null}
         <Route
           path="/search"
           element={

@@ -98,16 +98,20 @@ const Album = ({ albumSearched, createAlbum }) => {
     return <div>not found</div>;
   }
   const createNew = ({ album }) => {
-    createAlbum({
-      artist: album.title.split(' - ')[0].trim(),
-      title: album.title.split(' - ')[1].trim(),
-      url: album.uri,
-      year: album.year,
-      thumbnail: album.cover_image,
-      whole_title: album.title,
-      discogs_id: album.id,
-      heart: false,
-    });
+    try {
+      createAlbum({
+        artist: album.title.split(' - ')[0].trim(),
+        title: album.title.split(' - ')[1].trim(),
+        url: album.uri,
+        year: album.year,
+        thumbnail: album.cover_image,
+        whole_title: album.title,
+        discogs_id: album.id,
+        heart: false,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

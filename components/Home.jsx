@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import followService from '../services/follow';
 import PropTypes from 'prop-types';
+import UserMenu from './UserMenu';
 
 const styles = {
   container: {
@@ -22,7 +22,7 @@ const styles = {
     width: '100px',
     height: '100px',
     borderRadius: '50%',
-    border: '2px solid #646cff',
+    border: '2px solid rgb(255, 255, 255)',
     backgroundColor: 'transparent',
     // color: '#fff',
     display: 'flex',
@@ -33,6 +33,7 @@ const styles = {
   },
   circleText: {
     margin: 0,
+    color: 'black',
   },
 };
 
@@ -40,14 +41,12 @@ const Home = ({ user }) => {
   const { username } = useParams();
   const [userData, setUserData] = useState(null);
 
-  if (!username) return null;
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const response = await axios.get(
           `http://localhost:3001/api/users/${username}`
         );
-
         setUserData(response.data);
       } catch (error) {
         console.error(error);
@@ -55,6 +54,8 @@ const Home = ({ user }) => {
     };
     fetchUser();
   }, [username]);
+
+  if (!username) return null;
 
   // const currentMonth = () => {
   //   const currentDate = new Date();
@@ -89,41 +90,10 @@ const Home = ({ user }) => {
     ? userData.games.find((game) => game.heart === true)
     : null;
 
-  const testi = async (event) => {
-    event.preventDefault();
-    try {
-      followService.newFollow(user, userData);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   if (userData) {
     return (
       <>
-        <h1>{username}</h1>
-        {user && <button onClick={testi}> Follow</button>}
-
-        <div className="links-container">
-          <div>
-            <Link to={`/${username}/albums`}>albums</Link>
-          </div>
-          <div>
-            <Link to={`/${username}/books`}>books</Link>
-          </div>
-          <div>
-            <Link to={`/${username}/movies`}>movies</Link>
-          </div>
-          <div>
-            <Link to={`/${username}/games`}>games</Link>
-          </div>
-          <div>
-            <Link to={`/${username}/followers`}>followers</Link>
-          </div>
-          <div>
-            <Link to={`/${username}/following`}>following</Link>
-          </div>
-        </div>
+        <UserMenu user={user} />
         <h2>Recommendations</h2>
         <div>
           {heartAlbum || heartMovie || heartBook || heartGame ? (

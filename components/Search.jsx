@@ -4,6 +4,7 @@ import AlbumSearch from './AlbumSearch';
 import MovieSearch from './MovieSearch';
 import BookSearch from './BookSearch';
 import GameSearch from './GameSearch';
+import UserSearch from './UserSearch';
 import PropTypes from 'prop-types';
 
 const Search = ({ createAlbum, createBook, createMovie, createGame }) => {
@@ -22,7 +23,7 @@ const Search = ({ createAlbum, createBook, createMovie, createGame }) => {
             value="albums"
             checked={type === 'albums'}
             onChange={handleTypeChange}
-          />
+          />{' '}
           Albums
         </label>
         <label style={{ marginRight: '10px' }}>
@@ -31,7 +32,7 @@ const Search = ({ createAlbum, createBook, createMovie, createGame }) => {
             value="movies"
             checked={type === 'movies'}
             onChange={handleTypeChange}
-          />
+          />{' '}
           Movies
         </label>
         <label style={{ marginRight: '10px' }}>
@@ -40,23 +41,33 @@ const Search = ({ createAlbum, createBook, createMovie, createGame }) => {
             value="books"
             checked={type === 'books'}
             onChange={handleTypeChange}
-          />
+          />{' '}
           Books
         </label>
-        <label style={{ marginRight: '1Thanks0px' }}>
+        <label style={{ marginRight: '10px' }}>
           <input
             type="radio"
             value="games"
             checked={type === 'games'}
             onChange={handleTypeChange}
-          />
-          Games
+          />{' '}
+          Games{' '}
+        </label>
+        <label style={{ marginRight: '10px' }}>
+          <input
+            type="radio"
+            value="users"
+            checked={type === 'users'}
+            onChange={handleTypeChange}
+          />{' '}
+          User
         </label>
       </div>
       {type === 'albums' && <AlbumSearch createAlbum={createAlbum} />}
       {type === 'movies' && <MovieSearch createMovie={createMovie} />}
       {type === 'books' && <BookSearch createBook={createBook} />}
       {type === 'games' && <GameSearch createGame={createGame} />}
+      {type === 'users' && <UserSearch />}
     </div>
   );
 };

@@ -4,12 +4,13 @@ body {
     place-items: center;
     min-width: 320px;
     min-height: 100vh;
-    background-color: #b7acbc !important;
+    background-color: #6a659c !important;
+    color: black !important
   }
 
 a {
 font-weight: 500;
-color: #12170e !important;
+color: #f1ebeb !important;
 text-decoration: inherit;
 }
 
@@ -19,7 +20,7 @@ line-height: 1.5;
 font-weight: 400;
 
 color-scheme: white;
-color: rgba(50, 26, 26, 0.87) !important;
+color: rgba(0, 0, 0, 0.87) !important;
 background-color: #242424;
 
 font-synthesis: none;
@@ -28,9 +29,13 @@ text-rendering: optimizeLegibility;
 -moz-osx-font-smoothing: grayscale;
 }
 
-h2 {
+h1, h2 {
     margin-bottom: 50px;
     margin-top: 30px !important;
+    color: #000000 !important
+}
+.circleText {
+  color: black !important
 }
 .links-container {
     display: flex;
@@ -43,19 +48,30 @@ h2 {
 }
 
 .error {
-    color: red;
+    color: white;
+    background-color: red;
     font-weight: bold;
-    margin-top: 10px;
+    position: fixed;
+    border-radius: 5px;
+    font-size: 15px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center;
+    z-index:1000;
 }
 
 .notification {
     background-color: #4caf50;
     color: white;
-    padding: 10px;
+    padding: 20px;
     position: fixed;
     font-size: 16px;
+    top: 50%;
+    left: 50%;
     border-radius: 5px;
-    
+    z-index: 1000;
+    transform: translate(-50%, -50%)
 }
 
 button {
@@ -80,6 +96,7 @@ button {
   }
   .radio-group {
     margin-top: 20px;
+    accent-color: #6a659c;
   }
 
   .search-input {
@@ -87,4 +104,11 @@ button {
     padding: 5px;
     width: 100%;
     border-radius: 8px;
+  }
+
+  .dropdown-toggle:active,
+  .dropdown-toggle:focus {
+    background-color: black !important;
+    color:white;
+    border-color: black;
   }

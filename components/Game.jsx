@@ -86,9 +86,12 @@ const Game = ({ user, onUpdateGame }) => {
               <Heart isActive={active || false} onClick={handleHeartClick} />
             </p>
             {gameData.genres && <h3>Genres: {gameData.genres}</h3>}
-            <h3>
-              {new Date(gameData.release_date * 1000).toLocaleDateString()}
-            </h3>
+            {gameData.release_date && (
+              <h3>
+                Released:{' '}
+                {new Date(gameData.release_date * 1000).toLocaleDateString()}
+              </h3>
+            )}
 
             {gameData.summary && (
               <p

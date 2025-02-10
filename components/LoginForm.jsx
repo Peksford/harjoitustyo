@@ -8,6 +8,7 @@ import albumService from '../services/albums';
 import movieService from '../services/movies';
 import bookService from '../services/books';
 import gameService from '../services/games';
+import followService from '../services/follow';
 import { useNavigate } from 'react-router-dom';
 
 import { setNotification } from '../reducers/notificationReducer';
@@ -37,6 +38,8 @@ const LoginForm = () => {
       movieService.setToken(user.token);
       bookService.setToken(user.token);
       gameService.setToken(user.token);
+      followService.setToken(user.token);
+
       dispatch(setUser(user));
 
       setUsername('');

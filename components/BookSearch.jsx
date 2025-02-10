@@ -81,7 +81,7 @@ const useBook = (name) => {
             },
           }
         );
-        console.log('book data works?', response.data);
+
         setBookSearched(response.data.docs);
       } catch (error) {
         console.error(error);
@@ -91,7 +91,6 @@ const useBook = (name) => {
     searchBook();
   }, [name]);
 
-  console.log('what happens here', bookSearched);
   return bookSearched;
 };
 
@@ -101,7 +100,6 @@ const Book = ({ bookSearched, createBook }) => {
   }
 
   const createNew = ({ book }) => {
-    console.log('Testing book', book);
     createBook({
       author: book.author_name?.[0] || 'Unknown',
       title: book.title || 'Untitled',
