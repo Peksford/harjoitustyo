@@ -76,11 +76,10 @@ const useAlbum = (name) => {
               q: name,
               per_page: 40,
               page: 1,
-              type: 'release',
+              type: 'master',
             },
           }
         );
-
         setAlbumSearched(response.data.results);
       } catch (error) {
         console.error(error);
@@ -113,7 +112,7 @@ const Album = ({ albumSearched, createAlbum }) => {
       console.error(error);
     }
   };
-
+  console.log('is the album here', albumSearched);
   return (
     <div>
       <h4>
@@ -160,6 +159,7 @@ const AlbumSearch = ({ createAlbum }) => {
       <input
         className="search-input"
         {...albumInput}
+        data-testid="Search album"
         placeholder="Search for an album"
       />
       <Album albumSearched={album} createAlbum={createAlbum} />

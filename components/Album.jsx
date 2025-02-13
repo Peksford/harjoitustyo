@@ -78,7 +78,7 @@ const Album = ({ user, onUpdateAlbum }) => {
       try {
         if (albumData) {
           const data = await axios.get(
-            `https://api.discogs.com/releases/${albumData.discogs_id}`,
+            `https://api.discogs.com/masters/${albumData.discogs_id}`,
             {
               headers: {
                 Authorization: `Discogs token=${token}`,

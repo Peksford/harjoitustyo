@@ -143,6 +143,7 @@ const App = () => {
     try {
       const newMovie = await movieService.create(movieObject);
       setMovies([...movies, newMovie]);
+      dispatch(setNotification(`${movieObject.title} added on your list`, 5));
     } catch (error) {
       console.error(error);
       setErrorMessage(`'${movieObject.title}' already added into your list`);
@@ -156,6 +157,7 @@ const App = () => {
     try {
       const newBook = await bookService.create(bookObject);
       setBooks([...books, newBook]);
+      dispatch(setNotification(`${bookObject.title} added on your list`, 5));
     } catch (error) {
       console.error(error);
       setErrorMessage(`'${bookObject.title}' already added into your list`);
@@ -169,6 +171,7 @@ const App = () => {
     try {
       const newGame = await gameService.create(gameObject);
       setGames([...books, newGame]);
+      dispatch(setNotification(`${gameObject.title} added on your list`, 5));
     } catch (error) {
       console.error(error);
       setErrorMessage(`'${gameObject.title}' already added into your list`);
@@ -204,6 +207,7 @@ const App = () => {
           <div>
             <DropdownButton
               id="dropdown-secondary-button"
+              // data-testid="dropdown-list"
               title={user.username}
             >
               <Dropdown.Item as={Link} to={`/${user.username}/albums`}>

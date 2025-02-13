@@ -73,6 +73,7 @@ const LoginForm = () => {
           <Form.Label>username: </Form.Label>
           <Form.Control
             id="username"
+            data-testid="username"
             type="text"
             value={username}
             name="Username"
@@ -82,6 +83,7 @@ const LoginForm = () => {
           <Form.Label>password: </Form.Label>
           <Form.Control
             id="password"
+            data-testid="password"
             type="password"
             value={password}
             name="Password"

@@ -78,7 +78,10 @@ const MyListMovies = ({ user }) => {
         <div style={styles.container}>
           {userData.movies.map((movie) => (
             <div key={movie.id} style={styles.card}>
-              <Link to={`/${username}/movies/${movie.id}`}>
+              <Link
+                data-testid="movieTest"
+                to={`/${username}/movies/${movie.id}`}
+              >
                 <img
                   src={`https://www.themoviedb.org/t/p/w1280/${movie.thumbnail}`}
                   style={styles.thumbnail}

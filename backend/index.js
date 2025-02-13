@@ -31,6 +31,12 @@ app.use('/api/movies', moviesRouter);
 app.use('/api/games', gamesRouter);
 app.use('/api/follow', followRouter);
 
+if (process.env.NODE_ENV === 'test') {
+  const testingRouter = require('./controllers/testing');
+  console.log('ANYTHING HERE TEST');
+  app.use('/api/testing', testingRouter);
+}
+
 app.use(middleware.errorHandler);
 
 const start = async () => {

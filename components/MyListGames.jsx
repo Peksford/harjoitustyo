@@ -78,7 +78,7 @@ const MyListGames = ({ user }) => {
         <div style={styles.container}>
           {userData.games.map((game) => (
             <div key={game.id} style={styles.card}>
-              <Link to={`/${username}/games/${game.id}`}>
+              <Link data-testid="gameTest" to={`/${username}/games/${game.id}`}>
                 <img
                   src={game.thumbnail.replace(/t_thumb/, 't_cover_big')}
                   style={styles.thumbnail}

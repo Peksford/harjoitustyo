@@ -15,11 +15,12 @@ router.get('/search-book', async (req, res) => {
         'User-Agent': userAgent,
       },
       params: {
-        q: name,
+        title: name,
         limit: 50,
+        sort: 'editions',
       },
     });
-    // console.log('response', response);
+
     res.json(response.data);
   } catch (error) {
     console.error(error);

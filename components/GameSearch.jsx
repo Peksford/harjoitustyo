@@ -182,6 +182,7 @@ const GameSearch = ({ createGame }) => {
       <input
         className="search-input"
         {...gameInput}
+        data-testid="Search game"
         placeholder="Search for a game"
       />
       <Game gameSearched={game} createGame={createGame} />

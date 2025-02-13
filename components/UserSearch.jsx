@@ -184,6 +184,7 @@ const UserSearch = () => {
       <input
         className="search-input"
         {...userInput}
+        data-testid="Search user"
         placeholder="Search for an user"
       />
       <User userSearched={user} />

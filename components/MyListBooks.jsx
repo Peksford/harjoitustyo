@@ -82,7 +82,10 @@ const MyListBooks = ({ user }) => {
         <div style={styles.container}>
           {userData.books.map((book) => (
             <div key={book.id} style={styles.card}>
-              <Link to={`/${userData.username}/books/${book.id}`}>
+              <Link
+                data-testid="bookTest"
+                to={`/${userData.username}/books/${book.id}`}
+              >
                 {book.thumbnail && (
                   <img
                     src={`https://covers.openlibrary.org/b/id/${book.thumbnail}-L.jpg`}

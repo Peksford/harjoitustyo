@@ -78,7 +78,10 @@ const MyList = ({ user }) => {
         <div style={styles.container}>
           {userData.albums.map((album) => (
             <div key={album.id} style={styles.card}>
-              <Link to={`/${username}/albums/${album.id}`}>
+              <Link
+                data-testid="albumTest"
+                to={`/${username}/albums/${album.id}`}
+              >
                 <img src={album.thumbnail} style={styles.thumbnail} />
               </Link>
               {album.rating ? (

@@ -4,7 +4,7 @@ body {
     place-items: center;
     min-width: 320px;
     min-height: 100vh;
-    background-color: #6a659c !important;
+    background-color: #9996C0 !important;
     color: black !important
   }
 
@@ -49,7 +49,7 @@ h1, h2 {
 
 .error {
     color: white;
-    background-color: red;
+    background-color: rgb(255, 0 , 0);
     font-weight: bold;
     position: fixed;
     border-radius: 5px;
@@ -62,8 +62,8 @@ h1, h2 {
 }
 
 .notification {
-    background-color: #4caf50;
-    color: white;
+    background-color: blanchedalmond;
+    color: black;
     padding: 20px;
     position: fixed;
     font-size: 16px;
@@ -106,9 +106,22 @@ button {
     border-radius: 8px;
   }
 
-  .dropdown-toggle:active,
-  .dropdown-toggle:focus {
+  .dropdown-menu {
+    background-color: #1a1a1a !important;
+    border: 1px solid black;
+  }
+
+  .dropdown-toggle:hover {
+    border-radius: 8px;
+    border-color: #646cff !important;
+  }
+    
+  .dropdown-toggle {
     background-color: black !important;
-    color:white;
-    border-color: black;
+    color: white !important;
+    border-color: black !important;
+  }
+
+  .dropdown-item {
+    color: #6a659c !important
   }

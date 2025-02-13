@@ -39,6 +39,7 @@ const styles = {
 
 const useField = (type) => {
   const [value, setValue] = useState('');
+  console.log('typing...', value);
 
   const onChange = (event) => {
     setValue(event.target.value);
@@ -70,7 +71,10 @@ const useBook = (name) => {
   const [bookSearched, setBookSearched] = useState([]);
 
   useEffect(() => {
-    if (!name) return;
+    if (!name) {
+      setBookSearched([]);
+      return;
+    }
     const searchBook = async () => {
       try {
         const response = await axios.get(
@@ -98,7 +102,7 @@ const Book = ({ bookSearched, createBook }) => {
   if (bookSearched === null || bookSearched === undefined) {
     return <div>not found</div>;
   }
-
+  console.log('serching', bookSearched);
   const createNew = ({ book }) => {
     createBook({
       author: book.author_name?.[0] || 'Unknown',
@@ -112,6 +116,10 @@ const Book = ({ bookSearched, createBook }) => {
     });
   };
 
+  // const sortedSearch = bookSearched.sort(
+  //   (a, b) => a.first_publish_year - b.first_publish_year
+  // );
+  // console.log('book object', sortedSearch);
   return (
     <div>
       <h4>
@@ -127,8 +135,18 @@ const Book = ({ bookSearched, createBook }) => {
               <div style={styles.BookInfoAndButtons}>
                 <div style={styles.bookInfo}>
                   <p>{book.title}</p>
-                  {book.publish_year?.[0] && (
-                    <p>Year: {book.publish_year[0]}</p>
+                  {book.author_name &&
+                    (book.author_name.length < 2 ? (
+                      <p>
+                        Author: <i>{book.author_name.join(', ')}</i>
+                      </p>
+                    ) : (
+                      <p>
+                        Authors: <i>{book.author_name.join(', ')}</i>
+                      </p>
+                    ))}
+                  {book.first_publish_year && (
+                    <p>Year: {book.first_publish_year}</p>
                   )}
                   {book.key && (
                     <p>
@@ -159,14 +177,16 @@ const Book = ({ bookSearched, createBook }) => {
 
 const BookSearch = ({ createBook }) => {
   const bookInput = useField('text');
-  const debouncedBook = useDebounce(bookInput.value, 1000);
+  const debouncedBook = useDebounce(bookInput.value, 500);
   const book = useBook(debouncedBook);
+  console.log(bookInput.value);
 
   return (
     <div>
       <input
         className="search-input"
         {...bookInput}
+        data-testid="Search book"
         placeholder="Search for a book"
       />
       <Book bookSearched={book} createBook={createBook} />

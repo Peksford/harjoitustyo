@@ -230,7 +230,8 @@ const MovieSearch = ({ createMovie }) => {
       <input
         className="search-input"
         {...movieInput}
-        placeholder="Search for an movie"
+        data-testid="Search movie"
+        placeholder="Search for a movie"
       />
       <Movie movieSearched={movie} createMovie={createMovie} />
     </div>

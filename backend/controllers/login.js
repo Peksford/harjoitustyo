@@ -15,8 +15,6 @@ router.post('/', async (request, response) => {
     },
   });
 
-  console.log('Login controller', user);
-
   // const passwordCorrect = body.password === 'salainen';
 
   const passwordCorrect =

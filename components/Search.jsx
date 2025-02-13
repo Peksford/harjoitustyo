@@ -21,6 +21,7 @@ const Search = ({ createAlbum, createBook, createMovie, createGame }) => {
           <input
             type="radio"
             value="albums"
+            data-testid="album"
             checked={type === 'albums'}
             onChange={handleTypeChange}
           />{' '}
@@ -30,6 +31,7 @@ const Search = ({ createAlbum, createBook, createMovie, createGame }) => {
           <input
             type="radio"
             value="movies"
+            data-testid="movie"
             checked={type === 'movies'}
             onChange={handleTypeChange}
           />{' '}
@@ -39,6 +41,7 @@ const Search = ({ createAlbum, createBook, createMovie, createGame }) => {
           <input
             type="radio"
             value="books"
+            data-testid="book"
             checked={type === 'books'}
             onChange={handleTypeChange}
           />{' '}
@@ -48,6 +51,7 @@ const Search = ({ createAlbum, createBook, createMovie, createGame }) => {
           <input
             type="radio"
             value="games"
+            data-testid="game"
             checked={type === 'games'}
             onChange={handleTypeChange}
           />{' '}
@@ -57,6 +61,7 @@ const Search = ({ createAlbum, createBook, createMovie, createGame }) => {
           <input
             type="radio"
             value="users"
+            data-testid="user"
             checked={type === 'users'}
             onChange={handleTypeChange}
           />{' '}

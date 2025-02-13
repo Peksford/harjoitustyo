@@ -20,12 +20,13 @@ const UserMenu = (user) => {
         );
 
         setUserData(response.data);
+        if (user.user) {
+          const isFollowing = response.data.followers.some(
+            (follower) => follower.follower_id === user.user.id
+          );
 
-        const isFollowing = response.data.followers.some(
-          (follower) => follower.follower_id === user.user.id
-        );
-
-        setFollow(isFollowing);
+          setFollow(isFollowing);
+        }
       } catch (error) {
         console.error(error);
       }
@@ -53,7 +54,9 @@ const UserMenu = (user) => {
     return (
       <>
         <h1>{username}</h1>
-        <button onClick={Follow}>{follow ? 'Unfollow' : 'Follow'}</button>
+        {user.user && (
+          <button onClick={Follow}>{follow ? 'Unfollow' : 'Follow'}</button>
+        )}
 
         <div className="links-container">
           <div>
