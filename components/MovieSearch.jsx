@@ -207,7 +207,10 @@ const Movie = ({ movieSearched, createMovie }) => {
                 )} */}
               </div>
               <div style={styles.buttonContainer}>
-                <button onClick={() => createNew({ movie })}>
+                <button
+                  onClick={() => createNew({ movie })}
+                  className="button-text"
+                >
                   Add to My List
                 </button>
               </div>

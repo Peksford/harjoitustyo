@@ -4,14 +4,25 @@ import movieService from '../services/movies';
 import userService from '../services/users';
 import { useState, useEffect } from 'react';
 import Heart from 'react-heart';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { setNotification } from '../reducers/notificationReducer';
+import { useDispatch } from 'react-redux';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
 
 const Movie = ({ user, onUpdateMovie }) => {
   const { username, id } = useParams();
   const [movieData, setMovieData] = useState('');
   const [rating, setRating] = useState(0);
   const [active, setActive] = useState(false);
+
+  const [open, setOpen] = useState(false);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -69,6 +80,28 @@ const Movie = ({ user, onUpdateMovie }) => {
   const formatDate = (inputDate) => {
     const date = new Date(inputDate);
     return new Intl.DateTimeFormat('fi-FI').format(date);
+  };
+
+  const deleteMovie = async (id) => {
+    try {
+      setOpen(true);
+      await movieService.deleteMovie(id);
+      setMovieData(null);
+      dispatch(
+        setNotification(`${movieData.title} was removed from your list`, 5)
+      );
+      navigate(`/${username}/movies`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   if (movieData) {
@@ -158,6 +191,27 @@ const Movie = ({ user, onUpdateMovie }) => {
                 </div>
               </div>
             ) : null}
+            <div style={styles.buttonContainer}></div>
+            <div>
+              <button onClick={handleClickOpen}>Remove</button>
+              <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">
+                  {`Do you want to remove ${movieData.title} from your list?`}
+                </DialogTitle>
+                <DialogActions>
+                  <Button onClick={handleClose}>No</Button>
+                  <Button onClick={() => deleteMovie(movieData.id)} autoFocus>
+                    {' '}
+                    Yes
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </div>
           </div>
         </div>
       </>

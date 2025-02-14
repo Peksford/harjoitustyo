@@ -158,7 +158,10 @@ const Game = ({ gameSearched, createGame }) => {
                   )}
                 </div>
                 <div style={styles.buttonContainer}>
-                  <button onClick={() => createNew({ game })}>
+                  <button
+                    onClick={() => createNew({ game })}
+                    className="button-text"
+                  >
                     Add to My List
                   </button>
                 </div>

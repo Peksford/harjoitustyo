@@ -5,8 +5,14 @@ import userService from '../services/users';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Heart from 'react-heart';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { setNotification } from '../reducers/notificationReducer';
+import { useDispatch } from 'react-redux';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
 
 const Book = ({ user, onUpdateBook }) => {
   const { username, id } = useParams();
@@ -14,6 +20,10 @@ const Book = ({ user, onUpdateBook }) => {
   const [rating, setRating] = useState(0);
   const [descriptionFetched, setDescriptionFetched] = useState(false);
   const [active, setActive] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleHeartClick = async () => {
     try {
@@ -56,7 +66,7 @@ const Book = ({ user, onUpdateBook }) => {
     const fetchBook = async () => {
       try {
         const book = await bookService.getBook(id);
-        const user = await userService.getUserAlbums(username);
+        const user = await userService.getUserBooks(username);
 
         if (user[0].user_id === book.user_id) {
           setBookData(book);
@@ -99,6 +109,28 @@ const Book = ({ user, onUpdateBook }) => {
     releaseInfo();
   }, [bookData, descriptionFetched]);
 
+  const deleteBook = async (id) => {
+    try {
+      setOpen(true);
+      await bookService.deleteBook(id);
+      setBookData(null);
+      dispatch(
+        setNotification(`${bookData.title} was removed from your list`, 5)
+      );
+      navigate(`/${username}/books`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <>
       <div>
@@ -106,8 +138,8 @@ const Book = ({ user, onUpdateBook }) => {
           back to <Link to={`/${username}`}>{username}</Link> Home page
         </div>
       </div>
-      <div style={styles.albumContainer}>
-        <div style={styles.albumInfo}>
+      <div style={styles.bookContainer}>
+        <div style={styles.bookInfo}>
           <h2>{bookData.whole_title}</h2>
           <div>
             {username} added this on{' '}
@@ -174,12 +206,33 @@ const Book = ({ user, onUpdateBook }) => {
           />
           {bookData.rating ? (
             <div>
-              {/* {albumData.user_id}'s rating */}
+              {/* {bookData.user_id}'s rating */}
               <div style={styles.circle}>
                 <span style={styles.circleText}>{bookData.rating}</span>
               </div>
             </div>
           ) : null}
+          <div style={styles.buttonContainer}></div>
+          <div>
+            <button onClick={handleClickOpen}>Remove</button>
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                {`Do you want to remove ${bookData.title} from your list?`}
+              </DialogTitle>
+              <DialogActions>
+                <Button onClick={handleClose}>No</Button>
+                <Button onClick={() => deleteBook(bookData.id)} autoFocus>
+                  {' '}
+                  Yes
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </div>
         </div>
       </div>
     </>
@@ -187,13 +240,13 @@ const Book = ({ user, onUpdateBook }) => {
 };
 
 const styles = {
-  albumContainer: {
+  bookContainer: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '16px',
   },
-  albumInfo: {
+  bookInfo: {
     display: 'flex',
     flexDirection: 'column',
     marginRight: '100px',

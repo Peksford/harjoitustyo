@@ -125,3 +125,9 @@ button {
   .dropdown-item {
     color: #6a659c !important
   }
+
+  .button-text {
+    font-size: 16px;
+    line-height: 1;
+    padding: 14px 22px
+  }

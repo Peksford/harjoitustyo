@@ -89,4 +89,21 @@ router.put('/heart/:id', tokenExtractor, async (req, res) => {
   }
 });
 
+router.delete('/:id', tokenExtractor, async (req, res, next) => {
+  try {
+    const album = await Album.findByPk(req.params.id);
+    const user = await User.findByPk(req.decodedToken.id);
+
+    console.log('DELETE ALBUM', album);
+
+    await Album.destroy({
+      where: { whole_title: album.whole_title, user_id: user.id },
+    });
+
+    res.status(204).send({ message: 'Album deleted' });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;

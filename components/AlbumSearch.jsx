@@ -136,7 +136,10 @@ const Album = ({ albumSearched, createAlbum }) => {
                 )}
               </div>
               <div style={styles.buttonContainer}>
-                <button onClick={() => createNew({ album })}>
+                <button
+                  onClick={() => createNew({ album })}
+                  className="button-text"
+                >
                   Add to My List
                 </button>
               </div>

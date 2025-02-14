@@ -89,4 +89,19 @@ router.put('/heart/:id', tokenExtractor, async (req, res) => {
   }
 });
 
+router.delete('/:id', tokenExtractor, async (req, res, next) => {
+  try {
+    const movie = await Movie.findByPk(req.params.id);
+    const user = await User.findByPk(req.decodedToken.id);
+
+    await Movie.destroy({
+      where: { whole_title: movie.whole_title, user_id: user.id },
+    });
+
+    res.status(204).send({ message: 'Movie deleted' });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;

@@ -4,14 +4,25 @@ import gameService from '../services/games';
 import userService from '../services/users';
 import { useState, useEffect } from 'react';
 import Heart from 'react-heart';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { setNotification } from '../reducers/notificationReducer';
+import { useDispatch } from 'react-redux';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
 
 const Game = ({ user, onUpdateGame }) => {
   const { username, id } = useParams();
   const [gameData, setGameData] = useState('');
   const [rating, setRating] = useState(0);
   const [active, setActive] = useState(false);
+
+  const [open, setOpen] = useState(false);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchGame = async () => {
@@ -65,6 +76,28 @@ const Game = ({ user, onUpdateGame }) => {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const deleteGame = async (id) => {
+    try {
+      setOpen(true);
+      await gameService.deleteGame(id);
+      setGameData(null);
+      dispatch(
+        setNotification(`${gameData.title} was removed from your list`, 5)
+      );
+      navigate(`/${username}/games`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   if (gameData) {
@@ -142,6 +175,27 @@ const Game = ({ user, onUpdateGame }) => {
                 </div>
               </div>
             ) : null}
+            <div style={styles.buttonContainer}></div>
+            <div>
+              <button onClick={handleClickOpen}>Remove</button>
+              <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">
+                  {`Do you want to remove ${gameData.title} from your list?`}
+                </DialogTitle>
+                <DialogActions>
+                  <Button onClick={handleClose}>No</Button>
+                  <Button onClick={() => deleteGame(gameData.id)} autoFocus>
+                    {' '}
+                    Yes
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </div>
           </div>
         </div>
       </>

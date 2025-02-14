@@ -5,8 +5,14 @@ import userService from '../services/users';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Heart from 'react-heart';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
+import { setNotification } from '../reducers/notificationReducer';
+import { useDispatch } from 'react-redux';
 
 const Album = ({ user, onUpdateAlbum }) => {
   const { username, id } = useParams();
@@ -14,6 +20,10 @@ const Album = ({ user, onUpdateAlbum }) => {
   const [rating, setRating] = useState(0);
   const [trackListFetched, setTrackListFetched] = useState(false);
   const [active, setActive] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchAlbum = async () => {
@@ -21,7 +31,7 @@ const Album = ({ user, onUpdateAlbum }) => {
         const album = await albumService.getAlbum(id);
         const user = await userService.getUserAlbums(username);
 
-        if (user[0].user_id === album.user_id) {
+        if (album && user[0].user_id === album.user_id) {
           setAlbumData(album);
           setActive(album.heart || false);
           setRating(album.rating || 0);
@@ -96,6 +106,28 @@ const Album = ({ user, onUpdateAlbum }) => {
     releaseInfo();
   }, [albumData]);
 
+  const deleteAlbum = async (id) => {
+    try {
+      setOpen(true);
+      await albumService.deleteAlbum(id);
+      setAlbumData(null);
+      dispatch(
+        setNotification(`${albumData.title} was removed from your list`, 5)
+      );
+      navigate(`/${username}/albums`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   if (albumData) {
     return (
       <>
@@ -158,6 +190,27 @@ const Album = ({ user, onUpdateAlbum }) => {
                 </div>
               </div>
             ) : null}
+            <div style={styles.buttonContainer}></div>
+            <div>
+              <button onClick={handleClickOpen}>Remove</button>
+              <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">
+                  {`Do you want to remove ${albumData.title} from your list?`}
+                </DialogTitle>
+                <DialogActions>
+                  <Button onClick={handleClose}>No</Button>
+                  <Button onClick={() => deleteAlbum(albumData.id)} autoFocus>
+                    {' '}
+                    Yes
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </div>
           </div>
         </div>
       </>

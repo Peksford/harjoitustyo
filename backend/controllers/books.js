@@ -113,4 +113,19 @@ router.put('/heart/:id', tokenExtractor, async (req, res) => {
   }
 });
 
+router.delete('/:id', tokenExtractor, async (req, res, next) => {
+  try {
+    const book = await Book.findByPk(req.params.id);
+    const user = await User.findByPk(req.decodedToken.id);
+
+    await Book.destroy({
+      where: { whole_title: book.whole_title, user_id: user.id },
+    });
+
+    res.status(204).send({ message: 'Book deleted' });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;

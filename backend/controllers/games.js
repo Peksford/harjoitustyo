@@ -135,4 +135,19 @@ router.put('/heart/:id', tokenExtractor, async (req, res) => {
   }
 });
 
+router.delete('/:id', tokenExtractor, async (req, res, next) => {
+  try {
+    const game = await Game.findByPk(req.params.id);
+    const user = await User.findByPk(req.decodedToken.id);
+
+    await Game.destroy({
+      where: { whole_title: game.whole_title, user_id: user.id },
+    });
+
+    res.status(204).send({ message: 'Game deleted' });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;

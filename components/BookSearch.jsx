@@ -161,7 +161,10 @@ const Book = ({ bookSearched, createBook }) => {
                   )}
                 </div>
                 <div style={styles.buttonContainer}>
-                  <button onClick={() => createNew({ book })}>
+                  <button
+                    onClick={() => createNew({ book })}
+                    className="button-text"
+                  >
                     Add to My List
                   </button>
                 </div>
