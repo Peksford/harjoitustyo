@@ -145,7 +145,7 @@ const Book = ({ user, onUpdateBook }) => {
             {username} added this on{' '}
             {new Date(bookData.createdAt).toLocaleDateString()}
           </div>
-          <p style={{ width: '4rem' }}>
+          <p data-testid="heart" style={{ width: '4rem' }}>
             <Heart isActive={active || false} onClick={handleHeartClick} />
           </p>
           <h3>{bookData.year}</h3>

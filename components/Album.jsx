@@ -133,7 +133,11 @@ const Album = ({ user, onUpdateAlbum }) => {
       <>
         <div>
           <div>
-            back to <Link to={`/${username}`}>{username}</Link> home page
+            back to{' '}
+            <Link data-testid="homePage" to={`/${username}`}>
+              {username}
+            </Link>{' '}
+            home page
           </div>
         </div>
         <div style={styles.albumContainer}>
@@ -143,7 +147,7 @@ const Album = ({ user, onUpdateAlbum }) => {
               {username} added this on{' '}
               {new Date(albumData.createdAt).toLocaleDateString()}
             </div>
-            <p style={{ width: '4rem' }}>
+            <p data-testid="heart" style={{ width: '4rem' }}>
               <Heart isActive={active || false} onClick={handleHeartClick} />
             </p>
             <h3>{albumData.year}</h3>

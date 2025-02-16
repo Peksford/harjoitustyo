@@ -10,6 +10,8 @@ const UserMenu = (user) => {
   const [userData, setUserData] = useState(null);
   const [follow, setFollow] = useState(false);
 
+  console.log('what is follow');
+
   if (!username) return null;
 
   useEffect(() => {

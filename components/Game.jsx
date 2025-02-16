@@ -115,7 +115,7 @@ const Game = ({ user, onUpdateGame }) => {
               {username} added this on{' '}
               {new Date(gameData.createdAt).toLocaleDateString()}
             </div>
-            <p style={{ width: '4rem' }}>
+            <p data-testid="heart" style={{ width: '4rem' }}>
               <Heart isActive={active || false} onClick={handleHeartClick} />
             </p>
             {gameData.genres && <h3>Genres: {gameData.genres}</h3>}

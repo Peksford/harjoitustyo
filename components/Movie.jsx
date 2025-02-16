@@ -119,7 +119,7 @@ const Movie = ({ user, onUpdateMovie }) => {
               {username} added this on{' '}
               {new Date(movieData.createdAt).toLocaleDateString()}
             </div>
-            <p style={{ width: '4rem' }}>
+            <p data-testid="heart" style={{ width: '4rem' }}>
               <Heart isActive={active || false} onClick={handleHeartClick} />
             </p>
             <h3>
