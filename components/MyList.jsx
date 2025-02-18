@@ -5,6 +5,9 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import UserMenu from './UserMenu';
 import PropTypes from 'prop-types';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const styles = {
   container: {
@@ -51,6 +54,8 @@ const MyList = ({ user }) => {
   const { username } = useParams();
   const [userData, setUserData] = useState(null);
   const [loggedInUserData, setLoggedInUserData] = useState(null);
+  const [mutual, setMutual] = useState(false);
+  const [highest, setHighest] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -70,9 +75,6 @@ const MyList = ({ user }) => {
     fetchUser();
   }, [username]);
 
-  if (userData) console.log('PekkisBoi', userData.albums);
-  if (loggedInUserData) console.log('testuser', loggedInUserData.albums);
-
   const mutualAlbums =
     userData && loggedInUserData
       ? userData.albums.filter((album1) => {
@@ -82,17 +84,62 @@ const MyList = ({ user }) => {
         })
       : null;
 
-  console.log('mutual', mutualAlbums);
+  const highestAlbums = userData
+    ? [...userData.albums].sort((a, b) => b.rating - a.rating)
+    : null;
+
+  const displayAlbums = userData
+    ? mutual
+      ? mutualAlbums
+      : highest
+      ? highestAlbums
+      : userData.albums
+    : null;
 
   if (userData) {
     return (
       <>
         <UserMenu user={user} />
-        <div>
-          <h2>Albums</h2>
+        <div style={{ marginTop: '20px' }}>
+          <DropdownButton
+            id="dropdown-secondary-button"
+            // data-testid="dropdown-list"
+            title={
+              mutual
+                ? 'Mutual albums'
+                : highest
+                ? 'Highest rating'
+                : 'All albums'
+            }
+          >
+            <Dropdown.Item
+              onClick={() => {
+                setMutual(false);
+                setHighest(false);
+              }}
+            >
+              All albums
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => {
+                setMutual(true);
+                setHighest(false);
+              }}
+            >
+              Mutual albums
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => {
+                setHighest(true);
+                setMutual(false);
+              }}
+            >
+              Highest rating
+            </Dropdown.Item>
+          </DropdownButton>
         </div>
         <div style={styles.container}>
-          {userData.albums.map((album) => (
+          {displayAlbums.map((album) => (
             <div key={album.id} style={styles.card}>
               <Link
                 data-testid="albumTest"
