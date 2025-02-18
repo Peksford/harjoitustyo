@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = 'http://localhost:3001/api/books';
+const baseUrl = '/api/books';
 
 let token = null;
 
@@ -25,7 +25,6 @@ const create = async (newObject) => {
   const config = {
     headers: { Authorization: token },
   };
-  console.log('book object', newObject);
   const response = await axios.post(baseUrl, newObject, config);
   return response.data;
 };
@@ -42,7 +41,6 @@ const heartClick = async (id, updatedData) => {
   const config = {
     headers: { Authorization: token },
   };
-  console.log('book heart click', updatedData);
   const response = await axios.put(
     `${baseUrl}/heart/${id}`,
     updatedData,

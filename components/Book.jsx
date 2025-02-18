@@ -32,7 +32,6 @@ const Book = ({ user, onUpdateBook }) => {
         heart: true,
       });
 
-      console.log('The response of the heart ', updatedHeart);
       setBookData(updatedHeart);
       setActive(updatedHeart.heart);
 
@@ -138,7 +137,7 @@ const Book = ({ user, onUpdateBook }) => {
           back to <Link to={`/${username}`}>{username}</Link> Home page
         </div>
       </div>
-      <div style={styles.bookContainer}>
+      <div className="container">
         <div style={styles.bookInfo}>
           <h2>{bookData.whole_title}</h2>
           <div>

@@ -112,7 +112,7 @@ const Movie = ({ user, onUpdateMovie }) => {
             back to <Link to={`/${username}`}>{username}</Link> home page
           </div>
         </div>
-        <div style={styles.movieContainer}>
+        <div className="container">
           <div style={styles.movieInfo}>
             <h2>{movieData.whole_title}</h2>
             <div>

@@ -108,7 +108,7 @@ const Game = ({ user, onUpdateGame }) => {
             back to <Link to={`/${username}`}>{username}</Link> home page
           </div>
         </div>
-        <div style={styles.gameContainer}>
+        <div className="container">
           <div style={styles.gameInfo}>
             <h2>{gameData.whole_title}</h2>
             <div>

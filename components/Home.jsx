@@ -12,6 +12,8 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     gap: '50px',
+    paddingLeft: '24px',
+    marginLeft: '24px',
   },
   item: {
     textAlign: 'center',
@@ -45,7 +47,7 @@ const Home = ({ user }) => {
     const fetchUser = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3001/api/users/${username}`
+          `https://im-only-rating.fly.dev/api/users/${username}`
         );
         setUserData(response.data);
       } catch (error) {
@@ -78,16 +80,16 @@ const Home = ({ user }) => {
   // };
 
   const heartAlbum = userData
-    ? userData.albums.find((album) => album.heart === true)
+    ? userData?.albums?.find((album) => album.heart === true)
     : null;
   const heartMovie = userData
-    ? userData.movies.find((movie) => movie.heart === true)
+    ? userData?.movies?.find((movie) => movie.heart === true)
     : null;
   const heartBook = userData
-    ? userData.books.find((book) => book.heart === true)
+    ? userData?.books?.find((book) => book.heart === true)
     : null;
   const heartGame = userData
-    ? userData.games.find((game) => game.heart === true)
+    ? userData?.games?.find((game) => game.heart === true)
     : null;
 
   if (userData) {
@@ -98,7 +100,7 @@ const Home = ({ user }) => {
         <div>
           {heartAlbum || heartMovie || heartBook || heartGame ? (
             <div>
-              <div style={styles.container}>
+              <div className="home-container">
                 {heartAlbum ? (
                   <div style={styles.item}>
                     <div style={{ textAlign: 'center' }}>

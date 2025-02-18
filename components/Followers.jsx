@@ -14,7 +14,7 @@ const Followers = ({ user }) => {
     const fetchUser = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3001/api/users/${username}`
+          `https://im-only-rating.fly.dev/api/users/${username}`
         );
 
         setUserData(response.data);

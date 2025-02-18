@@ -2,6 +2,7 @@ const Discogs = require('disconnect').Client;
 // const app = express();
 require('dotenv').config();
 const { Sequelize, Model, DataTypes } = require('sequelize');
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -21,6 +22,8 @@ const followRouter = require('./controllers/follow');
 
 app.use(cors());
 app.use(express.json());
+// app.use(express.static('dist'));
+app.use(express.static(path.join(__dirname, 'dist')));
 
 app.use('/api/albums', albumRouter);
 app.use('/api/users', usersRouter);
@@ -30,6 +33,10 @@ app.use('/api/books', booksRouter);
 app.use('/api/movies', moviesRouter);
 app.use('/api/games', gamesRouter);
 app.use('/api/follow', followRouter);
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
 
 if (process.env.NODE_ENV === 'test') {
   const testingRouter = require('./controllers/testing');

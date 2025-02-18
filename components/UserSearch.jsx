@@ -73,12 +73,10 @@ const useUser = (name) => {
   useEffect(() => {
     if (!name) return;
     const searchUser = async () => {
-      console.log('safofsad', name);
       try {
         const response = await axios.get(
-          `http://localhost:3001/api/users/${name}`
+          `https://im-only-rating.fly.dev/api/users/${name}`
         );
-        console.log('what is response', response.data);
         setUserSearched(response.data);
       } catch (error) {
         console.error(error);
@@ -95,8 +93,6 @@ const User = ({ userSearched }) => {
   if (userSearched === null || userSearched === undefined) {
     return <div>not found</div>;
   }
-
-  console.log('user searched', userSearched);
 
   {
     /* {user.username} has reviewed{' '}

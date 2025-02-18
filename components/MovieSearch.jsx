@@ -13,8 +13,8 @@ const styles = {
     flexDirection: 'column',
   },
   thumbnail: {
-    width: '200px',
-    height: '200px',
+    width: '150px',
+    height: '220px',
     marginRight: '1rem',
   },
   buttonContainer: {
@@ -107,6 +107,8 @@ const useMovie = (name) => {
 
     searchMovie();
   }, [name]);
+
+  console.log('movie searched', movieSearched);
 
   return movieSearched;
 };

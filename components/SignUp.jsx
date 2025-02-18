@@ -62,7 +62,7 @@ const SignUp = () => {
 
   return (
     <div className="container">
-      <h2>Sign Up to rating app</h2>
+      <h2>Sign Up to I&apos;m Only Rating</h2>
       <ErrorMessage message={errorMessage} />
       <Form onSubmit={handleSignUp}>
         <Form.Group>
@@ -84,7 +84,12 @@ const SignUp = () => {
             onChange={({ target }) => setPassword(target.value)}
           />
           <div></div>
-          <Button variant="primary" id="login-button" type="submit">
+          <Button
+            className="black-button"
+            variant="primary"
+            id="login-button"
+            type="submit"
+          >
             login
           </Button>
         </Form.Group>

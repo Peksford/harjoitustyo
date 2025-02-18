@@ -10,19 +10,17 @@ const UserMenu = (user) => {
   const [userData, setUserData] = useState(null);
   const [follow, setFollow] = useState(false);
 
-  console.log('what is follow');
-
   if (!username) return null;
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3001/api/users/${username}`
+          `https://im-only-rating.fly.dev/api/users/${username}`
         );
 
         setUserData(response.data);
-        if (user.user) {
+        if (user.user && response.data) {
           const isFollowing = response.data.followers.some(
             (follower) => follower.follower_id === user.user.id
           );
@@ -43,7 +41,6 @@ const UserMenu = (user) => {
         followService.newFollow(user, userData);
         setFollow(true);
       } else {
-        console.log('follow = true');
         followService.unFollow(user, userData);
         setFollow(false);
       }

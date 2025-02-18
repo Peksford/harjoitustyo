@@ -9,11 +9,10 @@ import PropTypes from 'prop-types';
 const styles = {
   container: {
     display: 'flex',
-    flexWrap: 'wrap',
-    gap: '16px',
   },
   card: {
-    border: '1px',
+    maxWidth: '150px',
+
     padding: '10px',
     textAlign: 'center',
     borderRadius: '5px',
@@ -21,9 +20,8 @@ const styles = {
     marginBottom: '50px',
   },
   thumbnail: {
-    width: '150px',
-    height: '200px',
-    marginRight: '1rem',
+    width: '130px',
+    height: '180px',
     position: 'relative',
   },
   circle: {
@@ -61,7 +59,7 @@ const MyListBooks = ({ user }) => {
     const fetchUser = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3001/api/users/${username}`
+          `https://im-only-rating.fly.dev/api/users/${username}`
         );
 
         setUserData(response.data);

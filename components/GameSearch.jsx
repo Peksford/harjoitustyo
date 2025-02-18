@@ -74,7 +74,7 @@ const useGame = (name) => {
     const searchGame = async () => {
       try {
         const response = await axios.get(
-          'http://localhost:3001/api/games/search-game',
+          'https://im-only-rating.fly.dev/api/games/search-game',
           {
             params: {
               name: name,

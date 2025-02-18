@@ -140,7 +140,7 @@ const Album = ({ user, onUpdateAlbum }) => {
             home page
           </div>
         </div>
-        <div style={styles.albumContainer}>
+        <div className="container">
           <div style={styles.albumInfo}>
             <h2>{albumData.whole_title}</h2>
             <div>
@@ -227,14 +227,21 @@ const Album = ({ user, onUpdateAlbum }) => {
 const styles = {
   albumContainer: {
     display: 'flex',
+    flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '16px',
+    gap: '20px',
   },
   albumInfo: {
     display: 'flex',
     flexDirection: 'column',
     marginRight: '100px',
+
+    '@media (maxWidth: 768px)': {
+      marginRight: '0',
+      textAlign: 'center',
+    },
   },
   thumbNailContainer: {
     display: 'flex',

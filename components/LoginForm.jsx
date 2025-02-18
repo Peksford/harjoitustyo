@@ -90,7 +90,12 @@ const LoginForm = () => {
             onChange={({ target }) => setPassword(target.value)}
           />
           <div></div>
-          <Button variant="primary" id="login-button" type="submit">
+          <Button
+            className="black-button"
+            variant="primary"
+            id="login-button"
+            type="submit"
+          >
             login
           </Button>
         </Form.Group>

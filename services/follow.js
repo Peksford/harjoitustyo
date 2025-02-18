@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = 'http://localhost:3001/api/follow';
+const baseUrl = '/api/follow';
 
 let token = null;
 
@@ -8,13 +8,12 @@ const setToken = (newToken) => {
 };
 
 const newFollow = async (user, userData) => {
-  console.log('FOLLOw', user.username);
   const newObject = {
     followed_id: userData.id,
     followed_username: userData.username,
     follower_username: user.user.username,
   };
-  console.log('tokeni', token);
+
   const config = {
     headers: { Authorization: token },
   };
@@ -23,7 +22,6 @@ const newFollow = async (user, userData) => {
 };
 
 const unFollow = async (user, userData) => {
-  console.log('UNFOLLOw');
   const config = {
     headers: {
       Authorization: token,

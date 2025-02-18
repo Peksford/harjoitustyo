@@ -33,11 +33,15 @@ import PropTypes from 'prop-types';
 
 const styles = {
   padding: {
-    padding: 3,
+    padding: '0 10px',
   },
   container: {
     display: 'flex',
     justifyContent: 'flex-end',
+    width: '100%',
+    padding: '10px',
+    top: 0,
+    right: 0,
   },
 };
 
@@ -227,7 +231,6 @@ const App = () => {
         )}
         {user && (
           <button style={{ marginLeft: '5px' }} onClick={handleLogout}>
-            {' '}
             Logout
           </button>
         )}
@@ -235,7 +238,9 @@ const App = () => {
       <Routes>
         {user ? (
           <Route path="/" element={<Navigate to={`/${user.username}`} />} />
-        ) : null}
+        ) : (
+          <Route path="/" element={<Navigate to={'/login'} />} />
+        )}
         <Route
           path="/search"
           element={

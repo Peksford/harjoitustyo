@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = 'http://localhost:3001/api/movies';
+const baseUrl = '/api/movies';
 
 let token = null;
 
@@ -22,7 +22,6 @@ const getMovie = async (id) => {
 };
 
 const create = async (newObject) => {
-  console.log(token);
   const config = {
     headers: { Authorization: token },
   };

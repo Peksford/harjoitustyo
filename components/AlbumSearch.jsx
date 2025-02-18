@@ -112,7 +112,6 @@ const Album = ({ albumSearched, createAlbum }) => {
       console.error(error);
     }
   };
-  console.log('is the album here', albumSearched);
   return (
     <div>
       <h4>

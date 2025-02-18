@@ -9,8 +9,6 @@ import PropTypes from 'prop-types';
 const styles = {
   container: {
     display: 'flex',
-    flexWrap: 'wrap',
-    gap: '16px',
   },
   card: {
     border: '1px',
@@ -21,8 +19,8 @@ const styles = {
     marginBottom: '50px',
   },
   thumbnail: {
-    width: '170px',
-    height: '170px',
+    width: '150px',
+    height: '150px',
     marginRight: '1rem',
     position: 'relative',
   },
@@ -52,21 +50,39 @@ const styles = {
 const MyList = ({ user }) => {
   const { username } = useParams();
   const [userData, setUserData] = useState(null);
+  const [loggedInUserData, setLoggedInUserData] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3001/api/users/${username}`
+          `https://im-only-rating.fly.dev/api/users/${username}`
         );
-
+        const loggedInResponse = await axios.get(
+          `https://im-only-rating.fly.dev/api/users/${user.username}`
+        );
         setUserData(response.data);
+        setLoggedInUserData(loggedInResponse.data);
       } catch (error) {
         console.error(error);
       }
     };
     fetchUser();
   }, [username]);
+
+  if (userData) console.log('PekkisBoi', userData.albums);
+  if (loggedInUserData) console.log('testuser', loggedInUserData.albums);
+
+  const mutualAlbums =
+    userData && loggedInUserData
+      ? userData.albums.filter((album1) => {
+          return loggedInUserData.albums.some(
+            (album2) => album2.whole_title === album1.whole_title
+          );
+        })
+      : null;
+
+  console.log('mutual', mutualAlbums);
 
   if (userData) {
     return (

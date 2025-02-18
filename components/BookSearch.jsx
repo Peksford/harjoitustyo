@@ -39,7 +39,6 @@ const styles = {
 
 const useField = (type) => {
   const [value, setValue] = useState('');
-  console.log('typing...', value);
 
   const onChange = (event) => {
     setValue(event.target.value);
@@ -78,7 +77,7 @@ const useBook = (name) => {
     const searchBook = async () => {
       try {
         const response = await axios.get(
-          'http://localhost:3001/api/books/search-book',
+          'https://im-only-rating.fly.dev/api/books/search-book',
           {
             params: {
               name: name,
@@ -102,7 +101,6 @@ const Book = ({ bookSearched, createBook }) => {
   if (bookSearched === null || bookSearched === undefined) {
     return <div>not found</div>;
   }
-  console.log('serching', bookSearched);
   const createNew = ({ book }) => {
     createBook({
       author: book.author_name?.[0] || 'Unknown',
@@ -116,10 +114,6 @@ const Book = ({ bookSearched, createBook }) => {
     });
   };
 
-  // const sortedSearch = bookSearched.sort(
-  //   (a, b) => a.first_publish_year - b.first_publish_year
-  // );
-  // console.log('book object', sortedSearch);
   return (
     <div>
       <h4>
@@ -182,7 +176,6 @@ const BookSearch = ({ createBook }) => {
   const bookInput = useField('text');
   const debouncedBook = useDebounce(bookInput.value, 500);
   const book = useBook(debouncedBook);
-  console.log(bookInput.value);
 
   return (
     <div>
