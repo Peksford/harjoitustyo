@@ -69,25 +69,25 @@ router.get('/:username', async (req, res, next) => {
         {
           model: Album,
           attributes: {
-            exclude: ['createdAt', 'updatedAt', 'userId'],
+            exclude: ['updatedAt', 'userId'],
           },
         },
         {
           model: Book,
           attributes: {
-            exclude: ['createdAt', 'updatedAt', 'userId'],
+            exclude: ['updatedAt', 'userId'],
           },
         },
         {
           model: Movie,
           attributes: {
-            exclude: ['createdAt', 'updatedAt', 'userId'],
+            exclude: ['updatedAt', 'userId'],
           },
         },
         {
           model: Game,
           attributes: {
-            exclude: ['createdAt', 'updatedAt', 'userId'],
+            exclude: ['updatedAt', 'userId'],
           },
         },
         {

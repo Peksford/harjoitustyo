@@ -71,6 +71,10 @@ const useGame = (name) => {
 
   useEffect(() => {
     if (!name) return;
+    if (!name) {
+      setGameSearched([]);
+      return;
+    }
     const searchGame = async () => {
       try {
         const response = await axios.get(
@@ -181,7 +185,7 @@ const GameSearch = ({ createGame }) => {
   const game = useGame(debouncedGame);
 
   return (
-    <div>
+    <div style={{ width: '400px' }}>
       <input
         className="search-input"
         {...gameInput}

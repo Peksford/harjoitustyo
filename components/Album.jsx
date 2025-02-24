@@ -63,6 +63,8 @@ const Album = ({ user, onUpdateAlbum }) => {
     }
   };
 
+  console.log('albun', albumData);
+
   const changeRating = async (newRating) => {
     setRating(newRating);
     try {

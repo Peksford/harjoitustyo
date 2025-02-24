@@ -61,6 +61,10 @@ const useAlbum = (name) => {
   const [albumSearched, setAlbumSearched] = useState([]);
 
   useEffect(() => {
+    if (!name) {
+      setAlbumSearched([]);
+      return;
+    }
     if (!name) return;
     const searchAlbum = async () => {
       const token = import.meta.env.VITE_TOKEN;
@@ -81,6 +85,25 @@ const useAlbum = (name) => {
           }
         );
         setAlbumSearched(response.data.results);
+
+        if (response.data.results.length === 0) {
+          const response = await axios.get(
+            'https://api.discogs.com/database/search',
+            {
+              headers: {
+                Authorization: `Discogs token=${token}`,
+              },
+              params: {
+                q: name,
+                per_page: 40,
+                page: 1,
+                type: 'release',
+              },
+            }
+          );
+
+          setAlbumSearched(response.data.results);
+        }
       } catch (error) {
         console.error(error);
       }
@@ -96,6 +119,7 @@ const Album = ({ albumSearched, createAlbum }) => {
   if (albumSearched === null || albumSearched === undefined) {
     return <div>not found</div>;
   }
+
   const createNew = ({ album }) => {
     try {
       createAlbum({
@@ -155,16 +179,31 @@ const AlbumSearch = ({ createAlbum }) => {
   const albumInput = useField('text');
   const debouncedAlbum = useDebounce(albumInput.value, 1000);
   const album = useAlbum(debouncedAlbum);
+  const [showResults, setShowResults] = useState(true);
+
+  const hideResults = () => {
+    if (showResults === true) {
+      setShowResults(false);
+    } else {
+      setShowResults(true);
+    }
+  };
 
   return (
-    <div>
+    <div style={{ width: '400px' }}>
       <input
         className="search-input"
         {...albumInput}
         data-testid="Search album"
         placeholder="Search for an album"
+        onFocus={() => setShowResults(true)}
       />
-      <Album albumSearched={album} createAlbum={createAlbum} />
+      {debouncedAlbum && (
+        <button onClick={hideResults}>
+          {showResults ? 'Hide results' : 'Show results'}
+        </button>
+      )}
+      {showResults && <Album albumSearched={album} createAlbum={createAlbum} />}
     </div>
   );
 };

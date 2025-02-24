@@ -7,12 +7,28 @@ import GameSearch from './GameSearch';
 import UserSearch from './UserSearch';
 import PropTypes from 'prop-types';
 
-const Search = ({ createAlbum, createBook, createMovie, createGame }) => {
+const Search = ({
+  createAlbum,
+  createBook,
+  createMovie,
+  createGame,
+  albumRatingUpdate,
+}) => {
   const [type, setType] = useState('albums');
 
   const handleTypeChange = (event) => {
     setType(event.target.value);
   };
+
+  // const handleUpdatingAlbumList = async (albumData) => {
+  //   try {
+  //     console.log(albumData);
+  //     const newAlbum = await createAlbum(albumData);
+  //     updateAlbumList(newAlbum);
+  //   } catch (error) {
+  //     console.error('Error adding album in Search component', error.message);
+  //   }
+  // };
 
   return (
     <div>
@@ -68,7 +84,12 @@ const Search = ({ createAlbum, createBook, createMovie, createGame }) => {
           User
         </label>
       </div>
-      {type === 'albums' && <AlbumSearch createAlbum={createAlbum} />}
+      {type === 'albums' && (
+        <AlbumSearch
+          createAlbum={createAlbum}
+          albumRatingUpdate={albumRatingUpdate}
+        />
+      )}
       {type === 'movies' && <MovieSearch createMovie={createMovie} />}
       {type === 'books' && <BookSearch createBook={createBook} />}
       {type === 'games' && <GameSearch createGame={createGame} />}

@@ -58,7 +58,7 @@ const UserMenu = (user) => {
         )}
 
         <div className="links-container">
-          <div>
+          {/* <div>
             <Link to={`/${username}`}>recommendations</Link>
           </div>
           <div>
@@ -72,7 +72,7 @@ const UserMenu = (user) => {
           </div>
           <div>
             <Link to={`/${username}/games`}>games</Link>
-          </div>
+          </div> */}
           <div>
             <Link to={`/${username}/followers`}>followers</Link>
           </div>

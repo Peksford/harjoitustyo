@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, Routes, Route, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import albumService from '../services/albums';
+import userService from '../services/users';
 import movieService from '../services/movies';
 import logoutService from '../services/logout';
 import bookService from '../services/books';
@@ -58,12 +59,12 @@ ErrorMessage.propTypes = {
 };
 
 const App = () => {
-  const [albums, setAlbums] = useState([]);
   const [books, setBooks] = useState([]);
   const [movies, setMovies] = useState([]);
   const [games, setGames] = useState([]);
   const user = useSelector((state) => state.user);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [userAlbums, setUserAlbums] = useState([]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -85,8 +86,23 @@ const App = () => {
     }
   }, [dispatch]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (user) {
+          const userAlbums = await userService.getUserAlbums(user.username);
+          console.log('fetched albums', userAlbums);
+          setUserAlbums(userAlbums);
+        }
+      } catch (error) {
+        console.error('error', error);
+      }
+    };
+    fetchData();
+  }, [user]);
+
   const albumRatingUpdate = (updatedAlbum) => {
-    setAlbums((preAlbums) =>
+    setUserAlbums((preAlbums) =>
       preAlbums.map((album) =>
         album.id === updatedAlbum.id ? updatedAlbum : { ...album, heart: false }
       )
@@ -132,7 +148,7 @@ const App = () => {
   const createAlbum = async (albumObject) => {
     try {
       const newAlbum = await albumService.create(albumObject);
-      setAlbums([...albums, newAlbum]);
+      setUserAlbums([...userAlbums, newAlbum]);
       dispatch(setNotification(`${albumObject.title} added on your list`, 5));
     } catch (error) {
       console.error(error);
@@ -185,6 +201,8 @@ const App = () => {
     }
   };
 
+  console.log('UserAlbums', userAlbums);
+
   return (
     <div>
       <Notification />
@@ -192,7 +210,7 @@ const App = () => {
       <div style={styles.container}>
         {user ? (
           <Link style={styles.padding} to={`/${user.username}`}>
-            {user.username}
+            My profile
           </Link>
         ) : (
           <Link style={styles.padding} to="/signup">
@@ -254,7 +272,10 @@ const App = () => {
         />
         <Route path="/login" element={<LoginForm />} />
         {user ? (
-          <Route path="/:username/albums" element={<MyList user={user} />} />
+          <Route
+            path="/:username/albums"
+            element={<MyList user={user} userAlbums={userAlbums} />}
+          />
         ) : null}
         {user ? (
           <Route
@@ -304,13 +325,7 @@ const App = () => {
         ) : null}
         <Route
           path="/:username/albums/:id"
-          element={
-            <Album
-              user={user}
-              albums={albums}
-              onUpdateAlbum={albumRatingUpdate}
-            />
-          }
+          element={<Album user={user} onUpdateAlbum={albumRatingUpdate} />}
         />
         <Route
           path="/:username/books/:id"
@@ -332,7 +347,19 @@ const App = () => {
             <Game user={user} games={games} onUpdateGame={gameRatingUpdate} />
           }
         />
-        <Route path="/:username" element={<Home user={user} />} />
+        <Route
+          path="/:username"
+          element={
+            <Home
+              createAlbum={createAlbum}
+              createBook={createBook}
+              createMovie={createMovie}
+              createGame={createGame}
+              user={user}
+              userAlbums={userAlbums}
+            />
+          }
+        />
         <Route path="/signup" element={<SignUp />} />
       </Routes>
     </div>

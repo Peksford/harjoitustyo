@@ -62,6 +62,10 @@ const useMovie = (name) => {
 
   useEffect(() => {
     if (!name) return;
+    if (!name) {
+      setMovieSearched([]);
+      return;
+    }
     const searchMovie = async () => {
       const apiKey = import.meta.env.VITE_TMDB_API_KEY;
 
@@ -231,7 +235,7 @@ const MovieSearch = ({ createMovie }) => {
   const movie = useMovie(debouncedMovie);
 
   return (
-    <div>
+    <div style={{ width: '400px' }}>
       <input
         className="search-input"
         {...movieInput}

@@ -178,7 +178,7 @@ const BookSearch = ({ createBook }) => {
   const book = useBook(debouncedBook);
 
   return (
-    <div>
+    <div style={{ width: '400px' }}>
       <input
         className="search-input"
         {...bookInput}

@@ -50,10 +50,9 @@ const styles = {
   },
 };
 
-const MyListBooks = ({ user }) => {
+const MyListBooks = ({ user, userAlbums }) => {
   const { username } = useParams();
   const [userData, setUserData] = useState(null);
-  const [loggedInUserData, setLoggedInUserData] = useState(null);
   const [mutual, setMutual] = useState(false);
   const [highest, setHighest] = useState(false);
 
@@ -64,23 +63,18 @@ const MyListBooks = ({ user }) => {
           `https://im-only-rating.fly.dev/api/users/${username}`
         );
 
-        const loggedInResponse = await axios.get(
-          `https://im-only-rating.fly.dev/api/users/${user.username}`
-        );
-
         setUserData(response.data);
-        setLoggedInUserData(loggedInResponse.data);
       } catch (error) {
         console.error(error);
       }
     };
     fetchUser();
-  }, [username]);
+  }, [username, userAlbums]);
 
   const mutualBooks =
-    userData && loggedInUserData
+    userData && userAlbums
       ? userData.books.filter((book1) => {
-          return loggedInUserData.books.some(
+          return userAlbums.books.some(
             (book2) => book2.whole_title === book1.whole_title
           );
         })
@@ -101,7 +95,7 @@ const MyListBooks = ({ user }) => {
   if (userData) {
     return (
       <>
-        <UserMenu user={user} />
+        {/* <UserMenu user={user} /> */}
         <div style={{ marginTop: '20px' }}>
           <DropdownButton
             id="dropdown-secondary-button"
@@ -136,7 +130,7 @@ const MyListBooks = ({ user }) => {
             </Dropdown.Item>
           </DropdownButton>
         </div>
-        <div style={styles.container}>
+        <div className="album-container">
           {displayBooks.map((book) => (
             <div key={book.id} style={styles.card}>
               <Link
@@ -149,11 +143,10 @@ const MyListBooks = ({ user }) => {
                     style={styles.thumbnail}
                   />
                 )}
-                <div>{book.title}</div>
 
                 {/* <img src={book.thumbnail} style={styles.thumbnail} /> */}
               </Link>
-
+              <div>{book.title}</div>
               {book.rating ? (
                 <div style={styles.circle}>
                   <span style={styles.circleText}>{book.rating}</span>

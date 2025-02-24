@@ -61,7 +61,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="container">
+    <div className="login-container">
       <h2>Sign Up to I&apos;m Only Rating</h2>
       <ErrorMessage message={errorMessage} />
       <Form onSubmit={handleSignUp}>

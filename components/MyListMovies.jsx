@@ -101,7 +101,7 @@ const MyListMovies = ({ user }) => {
   if (userData) {
     return (
       <>
-        <UserMenu user={user} />
+        {/* <UserMenu user={user} /> */}
         <div style={{ marginTop: '20px' }}>
           <DropdownButton
             id="dropdown-secondary-button"
@@ -140,7 +140,7 @@ const MyListMovies = ({ user }) => {
             </Dropdown.Item>
           </DropdownButton>
         </div>
-        <div style={styles.container}>
+        <div className="album-container">
           {displayMovies.map((movie) => (
             <div key={movie.id} style={styles.card}>
               <Link
@@ -153,11 +153,9 @@ const MyListMovies = ({ user }) => {
                     style={styles.thumbnail}
                   />
                 )}
-                <div>{movie.title}</div>
-
                 {/* <img src={movie.thumbnail} style={styles.thumbnail} /> */}
               </Link>
-
+              <div>{movie.title}</div>
               {movie.rating ? (
                 <div style={styles.circle}>
                   <span style={styles.circleText}>{movie.rating}</span>

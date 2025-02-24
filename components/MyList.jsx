@@ -10,26 +10,25 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const styles = {
-  container: {
-    display: 'flex',
-  },
   card: {
-    border: '1px',
-    padding: '10px',
-    textAlign: 'center',
-    borderRadius: '5px',
     position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    textAlign: 'center',
+    margin: '5px',
+    width: '150px',
     marginBottom: '50px',
+    paddingBottom: '1px',
   },
   thumbnail: {
-    width: '150px',
-    height: '150px',
-    marginRight: '1rem',
-    position: 'relative',
+    width: '100%',
+    height: 'auto',
   },
   circle: {
     position: 'absolute',
-    top: '110%',
+    bottom: '5px',
+    top: '115%',
     left: '46%',
     transform: 'translate(-50%, -50%)',
     width: '50px',
@@ -37,7 +36,6 @@ const styles = {
     borderRadius: '50%',
     border: '2px solid rgb(255, 255, 255)',
     backgroundColor: 'transparent',
-    // color: '#fff',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -48,12 +46,15 @@ const styles = {
     margin: 0,
     color: 'black',
   },
+  title: {
+    textAlign: 'center',
+    wordWrap: 'break-word',
+  },
 };
 
-const MyList = ({ user }) => {
+const MyList = ({ user, userAlbums }) => {
   const { username } = useParams();
   const [userData, setUserData] = useState(null);
-  const [loggedInUserData, setLoggedInUserData] = useState(null);
   const [mutual, setMutual] = useState(false);
   const [highest, setHighest] = useState(false);
 
@@ -63,26 +64,25 @@ const MyList = ({ user }) => {
         const response = await axios.get(
           `https://im-only-rating.fly.dev/api/users/${username}`
         );
-        const loggedInResponse = await axios.get(
-          `https://im-only-rating.fly.dev/api/users/${user.username}`
-        );
+
         setUserData(response.data);
-        setLoggedInUserData(loggedInResponse.data);
       } catch (error) {
         console.error(error);
       }
     };
     fetchUser();
-  }, [username]);
+  }, [username, userAlbums]);
 
   const mutualAlbums =
-    userData && loggedInUserData
+    userData && userAlbums
       ? userData.albums.filter((album1) => {
-          return loggedInUserData.albums.some(
+          return userAlbums.some(
             (album2) => album2.whole_title === album1.whole_title
           );
         })
       : null;
+
+  console.log('mutual', mutualAlbums);
 
   const highestAlbums = userData
     ? [...userData.albums].sort((a, b) => b.rating - a.rating)
@@ -99,7 +99,7 @@ const MyList = ({ user }) => {
   if (userData) {
     return (
       <>
-        <UserMenu user={user} />
+        {/* <UserMenu user={user} /> */}
         <div style={{ marginTop: '20px' }}>
           <DropdownButton
             id="dropdown-secondary-button"
@@ -138,7 +138,7 @@ const MyList = ({ user }) => {
             </Dropdown.Item>
           </DropdownButton>
         </div>
-        <div style={styles.container}>
+        <div className="album-container">
           {displayAlbums.map((album) => (
             <div key={album.id} style={styles.card}>
               <Link
@@ -147,6 +147,7 @@ const MyList = ({ user }) => {
               >
                 <img src={album.thumbnail} style={styles.thumbnail} />
               </Link>
+              <div style={styles.title}>{album.title}</div>
               {album.rating ? (
                 <div style={styles.circle}>
                   <span style={styles.circleText}>{album.rating}</span>

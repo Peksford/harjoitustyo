@@ -72,6 +72,10 @@ const useUser = (name) => {
 
   useEffect(() => {
     if (!name) return;
+    if (!name) {
+      setUserSearched([]);
+      return;
+    }
     const searchUser = async () => {
       try {
         const response = await axios.get(
@@ -129,7 +133,6 @@ const User = ({ userSearched }) => {
       <div style={styles.UserInfoAndButtons}>
         <div style={styles.userInfo}>
           <h2>
-            {' '}
             <Link to={`/${userSearched.username}`}>
               {userSearched.username}
             </Link>
@@ -176,7 +179,7 @@ const UserSearch = () => {
   const user = useUser(debouncedUser);
 
   return (
-    <div>
+    <div style={{ width: '400px' }}>
       <input
         className="search-input"
         {...userInput}

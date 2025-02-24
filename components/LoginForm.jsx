@@ -65,7 +65,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="container">
+    <div className="login-container">
       <h2>Log in to page</h2>
       <ErrorMessage message={errorMessage} />
       <Form onSubmit={handleLogin}>

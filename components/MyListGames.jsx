@@ -10,12 +10,8 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const styles = {
-  container: {
-    display: 'flex',
-  },
   card: {
     maxWidth: '150px',
-
     padding: '10px',
     textAlign: 'center',
     borderRadius: '5px',
@@ -23,8 +19,8 @@ const styles = {
     marginBottom: '50px',
   },
   thumbnail: {
-    width: '130px',
-    height: '180px',
+    width: '120px',
+    height: '170px',
     position: 'relative',
   },
   circle: {
@@ -101,7 +97,7 @@ const MyListGames = ({ user }) => {
   if (userData) {
     return (
       <>
-        <UserMenu user={user} />
+        {/* <UserMenu user={user} /> */}
         <div style={{ marginTop: '20px' }}>
           <DropdownButton
             id="dropdown-secondary-button"
@@ -136,7 +132,7 @@ const MyListGames = ({ user }) => {
             </Dropdown.Item>
           </DropdownButton>
         </div>
-        <div style={styles.container}>
+        <div className="album-container">
           {displayGames.map((game) => (
             <div key={game.id} style={styles.card}>
               <Link
@@ -149,11 +145,10 @@ const MyListGames = ({ user }) => {
                     style={styles.thumbnail}
                   />
                 )}
-                <div>{game.title}</div>
 
                 {/* <img src={game.thumbnail} style={styles.thumbnail} /> */}
               </Link>
-
+              <div>{game.title}</div>
               {game.rating ? (
                 <div style={styles.circle}>
                   <span style={styles.circleText}>{game.rating}</span>
