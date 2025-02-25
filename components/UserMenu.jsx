@@ -52,7 +52,7 @@ const UserMenu = (user) => {
   if (userData) {
     return (
       <>
-        <h1>{username}</h1>
+        <h1>{username} </h1>
         {user.user && (
           <button onClick={Follow}>{follow ? 'Unfollow' : 'Follow'}</button>
         )}

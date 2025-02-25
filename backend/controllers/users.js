@@ -66,9 +66,10 @@ router.post('/', async (req, res, next) => {
 router.get('/following', tokenExtractor, async (req, res, next) => {
   try {
     const user = await User.findByPk(req.decodedToken.id);
+    console.log('USERI', user);
 
     const oneWeek = new Date();
-    oneWeek.setDate(oneWeek.getDate() - 7);
+    oneWeek.setDate(oneWeek.getDate() - 5);
 
     const followers = await User.findAll({
       attributes: ['name', 'username', 'id'],
@@ -77,22 +78,38 @@ router.get('/following', tokenExtractor, async (req, res, next) => {
           model: Album,
           attributes: { exclude: ['userId'] },
           where: { createdAt: { [Op.gte]: oneWeek } },
+          required: false,
         },
         {
           model: Book,
           attributes: { exclude: ['userId'] },
           where: { createdAt: { [Op.gte]: oneWeek } },
+          required: false,
         },
         {
           model: Movie,
           attributes: { exclude: ['userId'] },
           where: { createdAt: { [Op.gte]: oneWeek } },
+          required: false,
         },
         {
           model: Game,
           attributes: { exclude: ['userId'] },
           where: { createdAt: { [Op.gte]: oneWeek } },
+          required: false,
         },
+        {
+          model: Follow,
+          as: 'followers',
+          where: { follower_id: user.id },
+          attributes: [],
+        },
+        // {
+        //   model: Follow,
+        //   as: 'followed',
+        //   where: { follower_id: user.id },
+        //   attributes: { exclude: ['createdAt', 'updatedAt', 'userId'] },
+        // },
       ],
       order: [
         [Album, 'createdAt', 'DESC'],

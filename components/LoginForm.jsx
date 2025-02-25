@@ -8,6 +8,7 @@ import albumService from '../services/albums';
 import movieService from '../services/movies';
 import bookService from '../services/books';
 import gameService from '../services/games';
+import userService from '../services/users';
 import followService from '../services/follow';
 import { useNavigate } from 'react-router-dom';
 
@@ -39,12 +40,13 @@ const LoginForm = () => {
       bookService.setToken(user.token);
       gameService.setToken(user.token);
       followService.setToken(user.token);
+      userService.setToken(user.token);
 
       dispatch(setUser(user));
 
       setUsername('');
       setPassword('');
-      navigate(`/${username}`);
+      navigate(`/`);
       dispatch(setNotification(`Welcome ${user.username}!`, 5));
     } catch (exception) {
       console.error(exception);

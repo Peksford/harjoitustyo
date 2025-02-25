@@ -235,7 +235,7 @@ const MovieSearch = ({ createMovie }) => {
   const movie = useMovie(debouncedMovie);
 
   return (
-    <div style={{ width: '400px' }}>
+    <div style={{ width: '300px' }}>
       <input
         className="search-input"
         {...movieInput}

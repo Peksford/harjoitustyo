@@ -190,21 +190,27 @@ const AlbumSearch = ({ createAlbum }) => {
   };
 
   return (
-    <div style={{ width: '400px' }}>
-      <input
-        className="search-input"
-        {...albumInput}
-        data-testid="Search album"
-        placeholder="Search for an album"
-        onFocus={() => setShowResults(true)}
-      />
-      {debouncedAlbum && (
-        <button onClick={hideResults}>
-          {showResults ? 'Hide results' : 'Show results'}
-        </button>
-      )}
-      {showResults && <Album albumSearched={album} createAlbum={createAlbum} />}
-    </div>
+    <>
+      <div style={{ width: '70%' }}>
+        <input
+          className="search-input"
+          {...albumInput}
+          data-testid="Search album"
+          placeholder="Search for an album"
+          onFocus={() => setShowResults(true)}
+        />
+        {debouncedAlbum && (
+          <button onClick={hideResults}>
+            {showResults ? 'Hide results' : 'Show results'}
+          </button>
+        )}
+      </div>
+      <div style={{ width: '100%' }}>
+        {showResults && (
+          <Album albumSearched={album} createAlbum={createAlbum} />
+        )}
+      </div>
+    </>
   );
 };
 

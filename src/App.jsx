@@ -13,6 +13,7 @@ import gameService from '../services/games';
 import followService from '../services/follow';
 import Notification from '../components/Notification';
 import Home from '../components/Home';
+import Profile from '../components/Profile';
 import Search from '../components/Search';
 import LoginForm from '../components/LoginForm';
 import MyList from '../components/MyList';
@@ -80,6 +81,7 @@ const App = () => {
         movieService.setToken(user.token);
         gameService.setToken(user.token);
         followService.setToken(user.token);
+        userService.setToken(user.token);
       } catch (error) {
         console.error('Error', error);
       }
@@ -253,12 +255,27 @@ const App = () => {
           </button>
         )}
       </div>
+      <Link to={`/`}>
+        <h1 style={{ textAlign: 'center' }}>Let It Rate</h1>
+      </Link>
       <Routes>
-        {user ? (
-          <Route path="/" element={<Navigate to={`/${user.username}`} />} />
-        ) : (
-          <Route path="/" element={<Navigate to={'/login'} />} />
-        )}
+        {
+          user ? (
+            <Route
+              path="/"
+              element={
+                <Profile
+                  createAlbum={createAlbum}
+                  createBook={createBook}
+                  createMovie={createMovie}
+                  createGame={createGame}
+                  user={user}
+                />
+              }
+            />
+          ) : null
+          // <Route path="/" element={<Navigate to={'/login'} />} />
+        }
         <Route
           path="/search"
           element={

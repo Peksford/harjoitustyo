@@ -20,38 +20,46 @@ const styles = {
     paddingLeft: '24px',
     marginLeft: '24px',
   },
+  card: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    textAlign: 'center',
+    margin: '12px',
+    width: '150px',
+  },
   item: {
     textAlign: 'center',
     flex: '1',
   },
   thumbnailAlbum: {
-    width: '200px',
-    height: '200px',
+    width: '180px',
+    height: '180px',
     objectFit: 'cover',
     padding: '10px',
   },
   thumbnailBook: {
-    width: '200px',
-    height: '260px',
+    width: '170px',
+    height: '230px',
     objectFit: 'cover',
     padding: '10px',
   },
   thumbnailMovie: {
-    width: '210px',
-    height: '320px',
-    padding: '10px',
+    width: '180px',
+    height: '270px',
+    padding: '15px',
     objectFit: 'cover',
   },
   thumbnailGame: {
     width: '220px',
     height: '280px',
     objectFit: 'cover',
-    padding: '10px',
+    padding: '30px',
   },
   circle: {
     margin: '10px auto 0',
-    width: '100px',
-    height: '100px',
+    width: '70px',
+    height: '70px',
     borderRadius: '50%',
     border: '2px solid rgb(255, 255, 255)',
     backgroundColor: 'transparent',
@@ -59,7 +67,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: '25px',
+    fontSize: '20px',
     fontWeight: 'bold',
   },
   circleText: {
@@ -70,17 +78,19 @@ const styles = {
     display: 'block',
     textAlign: 'center',
     wordWrap: 'break-word',
-    width: '100%',
+    overflowWrap: 'break-word',
+    maxWidth: '100%',
+    whiteSpace: 'normal',
   },
 };
 
 const Home = ({
   user,
-  createAlbum,
-  createBook,
-  createMovie,
-  createGame,
-  userAlbums,
+  // createAlbum,
+  // createBook,
+  // createMovie,
+  // createGame,
+  // userAlbums,
 }) => {
   const { username } = useParams();
   const [userData, setUserData] = useState(null);
@@ -158,9 +168,9 @@ const Home = ({
   if (userData) {
     return (
       <>
-        <h1 style={{ textAlign: 'center' }}>Rateology</h1>
+        <UserMenu user={user} />
 
-        {userData.username === user.username && (
+        {/* {userData.username === user.username && (
           <>
             <h2>Search stuff here</h2>
             <Search
@@ -170,8 +180,8 @@ const Home = ({
               createGame={createGame}
             />
           </>
-        )}
-        {/* <UserMenu user={user} /> */}
+        )} */}
+
         {user.username === username ? (
           <h1 style={{ textAlign: 'center' }}>Your latest Albums</h1>
         ) : (

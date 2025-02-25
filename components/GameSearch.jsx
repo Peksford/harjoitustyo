@@ -185,7 +185,7 @@ const GameSearch = ({ createGame }) => {
   const game = useGame(debouncedGame);
 
   return (
-    <div style={{ width: '400px' }}>
+    <div style={{ width: '300px' }}>
       <input
         className="search-input"
         {...gameInput}

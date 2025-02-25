@@ -44,6 +44,7 @@ const SignUp = () => {
       bookService.setToken(user.token);
       gameService.setToken(user.token);
       followService.setToken(user.token);
+      userService.setToken(user.token);
       dispatch(setUser(user));
 
       dispatch(notificationShow(`Welcome ${user.username}!`));

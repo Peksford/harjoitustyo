@@ -179,7 +179,7 @@ const UserSearch = () => {
   const user = useUser(debouncedUser);
 
   return (
-    <div style={{ width: '400px' }}>
+    <div style={{ width: '300px' }}>
       <input
         className="search-input"
         {...userInput}
