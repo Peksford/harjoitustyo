@@ -1,7 +1,12 @@
 const bcrypt = require('bcryptjs');
 const router = require('express').Router();
-
 const { User, Album, Book, Movie, Game, Follow } = require('../models');
+const { tokenExtractor } = require('../util/middleware');
+const { Op } = require('sequelize');
+
+router.get('/test', (req, res) => {
+  res.send('Test route works!');
+});
 
 router.get('/', async (req, res) => {
   const users = await User.findAll({
@@ -53,6 +58,50 @@ router.post('/', async (req, res, next) => {
 
     const savedUser = await user.save();
     res.status(201).json(savedUser);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/following', tokenExtractor, async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.decodedToken.id);
+
+    const oneWeek = new Date();
+    oneWeek.setDate(oneWeek.getDate() - 7);
+
+    const followers = await User.findAll({
+      attributes: ['name', 'username', 'id'],
+      include: [
+        {
+          model: Album,
+          attributes: { exclude: ['userId'] },
+          where: { createdAt: { [Op.gte]: oneWeek } },
+        },
+        {
+          model: Book,
+          attributes: { exclude: ['userId'] },
+          where: { createdAt: { [Op.gte]: oneWeek } },
+        },
+        {
+          model: Movie,
+          attributes: { exclude: ['userId'] },
+          where: { createdAt: { [Op.gte]: oneWeek } },
+        },
+        {
+          model: Game,
+          attributes: { exclude: ['userId'] },
+          where: { createdAt: { [Op.gte]: oneWeek } },
+        },
+      ],
+      order: [
+        [Album, 'createdAt', 'DESC'],
+        [Book, 'createdAt', 'DESC'],
+        [Movie, 'createdAt', 'DESC'],
+        [Game, 'createdAt', 'DESC'],
+      ],
+    });
+    res.json(followers);
   } catch (error) {
     next(error);
   }

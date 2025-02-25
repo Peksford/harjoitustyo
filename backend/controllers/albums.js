@@ -68,8 +68,6 @@ router.put('/heart/:id', tokenExtractor, async (req, res) => {
     const album = await Album.findByPk(req.params.id);
     const user = await User.findByPk(req.decodedToken.id);
 
-    console.log('what is the user id', user);
-
     if (album.user_id !== req.decodedToken.id) {
       return res
         .status(404)

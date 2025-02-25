@@ -34,10 +34,6 @@ app.use('/api/movies', moviesRouter);
 app.use('/api/games', gamesRouter);
 app.use('/api/follow', followRouter);
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-});
-
 if (process.env.NODE_ENV === 'test') {
   const testingRouter = require('./controllers/testing');
   console.log('ANYTHING HERE TEST');
@@ -45,6 +41,9 @@ if (process.env.NODE_ENV === 'test') {
 }
 
 app.use(middleware.errorHandler);
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
 
 const start = async () => {
   await connectToDatabase();
