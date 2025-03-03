@@ -11,7 +11,7 @@ const newFollow = async (user, userData) => {
   const newObject = {
     followed_id: userData.id,
     followed_username: userData.username,
-    follower_username: user.user.username,
+    follower_username: user.username,
   };
 
   const config = {

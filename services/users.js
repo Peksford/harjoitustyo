@@ -22,8 +22,6 @@ const getFollowersData = async () => {
     headers: { Authorization: token },
   };
 
-  console.log('tokeni', token);
-
   const response = await axios.get(`${baseUrl}/following`, config);
   return response.data;
 };

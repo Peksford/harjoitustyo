@@ -31,6 +31,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../reducers/loginReducer';
 import { setNotification } from '../reducers/notificationReducer';
 import { useNavigate } from 'react-router-dom';
+import { setAlbums } from '../reducers/albumReducer';
 import PropTypes from 'prop-types';
 
 const styles = {
@@ -89,19 +90,33 @@ const App = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchAlbums = async () => {
       try {
         if (user) {
-          const userAlbums = await userService.getUserAlbums(user.username);
-          console.log('fetched albums', userAlbums);
-          setUserAlbums(userAlbums);
+          const albums = await userService.getUserAlbums(user.username);
+
+          dispatch(setAlbums(albums));
         }
       } catch (error) {
         console.error('error', error);
       }
     };
-    fetchData();
-  }, [user]);
+    fetchAlbums();
+  }, [dispatch, user]);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       if (user) {
+  //         const userAlbums = await userService.getUserAlbums(user.username);
+  //         setUserAlbums(userAlbums);
+  //       }
+  //     } catch (error) {
+  //       console.error('error', error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, [user]);
 
   const albumRatingUpdate = (updatedAlbum) => {
     setUserAlbums((preAlbums) =>
@@ -152,6 +167,7 @@ const App = () => {
       const newAlbum = await albumService.create(albumObject);
       setUserAlbums([...userAlbums, newAlbum]);
       dispatch(setNotification(`${albumObject.title} added on your list`, 5));
+      return newAlbum;
     } catch (error) {
       console.error(error);
       setErrorMessage(`'${albumObject.title}' already added into your list`);
@@ -166,6 +182,7 @@ const App = () => {
       const newMovie = await movieService.create(movieObject);
       setMovies([...movies, newMovie]);
       dispatch(setNotification(`${movieObject.title} added on your list`, 5));
+      return newMovie;
     } catch (error) {
       console.error(error);
       setErrorMessage(`'${movieObject.title}' already added into your list`);
@@ -180,6 +197,7 @@ const App = () => {
       const newBook = await bookService.create(bookObject);
       setBooks([...books, newBook]);
       dispatch(setNotification(`${bookObject.title} added on your list`, 5));
+      return newBook;
     } catch (error) {
       console.error(error);
       setErrorMessage(`'${bookObject.title}' already added into your list`);
@@ -194,6 +212,7 @@ const App = () => {
       const newGame = await gameService.create(gameObject);
       setGames([...books, newGame]);
       dispatch(setNotification(`${gameObject.title} added on your list`, 5));
+      return newGame;
     } catch (error) {
       console.error(error);
       setErrorMessage(`'${gameObject.title}' already added into your list`);
@@ -202,8 +221,6 @@ const App = () => {
       }, 5000);
     }
   };
-
-  console.log('UserAlbums', userAlbums);
 
   return (
     <div>
@@ -259,8 +276,10 @@ const App = () => {
         <h1 style={{ textAlign: 'center' }}>Let It Rate</h1>
       </Link>
       <Routes>
-        {
-          user ? (
+        {user === null ? (
+          <Route path="*" element={<p>Loading...</p>} />
+        ) : user ? (
+          <>
             <Route
               path="/"
               element={
@@ -270,12 +289,14 @@ const App = () => {
                   createMovie={createMovie}
                   createGame={createGame}
                   user={user}
+                  onUpdateAlbum={albumRatingUpdate}
                 />
               }
             />
-          ) : null
-          // <Route path="/" element={<Navigate to={'/login'} />} />
-        }
+          </>
+        ) : (
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        )}
         <Route
           path="/search"
           element={
@@ -284,6 +305,7 @@ const App = () => {
               createBook={createBook}
               createMovie={createMovie}
               createGame={createGame}
+              user={user}
             />
           }
         />

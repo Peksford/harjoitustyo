@@ -56,7 +56,7 @@ module.exports = {
       references: { model: 'users', key: 'id' },
     });
 
-    await queryInterface.addIndex('books', ['whole_title', 'user_id'], {
+    await queryInterface.addIndex('books', ['whole_title', 'user_id', 'year'], {
       unique: true,
     });
   },

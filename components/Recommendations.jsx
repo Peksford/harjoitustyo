@@ -8,25 +8,27 @@ import PropTypes from 'prop-types';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import userService from '../services/users';
 
 const styles = {
   card: {
-    maxWidth: '150px',
-    padding: '10px',
-    textAlign: 'center',
-    borderRadius: '5px',
     position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    textAlign: 'center',
+    margin: '5px',
+    width: '150px',
     marginBottom: '50px',
+    paddingBottom: '1px',
   },
   thumbnail: {
-    width: '120px',
-    height: '170px',
-    position: 'relative',
+    width: '100%',
+    height: 'auto',
   },
   circle: {
     position: 'absolute',
-    top: '110%',
+    bottom: '5px',
+    top: '115%',
     left: '46%',
     transform: 'translate(-50%, -50%)',
     width: '50px',
@@ -34,7 +36,6 @@ const styles = {
     borderRadius: '50%',
     border: '2px solid rgb(255, 255, 255)',
     backgroundColor: 'transparent',
-    // color: '#fff',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -45,53 +46,54 @@ const styles = {
     margin: 0,
     color: 'black',
   },
+  title: {
+    textAlign: 'center',
+    wordWrap: 'break-word',
+  },
 };
 
-const MyListGames = ({ user, userGames }) => {
+const MyList = ({ user, userAlbums }) => {
   const { username } = useParams();
   const [userData, setUserData] = useState(null);
-  const [loggedInUserData, setLoggedInUserData] = useState(null);
   const [mutual, setMutual] = useState(false);
   const [highest, setHighest] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await userService.getUser(username);
-        setUserData(response);
-
-        const loggedInResponse = await axios.get(
-          `https://im-only-rating.fly.dev/api/users/${user.username}`
+        const response = await axios.get(
+          `https://im-only-rating.fly.dev/api/users/${username}`
         );
 
         setUserData(response.data);
-        setLoggedInUserData(loggedInResponse.data);
       } catch (error) {
         console.error(error);
       }
     };
     fetchUser();
-  }, [username]);
+  }, [username, userAlbums]);
 
-  const mutualGames =
-    userData && loggedInUserData
-      ? userData.games.filter((game1) => {
-          return loggedInUserData.games.some(
-            (game2) => game2.whole_title === game1.whole_title
+  const mutualAlbums =
+    userData && userAlbums
+      ? userData.albums.filter((album1) => {
+          return userAlbums.some(
+            (album2) => album2.whole_title === album1.whole_title
           );
         })
       : null;
 
-  const highestGames = userData
-    ? [...userData.games].sort((a, b) => b.rating - a.rating)
+  console.log('mutual', mutualAlbums);
+
+  const highestAlbums = userData
+    ? [...userData.albums].sort((a, b) => b.rating - a.rating)
     : null;
 
-  const displayGames = userData
+  const displayAlbums = userData
     ? mutual
-      ? mutualGames
+      ? mutualAlbums
       : highest
-      ? highestGames
-      : userData.games
+      ? highestAlbums
+      : userData.albums
     : null;
 
   if (userData) {
@@ -103,7 +105,11 @@ const MyListGames = ({ user, userGames }) => {
             id="dropdown-secondary-button"
             // data-testid="dropdown-list"
             title={
-              mutual ? 'Mutual games' : highest ? 'Highest rating' : 'All games'
+              mutual
+                ? 'Mutual albums'
+                : highest
+                ? 'Highest rating'
+                : 'All albums'
             }
           >
             <Dropdown.Item
@@ -112,7 +118,7 @@ const MyListGames = ({ user, userGames }) => {
                 setHighest(false);
               }}
             >
-              All games
+              All albums
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {
@@ -120,7 +126,7 @@ const MyListGames = ({ user, userGames }) => {
                 setHighest(false);
               }}
             >
-              Mutual games
+              Mutual albums
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {
@@ -133,25 +139,18 @@ const MyListGames = ({ user, userGames }) => {
           </DropdownButton>
         </div>
         <div className="album-container">
-          {displayGames.map((game) => (
-            <div key={game.id} style={styles.card}>
+          {displayAlbums.map((album) => (
+            <div key={album.id} style={styles.card}>
               <Link
-                data-testid="gameTest"
-                to={`/${userData.username}/games/${game.id}`}
+                data-testid="albumTest"
+                to={`/${username}/albums/${album.id}`}
               >
-                {game.thumbnail && (
-                  <img
-                    src={game.thumbnail.replace(/t_thumb/, 't_cover_big')}
-                    style={styles.thumbnail}
-                  />
-                )}
-
-                {/* <img src={game.thumbnail} style={styles.thumbnail} /> */}
+                <img src={album.thumbnail} style={styles.thumbnail} />
               </Link>
-              <div>{game.title}</div>
-              {game.rating ? (
+              <div style={styles.title}>{album.title}</div>
+              {album.rating ? (
                 <div style={styles.circle}>
-                  <span style={styles.circleText}>{game.rating}</span>
+                  <span style={styles.circleText}>{album.rating}</span>
                 </div>
               ) : null}
             </div>
@@ -164,10 +163,10 @@ const MyListGames = ({ user, userGames }) => {
   }
 };
 
-MyListGames.propTypes = {
+MyList.propTypes = {
   user: PropTypes.shape({
     id: PropTypes.number.isRequired,
   }),
 };
 
-export default MyListGames;
+export default MyList;

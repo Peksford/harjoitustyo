@@ -12,8 +12,9 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
+import { useSelector } from 'react-redux';
 
-const Game = ({ user, onUpdateGame }) => {
+const Game = ({ onUpdateGame }) => {
   const { username, id } = useParams();
   const [gameData, setGameData] = useState('');
   const [rating, setRating] = useState(0);
@@ -23,6 +24,8 @@ const Game = ({ user, onUpdateGame }) => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchGame = async () => {

@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import UserMenu from './UserMenu';
 import PropTypes from 'prop-types';
+import userService from '../services/users';
 
 const Followers = ({ user }) => {
   const { username } = useParams();
@@ -13,11 +14,8 @@ const Followers = ({ user }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(
-          `https://im-only-rating.fly.dev/api/users/${username}`
-        );
-
-        setUserData(response.data);
+        const response = await userService.getUser(username);
+        setUserData(response);
       } catch (error) {
         console.error(error);
       }

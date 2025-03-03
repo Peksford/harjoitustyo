@@ -13,8 +13,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { setNotification } from '../reducers/notificationReducer';
 import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-const Album = ({ user, onUpdateAlbum }) => {
+const Album = ({ onUpdateAlbum }) => {
   const { username, id } = useParams();
   const [albumData, setAlbumData] = useState('');
   const [rating, setRating] = useState(0);
@@ -24,6 +25,7 @@ const Album = ({ user, onUpdateAlbum }) => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchAlbum = async () => {
@@ -62,8 +64,6 @@ const Album = ({ user, onUpdateAlbum }) => {
       console.error('error pressing heart', error);
     }
   };
-
-  console.log('albun', albumData);
 
   const changeRating = async (newRating) => {
     setRating(newRating);

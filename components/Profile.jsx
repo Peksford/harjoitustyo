@@ -1,10 +1,7 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import UserMenu from './UserMenu';
 import Search from './Search';
 import userService from '../services/users';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -16,7 +13,7 @@ const styles = {
   //   display: 'flex',
   //   alignItems: 'center',
   // },
-  albumInfo: {
+  containerInfo: {
     display: 'flex',
     alignItems: 'center',
     gap: '10px',
@@ -32,12 +29,12 @@ const styles = {
     marginRight: '1rem',
   },
   gameThumbnail: {
-    width: '200px',
-    height: '200px',
+    width: '170px',
+    height: '220px',
     marginRight: '1rem',
   },
   bookThumbnail: {
-    width: '200px',
+    width: '150px',
     height: '200px',
     marginRight: '1rem',
   },
@@ -74,26 +71,19 @@ const styles = {
   },
 };
 
-const Profile = ({
-  user,
-  createAlbum,
-  createBook,
-  createGame,
-  createMovie,
-}) => {
+const Profile = ({ createAlbum, createBook, createGame, createMovie }) => {
   const [followersData, setFollowersData] = useState(null);
   const [albums, setAlbums] = useState(true);
   const [books, setBooks] = useState(false);
   const [games, setGames] = useState(false);
   const [movies, setMovies] = useState(false);
+  const user = useSelector((state) => state.user);
 
-  console.log('Profile component', user);
   if (!user) return null;
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const response = await userService.getFollowersData();
-
         setFollowersData(response);
       } catch (error) {
         console.error(error.message);
@@ -102,22 +92,20 @@ const Profile = ({
     fetchUser();
   }, []);
 
-  console.log('Followers data', followersData);
-
-  if (followersData) {
-    return (
-      <>
-        {user && (
-          <>
-            <h2>Search stuff here</h2>
-            <Search
-              createAlbum={createAlbum}
-              createBook={createBook}
-              createMovie={createMovie}
-              createGame={createGame}
-            />
-          </>
-        )}
+  return (
+    <>
+      {user && (
+        <>
+          <h2>Search stuff here</h2>
+          <Search
+            createAlbum={createAlbum}
+            createBook={createBook}
+            createMovie={createMovie}
+            createGame={createGame}
+          />
+        </>
+      )}
+      {followersData ? (
         <div>
           <h2>Activity</h2>
           {followersData && (
@@ -185,7 +173,7 @@ const Profile = ({
                       <div key={album.id}>
                         <Link to={`/${item.username}`}>{item.username}</Link>{' '}
                         {album.rating ? 'rated' : 'added'}
-                        <div style={styles.albumInfo}>
+                        <div style={styles.containerInfo}>
                           <div
                             style={{
                               display: 'flex',
@@ -232,7 +220,7 @@ const Profile = ({
                       <div key={movie.id}>
                         <Link to={`/${item.username}`}>{item.username}</Link>{' '}
                         {movie.rating ? 'rated' : 'added'}
-                        <div style={styles.albumInfo}>
+                        <div style={styles.containerInfo}>
                           <div
                             style={{
                               display: 'flex',
@@ -286,16 +274,117 @@ const Profile = ({
                         <hr style={styles.separator} />
                       </div>
                     ))}
+                  {games &&
+                    item.games.map((game) => (
+                      <div key={game.id}>
+                        <Link to={`/${item.username}`}>{item.username}</Link>{' '}
+                        {game.rating ? 'rated' : 'added'}
+                        <div style={styles.containerInfo}>
+                          <div
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                            }}
+                          >
+                            <Link to={`${item.username}/games/${game.id}`}>
+                              {game.thumbnail && (
+                                <img
+                                  src={game.thumbnail.replace(
+                                    /t_thumb/,
+                                    't_cover_big'
+                                  )}
+                                  style={styles.gameThumbnail}
+                                />
+                              )}
+                            </Link>
+
+                            {game.rating && (
+                              <div style={styles.circle}>
+                                <span style={styles.circleText}>
+                                  {game.rating}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                          <div
+                            style={{ display: 'flex', flexDirection: 'column' }}
+                          >
+                            <span>{game.whole_title}</span>
+                            {game.url && (
+                              <p>
+                                <a
+                                  href={game.url}
+                                  target="blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  IGDB
+                                </a>
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <hr style={styles.separator} />
+                      </div>
+                    ))}
+                  {books &&
+                    item.books.map((book) => (
+                      <div key={book.id}>
+                        <Link to={`/${item.username}`}>{item.username}</Link>{' '}
+                        {book.rating ? 'rated' : 'added'}
+                        <div style={styles.containerInfo}>
+                          <div
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                            }}
+                          >
+                            <Link to={`${item.username}/books/${book.id}`}>
+                              {book.thumbnail && (
+                                <img
+                                  src={`https://covers.openlibrary.org/b/id/${book.thumbnail}-L.jpg`}
+                                  style={styles.bookThumbnail}
+                                />
+                              )}
+                            </Link>
+
+                            {book.rating && (
+                              <div style={styles.circle}>
+                                <span style={styles.circleText}>
+                                  {book.rating}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                          <div
+                            style={{ display: 'flex', flexDirection: 'column' }}
+                          >
+                            <span>{book.whole_title}</span>
+                            {book.key && (
+                              <p>
+                                <a
+                                  href={`https://openlibrary.org${book.key}`}
+                                  target="blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  Open Library
+                                </a>
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <hr style={styles.separator} />
+                      </div>
+                    ))}
                 </div>
               ))}
             </div>
           )}
         </div>
-      </>
-    );
-  } else {
-    return 'loading...';
-  }
+      ) : (
+        <div>Loading...</div>
+      )}
+    </>
+  );
 };
 
 export default Profile;

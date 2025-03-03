@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import userService from '../services/users';
 
 const styles = {
   container: {
@@ -59,11 +60,8 @@ const MyListBooks = ({ user, userAlbums }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(
-          `https://im-only-rating.fly.dev/api/users/${username}`
-        );
-
-        setUserData(response.data);
+        const response = await userService.getUser(username);
+        setUserData(response);
       } catch (error) {
         console.error(error);
       }

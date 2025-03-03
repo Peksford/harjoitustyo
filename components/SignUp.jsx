@@ -63,7 +63,7 @@ const SignUp = () => {
 
   return (
     <div className="login-container">
-      <h2>Sign Up to I&apos;m Only Rating</h2>
+      <h2>Sign Up to Let it Rate</h2>
       <ErrorMessage message={errorMessage} />
       <Form onSubmit={handleSignUp}>
         <Form.Group>

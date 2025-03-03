@@ -67,7 +67,7 @@ Movie.init(
     indexes: [
       {
         unique: true,
-        fields: ['whole_title', 'user_id'],
+        fields: ['whole_title', 'user_id', 'year'],
       },
     ],
   }

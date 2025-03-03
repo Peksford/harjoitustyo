@@ -2,27 +2,27 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import followService from '../services/follow';
+import userService from '../services/users';
+import { useSelector } from 'react-redux';
 
-const UserMenu = (user) => {
+const UserMenu = () => {
   const { username } = useParams();
   const [userData, setUserData] = useState(null);
   const [follow, setFollow] = useState(false);
+
+  const user = useSelector((state) => state.user);
 
   if (!username) return null;
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(
-          `https://im-only-rating.fly.dev/api/users/${username}`
-        );
-
-        setUserData(response.data);
-        if (user.user && response.data) {
-          const isFollowing = response.data.followers.some(
-            (follower) => follower.follower_id === user.user.id
+        const response = await userService.getUser(username);
+        setUserData(response);
+        if (user && response) {
+          const isFollowing = response.followers.some(
+            (follower) => follower.follower_id === user.id
           );
 
           setFollow(isFollowing);
@@ -53,7 +53,7 @@ const UserMenu = (user) => {
     return (
       <>
         <h1>{username} </h1>
-        {user.user && (
+        {user && (
           <button onClick={Follow}>{follow ? 'Unfollow' : 'Follow'}</button>
         )}
 
@@ -74,10 +74,13 @@ const UserMenu = (user) => {
             <Link to={`/${username}/games`}>games</Link>
           </div> */}
           <div>
-            <Link to={`/${username}/followers`}>followers</Link>
+            <Link to={`/${username}/followers`}>Followers</Link>
           </div>
           <div>
-            <Link to={`/${username}/following`}>following</Link>
+            <Link to={`/${username}/following`}>Following</Link>
+          </div>
+          <div>
+            <Link to={`/${username}`}>Recommendations</Link>
           </div>
         </div>
       </>

@@ -13,8 +13,9 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
+import { useSelector } from 'react-redux';
 
-const Book = ({ user, onUpdateBook }) => {
+const Book = ({ onUpdateBook }) => {
   const { username, id } = useParams();
   const [bookData, setBookData] = useState('');
   const [rating, setRating] = useState(0);
@@ -24,6 +25,8 @@ const Book = ({ user, onUpdateBook }) => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.user);
 
   const handleHeartClick = async () => {
     try {

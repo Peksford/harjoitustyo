@@ -66,7 +66,6 @@ router.post('/', async (req, res, next) => {
 router.get('/following', tokenExtractor, async (req, res, next) => {
   try {
     const user = await User.findByPk(req.decodedToken.id);
-    console.log('USERI', user);
 
     const oneWeek = new Date();
     oneWeek.setDate(oneWeek.getDate() - 5);
@@ -77,25 +76,45 @@ router.get('/following', tokenExtractor, async (req, res, next) => {
         {
           model: Album,
           attributes: { exclude: ['userId'] },
-          where: { createdAt: { [Op.gte]: oneWeek } },
+          where: {
+            [Op.or]: [
+              { createdAt: { [Op.gte]: oneWeek } },
+              { updatedAt: { [Op.gte]: oneWeek } },
+            ],
+          },
           required: false,
         },
         {
           model: Book,
           attributes: { exclude: ['userId'] },
-          where: { createdAt: { [Op.gte]: oneWeek } },
+          where: {
+            [Op.or]: [
+              { createdAt: { [Op.gte]: oneWeek } },
+              { updatedAt: { [Op.gte]: oneWeek } },
+            ],
+          },
           required: false,
         },
         {
           model: Movie,
           attributes: { exclude: ['userId'] },
-          where: { createdAt: { [Op.gte]: oneWeek } },
+          where: {
+            [Op.or]: [
+              { createdAt: { [Op.gte]: oneWeek } },
+              { updatedAt: { [Op.gte]: oneWeek } },
+            ],
+          },
           required: false,
         },
         {
           model: Game,
           attributes: { exclude: ['userId'] },
-          where: { createdAt: { [Op.gte]: oneWeek } },
+          where: {
+            [Op.or]: [
+              { createdAt: { [Op.gte]: oneWeek } },
+              { updatedAt: { [Op.gte]: oneWeek } },
+            ],
+          },
           required: false,
         },
         {
@@ -112,10 +131,10 @@ router.get('/following', tokenExtractor, async (req, res, next) => {
         // },
       ],
       order: [
-        [Album, 'createdAt', 'DESC'],
-        [Book, 'createdAt', 'DESC'],
-        [Movie, 'createdAt', 'DESC'],
-        [Game, 'createdAt', 'DESC'],
+        [Album, 'updatedAt', 'DESC'],
+        [Book, 'updatedAt', 'DESC'],
+        [Movie, 'updatedAt', 'DESC'],
+        [Game, 'updatedAt', 'DESC'],
       ],
     });
     res.json(followers);
@@ -131,49 +150,33 @@ router.get('/:username', async (req, res, next) => {
         username: req.params.username,
       },
       attributes: ['name', 'username', 'id'],
-      include: [
-        {
-          model: Album,
-          attributes: {
-            exclude: ['updatedAt', 'userId'],
-          },
-        },
-        {
-          model: Book,
-          attributes: {
-            exclude: ['updatedAt', 'userId'],
-          },
-        },
-        {
-          model: Movie,
-          attributes: {
-            exclude: ['updatedAt', 'userId'],
-          },
-        },
-        {
-          model: Game,
-          attributes: {
-            exclude: ['updatedAt', 'userId'],
-          },
-        },
-        {
-          model: Follow,
-          as: 'followers',
-          attributes: {
-            exclude: ['createdAt', 'updatedAt', 'userId'],
-          },
-        },
-        {
-          model: Follow,
-          as: 'followed',
-          attributes: {
-            exclude: ['createdAt', 'updatedAt', 'userId'],
-          },
-        },
-      ],
     });
+
     if (user) {
-      res.json(user);
+      const albums = await user.getAlbums({
+        order: [['createdAt', 'DESC']],
+      });
+      const books = await user.getBooks({
+        order: [['createdAt', 'DESC']],
+      });
+      const movies = await user.getMovies({
+        order: [['createdAt', 'DESC']],
+      });
+      const games = await user.getGames({
+        order: [['createdAt', 'DESC']],
+      });
+      const followers = await user.getFollowers();
+      const followed = await user.getFollowed();
+
+      res.json({
+        ...user.toJSON(),
+        albums,
+        books,
+        movies,
+        games,
+        followers,
+        followed,
+      });
     } else {
       res.status(404).end();
     }

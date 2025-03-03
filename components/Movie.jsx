@@ -12,8 +12,9 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
+import { useSelector } from 'react-redux';
 
-const Movie = ({ user, onUpdateMovie }) => {
+const Movie = ({ onUpdateMovie }) => {
   const { username, id } = useParams();
   const [movieData, setMovieData] = useState('');
   const [rating, setRating] = useState(0);
@@ -23,6 +24,8 @@ const Movie = ({ user, onUpdateMovie }) => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchMovie = async () => {

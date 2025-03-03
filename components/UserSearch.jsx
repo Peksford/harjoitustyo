@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import userService from '../services/users';
 
 const styles = {
   userContainer: {
@@ -71,17 +72,16 @@ const useUser = (name) => {
   const [userSearched, setUserSearched] = useState([]);
 
   useEffect(() => {
-    if (!name) return;
     if (!name) {
       setUserSearched([]);
       return;
     }
+    if (!name) return;
+
     const searchUser = async () => {
       try {
-        const response = await axios.get(
-          `https://im-only-rating.fly.dev/api/users/${name}`
-        );
-        setUserSearched(response.data);
+        const response = await userService.getUser(name);
+        setUserSearched(response);
       } catch (error) {
         console.error(error);
       }
@@ -97,24 +97,6 @@ const User = ({ userSearched }) => {
   if (userSearched === null || userSearched === undefined) {
     return <div>not found</div>;
   }
-
-  {
-    /* {user.username} has reviewed{' '}
-          <ul>
-            <li>
-              {albums.length > 1 ? (
-                <div>{albums.length} albums</div>
-              ) : (
-                <div>{albums.length} album</div>
-              )}
-            </li>
-            <li>
-              with average rating of{' '}
-              {albums.reduce((a, b) => a + b.rating, 0) / albums.length}
-            </li>
-          </ul> */
-  }
-
   const albumRatings = userSearched.albums
     ? userSearched.albums.filter((album) => album.rating !== null)
     : null;
@@ -137,36 +119,59 @@ const User = ({ userSearched }) => {
               {userSearched.username}
             </Link>
           </h2>
-          {userSearched.albums && (
-            <p>
-              Reviewed {userSearched.albums.length} albums, with average rating
-              of{' '}
-              {albumRatings.reduce((a, b) => a + b.rating, 0) /
-                albumRatings.length}
-            </p>
-          )}
+          {userSearched.albums &&
+            (userSearched.albums.length > 0 ? (
+              <p>
+                Reviewed {userSearched.albums.length} albums, with average
+                rating of{' '}
+                {Math.round(
+                  (albumRatings.reduce((a, b) => a + b.rating, 0) /
+                    albumRatings.length) *
+                    100
+                ) / 100 || 0}
+              </p>
+            ) : (
+              ''
+            ))}
           {userSearched.movies && (
             <p>
               Reviewed {userSearched.movies.length} movies, with average rating
               of{' '}
-              {movieRatings.reduce((a, b) => a + b.rating, 0) /
-                movieRatings.length}{' '}
+              {Math.round(
+                (movieRatings.reduce((a, b) => a + b.rating, 0) /
+                  movieRatings.length) *
+                  100
+              ) / 100 || 0}
             </p>
           )}
-          {userSearched.books && (
-            <p>
-              Reviewed {userSearched.books.length} books, with average rating of{' '}
-              {bookRatings.reduce((a, b) => a + b.rating, 0) /
-                bookRatings.length}
-            </p>
-          )}
-          {userSearched.games && (
-            <p>
-              Reviewed {userSearched.games.length} games, with average rating of{' '}
-              {gameRatings.reduce((a, b) => a + b.rating, 0) /
-                gameRatings.length}
-            </p>
-          )}
+          {userSearched.books &&
+            (userSearched.books.length > 0 ? (
+              <p>
+                Reviewed {userSearched.books.length} books, with average rating
+                of{' '}
+                {Math.round(
+                  (bookRatings.reduce((a, b) => a + b.rating, 0) /
+                    bookRatings.length) *
+                    100
+                ) / 100 || 0}
+              </p>
+            ) : (
+              <p>Reviewed 0 books</p>
+            ))}
+          {userSearched.games &&
+            (userSearched.games.length > 0 ? (
+              <p>
+                Reviewed {userSearched.games.length} games, with average rating
+                of{' '}
+                {Math.round(
+                  (gameRatings.reduce((a, b) => a + b.rating, 0) /
+                    gameRatings.length) *
+                    100
+                ) / 100 || 0}
+              </p>
+            ) : (
+              <p>Reviewed 0 games</p>
+            ))}
         </div>
       </div>
     </div>
@@ -179,15 +184,17 @@ const UserSearch = () => {
   const user = useUser(debouncedUser);
 
   return (
-    <div style={{ width: '300px' }}>
-      <input
-        className="search-input"
-        {...userInput}
-        data-testid="Search user"
-        placeholder="Search for an user"
-      />
-      <User userSearched={user} />
-    </div>
+    <>
+      <div style={{ width: '70%' }}>
+        <input
+          className="search-input"
+          {...userInput}
+          data-testid="Search user"
+          placeholder="Search for an user"
+        />
+        <User userSearched={user} />
+      </div>
+    </>
   );
 };
 

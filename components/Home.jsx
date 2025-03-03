@@ -1,15 +1,11 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import UserMenu from './UserMenu';
-import Search from './Search';
-import MyList from './MyList';
-import MyListBooks from './MyListBooks';
-import MyListMovies from './MyListMovies';
-import MyListGames from './MyListGames';
+import userService from '../services/users';
+import { useSelector } from 'react-redux';
 
 const styles = {
   container: {
@@ -84,25 +80,16 @@ const styles = {
   },
 };
 
-const Home = ({
-  user,
-  // createAlbum,
-  // createBook,
-  // createMovie,
-  // createGame,
-  // userAlbums,
-}) => {
+const Home = () => {
   const { username } = useParams();
   const [userData, setUserData] = useState(null);
-  // const [albums, setAlbums] = useState([]);
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(
-          `https://im-only-rating.fly.dev/api/users/${username}`
-        );
-        setUserData(response.data);
+        const response = await userService.getUser(username);
+        setUserData(response);
       } catch (error) {
         console.error(error);
       }
@@ -170,20 +157,8 @@ const Home = ({
       <>
         <UserMenu user={user} />
 
-        {/* {userData.username === user.username && (
-          <>
-            <h2>Search stuff here</h2>
-            <Search
-              createAlbum={createAlbum}
-              createBook={createBook}
-              createMovie={createMovie}
-              createGame={createGame}
-            />
-          </>
-        )} */}
-
-        {user.username === username ? (
-          <h1 style={{ textAlign: 'center' }}>Your latest Albums</h1>
+        {user?.username === username ? (
+          <h1 style={{ textAlign: 'center' }}>Your latest albums</h1>
         ) : (
           <h1 style={{ textAlign: 'center' }}>{username}&apos;s Albums</h1>
         )}
@@ -214,8 +189,8 @@ const Home = ({
         </Link>
         {/* BOOKS */}
         <hr />
-        {user.username === username ? (
-          <h1 style={{ textAlign: 'center' }}>Your latest Books</h1>
+        {user?.username === username ? (
+          <h1 style={{ textAlign: 'center' }}>Your latest books</h1>
         ) : (
           <h1 style={{ textAlign: 'center' }}>
             {username}&apos;s latest Books
@@ -258,8 +233,8 @@ const Home = ({
         </Link>
         <hr />
         {/* MOVIES */}
-        {user.username === username ? (
-          <h1 style={{ textAlign: 'center' }}>Your Movies</h1>
+        {user?.username === username ? (
+          <h1 style={{ textAlign: 'center' }}>Your movies/tv</h1>
         ) : (
           <h1 style={{ textAlign: 'center' }}>
             {username}&apos;s latest Movies
@@ -293,10 +268,16 @@ const Home = ({
             </div>
           ))}
         </div>
+        <Link
+          style={{ fontSize: '20px', textAlign: 'center', display: 'block' }}
+          to={`/${username}/movies`}
+        >
+          Show all
+        </Link>
         {/* <MyListMovies user={user} /> */}
         <hr />
-        {user.username === username ? (
-          <h1 style={{ textAlign: 'center' }}>Your Games</h1>
+        {user?.username === username ? (
+          <h1 style={{ textAlign: 'center' }}>Your games</h1>
         ) : (
           <h1 style={{ textAlign: 'center' }}>
             {username}&apos;s latest Games
@@ -305,29 +286,42 @@ const Home = ({
 
         {/* GAMES */}
         <div className="album-container">
-          {sortedByDateGame.map((game) => (
-            <div key={game.id} style={styles.card}>
-              <Link
-                data-testid="albumTest"
-                to={`/${username}/games/${game.id}`}
-              >
-                {game.thumbnail && (
-                  <img
-                    src={game.thumbnail.replace(/t_thumb/, 't_cover_big')}
-                    style={styles.thumbnailGame}
-                  />
-                )}
-              </Link>
-              <div style={styles.title}>{game.title}</div>
-              {game.rating ? (
-                <div style={styles.circle}>
-                  <span style={styles.circleText}>{game.rating}</span>
-                </div>
-              ) : null}
-            </div>
-          ))}
+          {sortedByDateGame.length > 0 ? (
+            sortedByDateGame.map((game) => (
+              <div key={game.id} style={styles.card}>
+                <Link
+                  data-testid="albumTest"
+                  to={`/${username}/games/${game.id}`}
+                >
+                  {game.thumbnail && (
+                    <img
+                      src={game.thumbnail.replace(/t_thumb/, 't_cover_big')}
+                      style={styles.thumbnailGame}
+                    />
+                  )}
+                </Link>
+                <div style={styles.title}>{game.title}</div>
+                {game.rating ? (
+                  <div style={styles.circle}>
+                    <span style={styles.circleText}>{game.rating}</span>
+                  </div>
+                ) : null}
+              </div>
+            ))
+          ) : (
+            <p>{username} is not much of a gamer</p>
+          )}
         </div>
-        {/* <MyListGames user={user} /> */}
+        <Link
+          style={{
+            fontSize: '20px',
+            textAlign: 'center',
+            display: 'block',
+          }}
+          to={`/${username}/games`}
+        >
+          Show all
+        </Link>
         <hr />
 
         <h2>Recommendations</h2>
