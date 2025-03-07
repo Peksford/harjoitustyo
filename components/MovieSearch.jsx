@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import movieService from '../services/movies';
-import { useSelector } from 'react-redux';
 
 const styles = {
   movieContainer: {
@@ -96,17 +95,18 @@ const useMovie = (name) => {
   const [movieSearched, setMovieSearched] = useState([]);
 
   useEffect(() => {
-    if (!name) return;
     if (!name) {
       setMovieSearched([]);
       return;
     }
+    if (!name) return;
+
     const searchMovie = async () => {
       const apiKey = import.meta.env.VITE_TMDB_API_KEY;
 
       try {
         const movieResponse = await axios.get(
-          'https://api.themoviedb.org/3/search/movie',
+          'https://api.themoviedb.org/3/search/multi',
           {
             params: {
               api_key: apiKey,
@@ -116,29 +116,29 @@ const useMovie = (name) => {
           }
         );
 
-        const tvResponse = await axios.get(
-          'https://api.themoviedb.org/3/search/tv',
-          {
-            params: {
-              api_key: apiKey,
-              query: name,
-              page: 1,
-            },
-          }
-        );
+        // const tvResponse = await axios.get(
+        //   'https://api.themoviedb.org/3/search/tv',
+        //   {
+        //     params: {
+        //       api_key: apiKey,
+        //       query: name,
+        //       page: 1,
+        //     },
+        //   }
+        // );
 
-        const movieAndTvCombined = [
-          ...movieResponse.data.results.map((item) => ({
-            ...item,
-            type: 'movie',
-          })),
-          ...tvResponse.data.results.map((item) => ({
-            ...item,
-            type: 'tv',
-          })),
-        ];
+        // const movieAndTvCombined = [
+        //   ...movieResponse.data.results.map((item) => ({
+        //     ...item,
+        //     type: 'movie',
+        //   })),
+        //   ...tvResponse.data.results.map((item) => ({
+        //     ...item,
+        //     type: 'tv',
+        //   })),
+        // ];
 
-        setMovieSearched(movieAndTvCombined);
+        setMovieSearched(movieResponse.data.results);
       } catch (error) {
         console.error(error);
       }
@@ -158,8 +158,8 @@ const Movie = ({ movieSearched, createMovie }) => {
   const [addedMovies, setAddedMovies] = useState([]);
   const [ratings, setRatings] = useState({});
 
-  const createNew = async ({ movie }) => {
-    if (movie.type === 'movie') {
+  const createNew = async (movie) => {
+    if (movie.media_type === 'movie') {
       const newMovie = await createMovie({
         title: movie.title,
         url: movie.id,
@@ -167,7 +167,7 @@ const Movie = ({ movieSearched, createMovie }) => {
         thumbnail: movie.poster_path,
         whole_title: movie.title,
         tmdb_id: movie.id,
-        type: movie.type,
+        type: movie.media_type,
         overview: movie.overview,
         heart: false,
       });
@@ -181,7 +181,7 @@ const Movie = ({ movieSearched, createMovie }) => {
         thumbnail: movie.poster_path,
         whole_title: movie.name,
         tmdb_id: movie.id,
-        type: movie.type,
+        type: movie.media_type,
         overview: movie.overview,
         heart: false,
       });
@@ -217,6 +217,8 @@ const Movie = ({ movieSearched, createMovie }) => {
     if (inputDate) return new Intl.DateTimeFormat('fi-FI').format(date);
   };
 
+  console.log(movieSearched);
+
   return (
     <div>
       <h4>
@@ -236,44 +238,90 @@ const Movie = ({ movieSearched, createMovie }) => {
           return (
             <div key={movie.id}>
               <div style={styles.movieContainer}>
-                <img
-                  src={`https://www.themoviedb.org/t/p/w1280/${movie.poster_path}`}
-                  style={styles.thumbnail}
-                />
+                {movie.poster_path && (
+                  <img
+                    src={`https://www.themoviedb.org/t/p/w1280/${movie.poster_path}`}
+                    style={styles.thumbnail}
+                  />
+                )}
                 <div style={styles.movieInfo}>
-                  {movie.type === 'movie' ? (
-                    <p>{movie.title}</p>
-                  ) : (
-                    <p>{movie.name}</p>
+                  {movie.media_type === 'movie'
+                    ? movie.title
+                    : movie.media_type === 'tv'
+                    ? movie.name
+                    : movie.media_type === 'person'
+                    ? movie.name
+                    : 'unknown'}
+
+                  {movie.media_type === 'movie' && (
+                    <>
+                      <p>Release date: {formatDate(movie.release_date)}</p>
+                      <p>
+                        <a
+                          href={`https://themoviedb.org/movie/${movie.id}`}
+                          target="blank"
+                          rel="noopener noreferrer"
+                        >
+                          The Movie Database
+                        </a>
+                      </p>
+                    </>
                   )}
-                  {movie.type === 'movie' ? (
-                    <p>Release date: {formatDate(movie.release_date)}</p>
-                  ) : (
-                    <p>First aired date: {formatDate(movie.first_air_date)}</p>
+                  {movie.media_type === 'tv' && (
+                    <>
+                      <p>
+                        First aired date: {formatDate(movie.first_air_date)}
+                      </p>
+                      <p>
+                        <a
+                          href={`https://themoviedb.org/tc/${movie.id}`}
+                          target="blank"
+                          rel="noopener noreferrer"
+                        >
+                          The Movie Database
+                        </a>
+                      </p>
+                    </>
                   )}
-                  {/* {movie.release_date && (
-                  <p>Release date: {formatDate(movie.release_date)}</p>
-                )} */}
-                  {movie.type === 'movie' ? (
-                    <p>
-                      <a
-                        href={`https://themoviedb.org/movie/${movie.id}`}
-                        target="blank"
-                        rel="noopener noreferrer"
-                      >
-                        The Movie Database
-                      </a>
-                    </p>
-                  ) : (
-                    <p>
-                      <a
-                        href={`https://themoviedb.org/tv/${movie.id}`}
-                        target="blank"
-                        rel="noopener noreferrer"
-                      >
-                        The Movie Database
-                      </a>
-                    </p>
+                  {movie.media_type === 'person' && (
+                    <>
+                      <p>
+                        Known for {movie.known_for_department}:{' '}
+                        <ul>
+                          {movie.known_for.map(
+                            (known) =>
+                              (known.media_type === 'movie' ||
+                                known.media_type === 'tv') && (
+                                <li key={known.id}>
+                                  <p>{known.title}</p>
+                                  {known.poster_path && (
+                                    <img
+                                      src={`https://www.themoviedb.org/t/p/w1280/${known.poster_path}`}
+                                      style={styles.thumbnail}
+                                    />
+                                  )}
+                                  <div>
+                                    <a
+                                      href={`https://themoviedb.org/${known.media_type}/${known.id}`}
+                                      target="blank"
+                                      rel="noopener noreferrer"
+                                    >
+                                      The Movie Database
+                                    </a>
+                                  </div>
+                                  <button
+                                    onClick={() => createNew(known)}
+                                    className="button-text"
+                                  >
+                                    Add
+                                  </button>
+                                  <hr />
+                                </li>
+                              )
+                          )}
+                        </ul>
+                      </p>
+                    </>
                   )}
                   {alreadyAdded ? (
                     <Popup
@@ -356,12 +404,14 @@ const Movie = ({ movieSearched, createMovie }) => {
 
                     // Rate this movie
                     // </button>}
-                    <button
-                      onClick={() => createNew({ movie })}
-                      className="button-text"
-                    >
-                      Add
-                    </button>
+                    movie.media_type !== 'person' && (
+                      <button
+                        onClick={() => createNew(movie)}
+                        className="button-text"
+                      >
+                        Add
+                      </button>
+                    )
                   )}
                   {/* {movie.id && (
                   <p>
@@ -391,13 +441,7 @@ const MovieSearch = ({ createMovie }) => {
   const movie = useMovie(debouncedMovie);
   const [showResults, setShowResults] = useState(true);
 
-  const hideResults = () => {
-    if (showResults === true) {
-      setShowResults(false);
-    } else {
-      setShowResults(true);
-    }
-  };
+  const hideResults = () => setShowResults(!showResults);
 
   return (
     <>
@@ -406,9 +450,10 @@ const MovieSearch = ({ createMovie }) => {
           className="search-input"
           {...movieInput}
           data-testid="Search movie"
-          placeholder="Search for an movie"
+          placeholder="Search for a movie, tv show or person"
           onFocus={() => setShowResults(true)}
         />
+
         {debouncedMovie && (
           <button onClick={hideResults}>
             {showResults ? 'Hide results' : 'Show results'}

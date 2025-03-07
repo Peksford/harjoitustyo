@@ -6,6 +6,8 @@ import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import gameService from '../services/games';
 import { useSelector } from 'react-redux';
+import GameAdvancedSearch from './GameAdvancedSearch';
+import genres from '../services/igdb_genres';
 
 const styles = {
   gameContainer: {
@@ -24,7 +26,7 @@ const styles = {
   },
   thumbnail: {
     width: '200px',
-    height: '250px',
+    height: '290px',
     objectFit: 'cover',
   },
   buttonContainer: {
@@ -103,11 +105,12 @@ const useGame = (name) => {
   const [gameSearched, setGameSearched] = useState([]);
 
   useEffect(() => {
-    if (!name) return;
     if (!name) {
       setGameSearched([]);
       return;
     }
+    if (!name) return;
+
     const searchGame = async () => {
       try {
         const response = await axios.get(
@@ -175,6 +178,8 @@ const Game = ({ gameSearched, createGame }) => {
       console.error(error);
     }
   };
+
+  console.log('game', gameSearched);
 
   return (
     <div>
@@ -338,14 +343,37 @@ const GameSearch = ({ createGame }) => {
   const debouncedGame = useDebounce(gameInput.value, 1000);
   const game = useGame(debouncedGame);
   const [showResults, setShowResults] = useState(true);
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
+  const [gameSearched, setGameSearched] = useState([]);
 
-  const hideResults = () => {
-    if (showResults === true) {
-      setShowResults(false);
-    } else {
-      setShowResults(true);
+  const hideResults = () => setShowResults(!showResults);
+  const hideSearch = () => setShowAdvancedSearch(!showAdvancedSearch);
+
+  const handleAdvancedSearch = async (searchParams) => {
+    try {
+      console.log('sending request with params', searchParams);
+      setGameSearched([]);
+      const response = await axios.get(
+        'https://im-only-rating.fly.dev/api/games/search-game',
+        {
+          params: {
+            advancedName: searchParams.advancedName || '',
+            genre: searchParams.genre || '',
+            platform: searchParams.platform || '',
+            year: searchParams.year || '',
+            company: searchParams.company || '',
+            rating: searchParams.rating || '',
+          },
+        }
+      );
+      console.log('response', response);
+      setGameSearched(response.data);
+    } catch (error) {
+      console.error('Error making advanced search', error);
     }
   };
+
+  console.log('game searched', gameSearched);
 
   return (
     <>
@@ -354,9 +382,19 @@ const GameSearch = ({ createGame }) => {
           className="search-input"
           {...gameInput}
           data-testid="Search game"
-          placeholder="Search for an game"
+          placeholder="Search for a game"
           onFocus={() => setShowResults(true)}
         />
+        <button
+          onClick={hideSearch}
+          style={{ marginTop: '10px', marginBottom: '10px' }}
+        >
+          {showAdvancedSearch ? 'Hide advanced search' : 'Advanced search'}
+        </button>
+        {showAdvancedSearch && (
+          <GameAdvancedSearch onSearch={handleAdvancedSearch} />
+        )}
+
         {debouncedGame && (
           <button onClick={hideResults}>
             {showResults ? 'Hide results' : 'Show results'}
@@ -364,7 +402,12 @@ const GameSearch = ({ createGame }) => {
         )}
       </div>
       <div style={{ width: '100%' }}>
-        {showResults && <Game gameSearched={game} createGame={createGame} />}
+        {showResults && (
+          <Game
+            gameSearched={gameSearched.length ? gameSearched : game}
+            createGame={createGame}
+          />
+        )}
       </div>
     </>
   );

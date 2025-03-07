@@ -1,0 +1,8 @@
+POST https://api.igdb.com/v4/companies
+Content-Type: application/json
+Client-ID: 
+Authorization: Bearer
+
+search "Remedy Entertainment";
+fields id, name;
+limit 50;

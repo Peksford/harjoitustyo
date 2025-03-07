@@ -1,0 +1,402 @@
+[
+    {
+      "id": 306,
+      "name": "Satellaview"
+    },
+    {
+      "id": 339,
+      "name": "Sega Pico"
+    },
+    {
+      "id": 376,
+      "name": "Epoch Super Cassette Vision"
+    },
+    {
+      "id": 62,
+      "name": "Atari Jaguar"
+    },
+    {
+      "id": 150,
+      "name": "Turbografx-16/PC Engine CD"
+    },
+    {
+      "id": 156,
+      "name": "Thomson MO5"
+    },
+    {
+      "id": 148,
+      "name": "AY-3-8607"
+    },
+    {
+      "id": 309,
+      "name": "Evercade"
+    },
+    {
+      "id": 389,
+      "name": "AirConsole"
+    },
+    {
+      "id": 112,
+      "name": "Microcomputer"
+    },
+    {
+      "id": 41,
+      "name": "Wii U"
+    },
+    {
+      "id": 13,
+      "name": "DOS"
+    },
+    {
+      "id": 60,
+      "name": "Atari 7800"
+    },
+    {
+      "id": 410,
+      "name": "Atari Jaguar CD"
+    },
+    {
+      "id": 127,
+      "name": "Fairchild Channel F"
+    },
+    {
+      "id": 30,
+      "name": "Sega 32X"
+    },
+    {
+      "id": 53,
+      "name": "MSX2"
+    },
+    {
+      "id": 77,
+      "name": "Sharp X1"
+    },
+    {
+      "id": 132,
+      "name": "Amazon Fire TV"
+    },
+    {
+      "id": 120,
+      "name": "Neo Geo Pocket Color"
+    },
+    {
+      "id": 61,
+      "name": "Atari Lynx"
+    },
+    {
+      "id": 413,
+      "name": "Leapster Explorer/LeadPad Explorer"
+    },
+    {
+      "id": 153,
+      "name": "Dragon 32/64"
+    },
+    {
+      "id": 140,
+      "name": "AY-3-8500"
+    },
+    {
+      "id": 143,
+      "name": "AY-3-8760"
+    },
+    {
+      "id": 154,
+      "name": "Amstrad PCW"
+    },
+    {
+      "id": 167,
+      "name": "PlayStation 5"
+    },
+    {
+      "id": 70,
+      "name": "Vectrex"
+    },
+    {
+      "id": 145,
+      "name": "AY-3-8603"
+    },
+    {
+      "id": 87,
+      "name": "Virtual Boy"
+    },
+    {
+      "id": 386,
+      "name": "Meta Quest 2"
+    },
+    {
+      "id": 390,
+      "name": "PlayStation VR2"
+    },
+    {
+      "id": 477,
+      "name": "Panasonic Jungle"
+    },
+    {
+      "id": 504,
+      "name": "Uzebox"
+    },
+    {
+      "id": 65,
+      "name": "Atari 8-bit"
+    },
+    {
+      "id": 158,
+      "name": "Commodore CDTV"
+    },
+    {
+      "id": 165,
+      "name": "PlayStation VR"
+    },
+    {
+      "id": 440,
+      "name": "Visual Memory Unit / Visual Memory System"
+    },
+    {
+      "id": 473,
+      "name": "Arcadia 2001"
+    },
+    {
+      "id": 474,
+      "name": "Gizmondo"
+    },
+    {
+      "id": 94,
+      "name": "Commodore Plus/4"
+    },
+    {
+      "id": 123,
+      "name": "WonderSwan Color"
+    },
+    {
+      "id": 128,
+      "name": "PC Engine SuperGrafx"
+    },
+    {
+      "id": 129,
+      "name": "Texas Instruments TI-99"
+    },
+    {
+      "id": 89,
+      "name": "Microvision"
+    },
+    {
+      "id": 48,
+      "name": "PlayStation 4"
+    },
+    {
+      "id": 51,
+      "name": "Family Computer Disk System"
+    },
+    {
+      "id": 482,
+      "name": "Sega CD 32X"
+    },
+    {
+      "id": 6,
+      "name": "PC (Microsoft Windows)"
+    },
+    {
+      "id": 134,
+      "name": "Acorn Electron"
+    },
+    {
+      "id": 8,
+      "name": "PlayStation 2"
+    },
+    {
+      "id": 136,
+      "name": "Neo Geo CD"
+    },
+    {
+      "id": 23,
+      "name": "Dreamcast"
+    },
+    {
+      "id": 35,
+      "name": "Sega Game Gear"
+    },
+    {
+      "id": 44,
+      "name": "Tapwave Zodiac"
+    },
+    {
+      "id": 88,
+      "name": "Odyssey"
+    },
+    {
+      "id": 97,
+      "name": "PDP-8"
+    },
+    {
+      "id": 39,
+      "name": "iOS"
+    },
+    {
+      "id": 3,
+      "name": "Linux"
+    },
+    {
+      "id": 373,
+      "name": "Sinclair ZX81"
+    },
+    {
+      "id": 505,
+      "name": "Elektor TV Games Computer"
+    },
+    {
+      "id": 133,
+      "name": "Odyssey 2 / Videopac G7000"
+    },
+    {
+      "id": 135,
+      "name": "Hyper Neo Geo 64"
+    },
+    {
+      "id": 142,
+      "name": "PC-50X Family"
+    },
+    {
+      "id": 144,
+      "name": "AY-3-8710"
+    },
+    {
+      "id": 146,
+      "name": "AY-3-8605"
+    },
+    {
+      "id": 147,
+      "name": "AY-3-8606"
+    },
+    {
+      "id": 149,
+      "name": "PC-9800 Series"
+    },
+    {
+      "id": 163,
+      "name": "SteamVR"
+    },
+    {
+      "id": 237,
+      "name": "Sol-20"
+    },
+    {
+      "id": 85,
+      "name": "Donner Model 30"
+    },
+    {
+      "id": 24,
+      "name": "Game Boy Advance"
+    },
+    {
+      "id": 78,
+      "name": "Sega CD"
+    },
+    {
+      "id": 115,
+      "name": "Apple IIGS"
+    },
+    {
+      "id": 119,
+      "name": "Neo Geo Pocket"
+    },
+    {
+      "id": 125,
+      "name": "PC-8800 Series"
+    },
+    {
+      "id": 72,
+      "name": "Ouya"
+    },
+    {
+      "id": 101,
+      "name": "Ferranti Nimrod Computer"
+    },
+    {
+      "id": 108,
+      "name": "PDP-11"
+    },
+    {
+      "id": 109,
+      "name": "CDC Cyber 70"
+    },
+    {
+      "id": 113,
+      "name": "OnLive Game System"
+    },
+    {
+      "id": 98,
+      "name": "DEC GT40"
+    },
+    {
+      "id": 124,
+      "name": "SwanCrystal"
+    },
+    {
+      "id": 138,
+      "name": "VC 4000"
+    },
+    {
+      "id": 139,
+      "name": "1292 Advanced Programmable Video System"
+    },
+    {
+      "id": 155,
+      "name": "Tatung Einstein"
+    },
+    {
+      "id": 46,
+      "name": "PlayStation Vita"
+    },
+    {
+      "id": 66,
+      "name": "Atari 5200"
+    },
+    {
+      "id": 9,
+      "name": "PlayStation 3"
+    },
+    {
+      "id": 11,
+      "name": "Xbox"
+    },
+    {
+      "id": 111,
+      "name": "Imlac PDS-1"
+    },
+    {
+      "id": 15,
+      "name": "Commodore C64/128/MAX"
+    },
+    {
+      "id": 18,
+      "name": "Nintendo Entertainment System"
+    },
+    {
+      "id": 162,
+      "name": "Oculus VR"
+    },
+    {
+      "id": 67,
+      "name": "Intellivision"
+    },
+    {
+      "id": 20,
+      "name": "Nintendo DS"
+    },
+    {
+      "id": 22,
+      "name": "Game Boy Color"
+    },
+    {
+      "id": 32,
+      "name": "Sega Saturn"
+    },
+    {
+      "id": 131,
+      "name": "Super NES CD-ROM System"
+    },
+    {
+      "id": 73,
+      "name": "BlackBerry OS"
+    }
+  ]

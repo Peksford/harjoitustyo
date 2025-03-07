@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const { Game, User } = require('../models');
 const { tokenExtractor } = require('../util/middleware');
+const genres = require('../util/igdb_genres.json');
 
 const CLIENT_ID = process.env.VITE_TWITCH_CLIENT_ID;
 const CLIENT_SECRET = process.env.VITE_TWITCH_CLIENT_SECRET;
@@ -31,16 +32,83 @@ const getAccessToken = async () => {
 };
 
 router.get('/search-game', async (req, res) => {
-  const { name } = req.query;
+  const { name, genre, platform, year, company, rating, advancedName } =
+    req.query;
+
+  console.log('query', req.query);
 
   try {
     if (!accessToken) await getAccessToken();
 
-    const query = `
-    search "${name}";
+    let companyId = '';
+
+    if (company) {
+      companyQuery = `
+      fields id, name;
+      where name ~*"${company}";
+      limit 10;`;
+
+      console.log('Company query: ', companyQuery);
+      const companyResponse = await axios.post(
+        'https://api.igdb.com/v4/companies',
+        companyQuery,
+        {
+          headers: {
+            'Client-ID': CLIENT_ID,
+            Authorization: `Bearer ${accessToken}`,
+            Accept: 'application/json',
+          },
+        }
+      );
+      companyId = companyResponse.data;
+      console.log('response data', companyResponse.data);
+    }
+
+    let query = '';
+    if (name) {
+      query = `search "${name}";
+      fields id,name, genres.name, rating, cover.url, first_release_date, summary, involved_companies, url;
+      limit 50;`;
+    } else {
+      let filters = [];
+      // if (advancedName) filters.push(`search "${advancedName}"`);
+      if (genre) filters.push(`genres = (${genre})`);
+      if (platform) filters.push(`platforms = (${platform})`);
+      if (year) {
+        const startDate = new Date(year, 0, 1).getTime() / 1000;
+        const endDate = new Date(year, 11, 31).getTime() / 1000;
+        filters.push(
+          `first_release_date >= ${startDate} & first_release_date <= ${endDate}`
+        );
+      }
+      if (company)
+        filters.push(`involved_companies.company = (${companyId[0].id})`);
+      if (rating) filters.push(`rating >= ${rating}`);
+
+      if (filters.length > 0 && !advancedName) {
+        query = `
+        where ${filters.join(' & ')};
+        fields id,name, genres.name, rating, cover.url, first_release_date, summary, involved_companies, url;
+        limit 50;
+        `;
+      } else if (advancedName && filters.length > 0) {
+        query = `
+    search "${advancedName}"; where ${filters.join(' & ')};
     fields id,name, genres.name, rating, cover.url, first_release_date, summary, involved_companies, url;
-    limit 20;
+    limit 50;
     `;
+      } else if (advancedName && filters.length === 0) {
+        query = `
+    search "${advancedName}";
+    fields id,name, genres.name, rating, cover.url, first_release_date, summary, involved_companies, url;
+    limit 50;
+    `;
+      } else {
+        return res.status(400).json({ error: 'No valid filters' });
+      }
+    }
+
+    console.log('Final Query: ', query);
 
     const response = await axios.post('https://api.igdb.com/v4/games', query, {
       headers: {
@@ -78,7 +146,6 @@ router.post('/', tokenExtractor, async (req, res, next) => {
     res.json(game);
   } catch (error) {
     next(error);
-    // return res.status(400).json({ error });
   }
 });
 

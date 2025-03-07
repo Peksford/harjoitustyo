@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import albumService from '../services/albums';
+import AlbumAdvancedSearch from './AlbumAdvancedSearch';
 import { useSelector } from 'react-redux';
 
 const styles = {
@@ -93,7 +94,7 @@ const useDebounce = (value, delay) => {
   return debouncedValue;
 };
 
-const useAlbum = (searchParams) => {
+const useAlbum = (name) => {
   const [albumSearched, setAlbumSearched] = useState([]);
 
   useEffect(() => {
@@ -147,6 +148,7 @@ const useAlbum = (searchParams) => {
 
     searchAlbum();
   }, [name]);
+  console.log(albumSearched);
 
   return albumSearched;
 };
@@ -362,6 +364,7 @@ const AlbumSearch = ({ createAlbum }) => {
             type: searchType,
             format: searchParams.format || undefined,
             country: searchParams.language || undefined,
+            style: searchParams.style || undefined,
             sort: searchParams.sort || 'relevance',
             barcode: searchParams.ean || undefined,
             per_page: 40,
@@ -375,90 +378,7 @@ const AlbumSearch = ({ createAlbum }) => {
     }
   };
 
-  const AdvancedSearch = ({ onSearch }) => {
-    const [searchParams, setSearchParams] = useState({
-      artist: '',
-      album: '',
-      year: '',
-      type: 'master',
-      language: '',
-    });
-
-    const handleChange = (e) => {
-      setSearchParams({ ...searchParams, [e.target.name]: e.target.value });
-    };
-
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      onSearch(searchParams);
-    };
-
-    return (
-      <div style={{ width: '70%' }}>
-        <form onSubmit={handleSubmit}>
-          <select
-            name="type"
-            onChange={handleChange}
-            value={searchParams.ean ? 'release' : searchParams.type}
-            disabled={!!searchParams.ean}
-          >
-            <option value="master">Master Album</option>
-            <option value="release">Different versions</option>
-          </select>
-          <select name="sort" onChange={handleChange}>
-            <option value="relevancer">Relevance</option>
-            <option value="year">Year</option>
-            <option value="title">Title</option>
-          </select>
-          <input
-            className="search-input"
-            type="text"
-            name="artist"
-            placeholder="Artist"
-            onChange={handleChange}
-          />
-          <input
-            className="search-input"
-            type="text"
-            name="album"
-            placeholder="Album Title"
-            onChange={handleChange}
-          />
-          <input
-            className="search-input"
-            type="text"
-            name="year"
-            placeholder="Year (e. g. 1962-1970)"
-            onChange={handleChange}
-          />
-          <input
-            className="search-input"
-            type="text"
-            name="language"
-            placeholder="Language/Country (e.g. UK, US)"
-            onChange={handleChange}
-          />
-          <input
-            className="search-input"
-            type="text"
-            name="format"
-            placeholder="Format (e.g. Vinyl, CD)"
-            onChange={handleChange}
-          />
-          <input
-            className="search-input"
-            type="text"
-            name="ean"
-            placeholder="EAN (Barcode)"
-            onChange={handleChange}
-          />
-          <button type="submit">Search</button>
-        </form>
-      </div>
-    );
-  };
-
-  console.log('Show advanced search results', albumSearched);
+  console.log('album', album);
 
   return (
     <>
@@ -470,11 +390,14 @@ const AlbumSearch = ({ createAlbum }) => {
           placeholder="Search for an album"
           onFocus={() => setShowResults(true)}
         />
-        <button onClick={hideSearch}>
+        <button
+          onClick={hideSearch}
+          style={{ marginTop: '10px', marginBottom: '10px' }}
+        >
           {showAdvancedSearch ? 'Hide advanced search' : 'Advanced search'}
         </button>
         {showAdvancedSearch && (
-          <AdvancedSearch onSearch={handleAdvancedSearch} />
+          <AlbumAdvancedSearch onSearch={handleAdvancedSearch} />
         )}
 
         {debouncedAlbum && (
