@@ -2,16 +2,22 @@ import React from 'react';
 import { useState } from 'react';
 import genres from '../services/igdb_genres';
 import platforms from '../services/igdb_platforms';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import PropTypes from 'prop-types';
 
 const GameAdvancedSearch = ({ onSearch }) => {
   const [searchParams, setSearchParams] = useState({
     advancedName: '',
     genre: '',
     platform: '',
-    year: '',
+    startYear: '',
+    endYear: '',
     company: '',
     rating: '',
   });
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const handleChange = (e) => {
     setSearchParams((prev) => ({
       ...prev,
@@ -24,34 +30,40 @@ const GameAdvancedSearch = ({ onSearch }) => {
     onSearch(searchParams);
   };
 
-  // const sortedCompanies = companies.sort((a, b) => {
-  //   if (a.name < b.name) {
-  //     return -1;
-  //   }
-  // });
+  const sortedPlatforms = platforms.sort((a, b) => {
+    if (a.name < b.name) {
+      return -1;
+    }
+  });
+
+  const sortedGenres = genres.sort((a, b) => {
+    if (a.name < b.name) {
+      return -1;
+    }
+  });
+
+  const handleDateChange = (date, field) => {
+    if (field === 'start') {
+      const year = date ? date.getFullYear() : null;
+      setStartDate(date);
+
+      setSearchParams((prev) => ({
+        ...prev,
+        startYear: year,
+      }));
+    } else if (field === 'end') {
+      const year = date ? date.getFullYear() : null;
+      setEndDate(date);
+      setSearchParams((prev) => ({
+        ...prev,
+        endYear: year,
+      }));
+    }
+  };
 
   return (
     <div style={{ width: '70%' }}>
       <form onSubmit={handleSubmit}>
-        {/* <select
-          name="type"
-          onChange={handleChange}
-          value={searchParams.ean ? 'release' : searchParams.type}
-          disabled={!!searchParams.ean}
-          style={{ marginTop: '10px' }}
-        >
-          <option value="master">Master Game</option>
-          <option value="release">Different versions</option>
-        </select>
-        <select
-          name="sort"
-          onChange={handleChange}
-          style={{ marginTop: '10px' }}
-        >
-          <option value="relevancer">Relevance</option>
-          <option value="year">Year</option>
-          <option value="title">Title</option>
-        </select> */}
         <input
           className="search-input"
           type="text"
@@ -60,21 +72,26 @@ const GameAdvancedSearch = ({ onSearch }) => {
           value={searchParams.advancedName}
           onChange={handleChange}
         />
-        <input
-          className="search-input"
-          type="text"
-          name="year"
-          placeholder="Year"
-          value={searchParams.year}
-          onChange={handleChange}
-        />
-        {/* <select
-          name="type"
-          onChange={handleChange}
-          value={searchParams.ean ? 'release' : searchParams.type}
-          disabled={!!searchParams.ean}
-          style={{ marginTop: '10px' }}
-        > */}
+        <div style={{ marginTop: '10px', marginBottom: '10px' }}>
+          Release year:{' '}
+          <DatePicker
+            selected={startDate}
+            onChange={(date) => handleDateChange(date, 'start')}
+            placeholderText="Start Date"
+            dateFormat="yyyy"
+            showYearPicker
+            isClearable
+          />
+          <span> - </span>
+          <DatePicker
+            selected={endDate}
+            onChange={(date) => handleDateChange(date, 'end')}
+            placeholderText="End Date"
+            dateFormat="yyyy"
+            showYearPicker
+            isClearable
+          />
+        </div>
         Genre:{' '}
         <select
           name="genre"
@@ -82,20 +99,12 @@ const GameAdvancedSearch = ({ onSearch }) => {
           style={{ marginTop: '10px' }}
         >
           <option value="">Select a Genre</option>
-          {genres.map((genre) => (
+          {sortedGenres.map((genre) => (
             <option key={genre.id} value={genre.id}>
               {genre.name}
             </option>
           ))}
         </select>
-        {/* <input
-          className="search-input"
-          type="text"
-          name="genre"
-          placeholder="Genre"
-          value={searchParams.genre}
-          onChange={handleChange}
-        /> */}
         <div>
           Platform:{' '}
           <select
@@ -104,7 +113,7 @@ const GameAdvancedSearch = ({ onSearch }) => {
             style={{ marginTop: '10px' }}
           >
             <option value="">Select a Platform</option>
-            {platforms.map((platform) => (
+            {sortedPlatforms.map((platform) => (
               <option key={platform.id} value={platform.id}>
                 {platform.name}
               </option>
@@ -119,22 +128,6 @@ const GameAdvancedSearch = ({ onSearch }) => {
           value={searchParams.company}
           onChange={handleChange}
         />
-        {/* <div>
-          Company:{' '}
-          <select
-            name="company"
-            onChange={handleChange}
-            style={{ marginTop: '10px' }}
-          >
-            <option value="">Select a Company</option>
-            {sortedCompanies.map((company) => (
-              <option key={company.id} value={company.id}>
-                {company.name}
-              </option>
-            ))}
-            {console.log('companies', sortedCompanies)}
-          </select>
-        </div> */}
         <input
           className="search-input"
           type="text"
@@ -152,6 +145,10 @@ const GameAdvancedSearch = ({ onSearch }) => {
       </form>
     </div>
   );
+};
+
+GameAdvancedSearch.propTypes = {
+  onSearch: PropTypes.func.isRequired,
 };
 
 export default GameAdvancedSearch;

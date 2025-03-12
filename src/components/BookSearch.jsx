@@ -2,31 +2,36 @@ import React from 'react';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
+import bookService from '../services/books';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
-import albumService from '../services/albums';
-import AlbumAdvancedSearch from './AlbumAdvancedSearch';
-import { useSelector } from 'react-redux';
+import BookAdvancedSearch from './BookAdvancedSearch';
 
 const styles = {
-  albumContainer: {
+  bookContainer: {
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    gap: '16px',
   },
-  albumInfo: {
+  BookInfoAndButtons: {
     display: 'flex',
     flexDirection: 'column',
   },
+  bookInfo: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
   thumbnail: {
-    width: '200px',
-    height: '200px',
-    marginRight: '1rem',
+    width: '220px',
+    height: '330px',
+    objectFit: 'cover',
   },
   buttonContainer: {
     display: 'flex',
     flexDirection: 'column',
     gap: '8px',
+    marginTop: '8px',
   },
   separator: {
     border: 'px solid #ccc',
@@ -94,107 +99,81 @@ const useDebounce = (value, delay) => {
   return debouncedValue;
 };
 
-const useAlbum = (name) => {
-  const [albumSearched, setAlbumSearched] = useState([]);
+const useBook = (name) => {
+  const [bookSearched, setBookSearched] = useState([]);
 
   useEffect(() => {
     if (!name) {
-      setAlbumSearched([]);
+      setBookSearched([]);
       return;
     }
-    if (!name) return;
-    const searchAlbum = async () => {
-      const token = import.meta.env.VITE_TOKEN;
-
+    const searchBook = async () => {
       try {
         const response = await axios.get(
-          'https://api.discogs.com/database/search',
+          'https://im-only-rating.fly.dev/api/books/search-book',
           {
-            headers: {
-              Authorization: `Discogs token=${token}`,
-            },
             params: {
-              q: name,
-              per_page: 40,
-              page: 1,
-              type: 'master',
+              name: name,
             },
           }
         );
-        setAlbumSearched(response.data.results);
 
-        if (response.data.results.length === 0) {
-          const response = await axios.get(
-            'https://api.discogs.com/database/search',
-            {
-              headers: {
-                Authorization: `Discogs token=${token}`,
-              },
-              params: {
-                q: name,
-                per_page: 40,
-                page: 1,
-                type: 'release',
-              },
-            }
-          );
-
-          setAlbumSearched(response.data.results);
-        }
+        setBookSearched(response.data.docs);
       } catch (error) {
         console.error(error);
       }
     };
 
-    searchAlbum();
+    searchBook();
   }, [name]);
-  console.log(albumSearched);
 
-  return albumSearched;
+  return bookSearched;
 };
 
-const Album = ({ albumSearched, createAlbum }) => {
-  if (albumSearched === null || albumSearched === undefined) {
+const Book = ({ bookSearched, createBook }) => {
+  if (bookSearched === null || bookSearched === undefined) {
     return <div>not found</div>;
   }
-  const [addedAlbums, setAddedAlbums] = useState([]);
+
+  const [addedBooks, setAddedBooks] = useState([]);
   const [ratings, setRatings] = useState({});
 
-  const createNew = async ({ album }) => {
+  const createNew = async ({ book }) => {
     try {
-      const newAlbum = await createAlbum({
-        artist: album.title.split(' - ')[0].trim(),
-        title: album.title.split(' - ')[1].trim(),
-        url: album.uri,
-        year: album.year,
-        thumbnail: album.cover_image,
-        whole_title: album.title,
-        discogs_id: album.id,
+      const newBook = await createBook({
+        type: 'book',
+        author: book.author_name?.[0] || 'Unknown',
+        title: book.title || 'Untitled',
+        url: book.key,
+        year: book.first_publish_year || null,
+        thumbnail: book.cover_i,
+        whole_title: book.author_name[0] + ' - ' + book.title,
+        key: book.key,
         heart: false,
       });
+      newBook && setAddedBooks((prevBooks) => [...prevBooks, newBook]);
 
-      newAlbum && setAddedAlbums((prevAlbums) => [...prevAlbums, newAlbum]);
-      return addedAlbums;
+      return addedBooks;
     } catch (error) {
       console.error(error);
-      return null;
     }
   };
-  const changeRating = async (newRating, addedAlbum) => {
+
+  const changeRating = async (newRating, addedBook) => {
     setRatings((prevRatings) => ({
       ...prevRatings,
-      [addedAlbum.id]: newRating,
+      [addedBook.id]: newRating,
     }));
-    if (!addedAlbum) return;
+    if (!addedBook) return;
 
     try {
-      const updatedAlbum = await albumService.updatedAlbum(addedAlbum.id, {
-        ...addedAlbum,
+      const updatedBook = await bookService.updatedBook(addedBook.id, {
+        ...addedBook,
         rating: newRating,
       });
-      setAddedAlbums((prevAlbums) =>
-        prevAlbums.map((album) =>
-          album.id === updatedAlbum.id ? updatedAlbum : album
+      setAddedBooks((prevBooks) =>
+        prevBooks.map((book) =>
+          book.id === updatedBook.id ? updatedBook : book
         )
       );
     } catch (error) {
@@ -204,38 +183,55 @@ const Album = ({ albumSearched, createAlbum }) => {
 
   return (
     <div>
-      <h4>
-        {albumSearched.map((album) => {
-          const alreadyAdded =
-            addedAlbums.length > 0 &&
-            addedAlbums.some(
-              (added) =>
-                added.whole_title === album.title &&
-                added.year === Number(album.year)
-            );
-          const album_rating = addedAlbums.find(
-            (added) => added.whole_title === album.title
+      {bookSearched.map((book) => {
+        const alreadyAdded =
+          addedBooks.length > 0 &&
+          addedBooks.some(
+            (added) =>
+              added.title === book.title &&
+              added.year === Number(book.first_publish_year)
           );
-          return (
-            <div key={album.id}>
-              <div style={styles.albumContainer}>
-                <img src={album.cover_image} style={styles.thumbnail} />
-                <div style={styles.albumInfo}>
-                  <p>{album.title}</p>
-                  {album.year && <p>Year: {album.year}</p>}
-                  {album.uri && (
+        const book_rating = addedBooks.find(
+          (added) => added.title === book.title
+        );
+        return (
+          <div key={book.key}>
+            <div style={styles.bookContainer}>
+              {book.cover_i && (
+                <img
+                  src={`https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`}
+                  style={styles.thumbnail}
+                />
+              )}
+              <div style={styles.BookInfoAndButtons}>
+                <div style={styles.bookInfo}>
+                  <h4>{book.title}</h4>
+                  {book.author_name &&
+                    (book.author_name.length < 2 ? (
+                      <p>
+                        Author: <i>{book.author_name.join(', ')}</i>
+                      </p>
+                    ) : (
+                      <p>
+                        Authors: <i>{book.author_name.join(', ')}</i>
+                      </p>
+                    ))}
+                  {book.first_publish_year && (
+                    <p>Year: {book.first_publish_year}</p>
+                  )}
+                  {book.key && (
                     <p>
                       <a
-                        href={`https://www.discogs.com${album.uri}`}
+                        href={`https://openlibrary.org${book.key}`}
                         target="blank"
                         rel="noopener noreferrer"
                       >
-                        Discogs
+                        Open Library
                       </a>
                     </p>
                   )}
                 </div>
-                <div>
+                <div style={styles.buttonContainer}>
                   {alreadyAdded ? (
                     <Popup
                       trigger={<button className="button-text">Rate</button>}
@@ -245,11 +241,11 @@ const Album = ({ albumSearched, createAlbum }) => {
                     >
                       {(close) => (
                         <div className="modal-container">
-                          <div className="modal-header">{album.title}</div>
-                          {album_rating && ratings[album_rating.id] ? (
+                          <div className="modal-header">{book.title}</div>
+                          {book_rating && ratings[book_rating.id] ? (
                             <div style={styles.circle}>
                               <span style={styles.circleText}>
-                                {ratings[album_rating.id]}
+                                {ratings[book_rating.id]}
                               </span>
                             </div>
                           ) : null}
@@ -262,15 +258,13 @@ const Album = ({ albumSearched, createAlbum }) => {
                                 max="10"
                                 step="0.1"
                                 value={
-                                  (album_rating && ratings[album_rating.id]) ||
-                                  0
+                                  (book_rating && ratings[book_rating.id]) || 0
                                 }
                                 onChange={(e) =>
                                   changeRating(
                                     parseFloat(e.target.value),
-                                    addedAlbums.find(
-                                      (added) =>
-                                        added.whole_title === album.title
+                                    addedBooks.find(
+                                      (added) => added.title === book.title
                                     )
                                   )
                                 }
@@ -303,23 +297,8 @@ const Album = ({ albumSearched, createAlbum }) => {
                       )}
                     </Popup>
                   ) : (
-                    /* // onClick={() =>
-                      //   navigate(
-                      //     `/${user.username}/albums/${
-                      //       addedAlbums.find(
-                      //         (added) =>
-                      //           added.whole_title === album.title &&
-                      //           added.year === Number(album.year)
-                      //       ).id
-                      //     }`
-                      //   )
-                      // } */
-                    /* className="button-text" */
-
-                    // Rate this album
-                    // </button>}
                     <button
-                      onClick={() => createNew({ album })}
+                      onClick={() => createNew({ book })}
                       className="button-text"
                     >
                       Add
@@ -327,67 +306,56 @@ const Album = ({ albumSearched, createAlbum }) => {
                   )}
                 </div>
               </div>
-              <hr style={styles.separator} />
             </div>
-          );
-        })}
-      </h4>
+            <hr style={styles.separator} />
+          </div>
+        );
+      })}
     </div>
   );
 };
 
-const AlbumSearch = ({ createAlbum }) => {
-  const albumInput = useField('text');
-  const debouncedAlbum = useDebounce(albumInput.value, 1000);
-  const album = useAlbum(debouncedAlbum);
+const BookSearch = ({ createBook }) => {
+  const bookInput = useField('text');
+  const debouncedBook = useDebounce(bookInput.value, 500);
+  const book = useBook(debouncedBook);
   const [showResults, setShowResults] = useState(true);
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
-  const [albumSearched, setAlbumSearched] = useState([]);
+  const [bookSearched, setBookSearched] = useState([]);
 
   const hideResults = () => setShowResults(!showResults);
   const hideSearch = () => setShowAdvancedSearch(!showAdvancedSearch);
 
   const handleAdvancedSearch = async (searchParams) => {
     try {
-      const token = import.meta.env.VITE_TOKEN;
-      const searchType = searchParams.ean
-        ? 'release'
-        : searchParams.type || 'master';
+      setBookSearched([]);
       const response = await axios.get(
-        'https://api.discogs.com/database/search',
+        'https://im-only-rating.fly.dev/api/books/search-book',
+        // 'http://localhost:3001/api/books/search-book',
         {
-          headers: { Authorization: `Discogs token=${token}` },
           params: {
-            artist: searchParams.artist || undefined,
-            release_title: searchParams.album || undefined,
-            year: searchParams.year || undefined,
-            type: searchType,
-            format: searchParams.format || undefined,
-            country: searchParams.language || undefined,
-            style: searchParams.style || undefined,
-            sort: searchParams.sort || 'relevance',
-            barcode: searchParams.ean || undefined,
-            per_page: 40,
-            page: 1,
+            title: searchParams.title || '',
+            author: searchParams.author || '',
+            language: searchParams.language || '',
+            subject: searchParams.subject,
+            isbn: searchParams.isbn || '',
           },
         }
       );
-      setAlbumSearched(response.data.results);
+      setBookSearched(response.data.docs);
     } catch (error) {
       console.error('Error making advanced search', error);
     }
   };
-
-  console.log('album', album);
 
   return (
     <>
       <div style={{ width: '70%' }}>
         <input
           className="search-input"
-          {...albumInput}
-          data-testid="Search album"
-          placeholder="Search for an album"
+          {...bookInput}
+          data-testid="Search book"
+          placeholder="Search for a book"
           onFocus={() => setShowResults(true)}
         />
         <button
@@ -397,10 +365,9 @@ const AlbumSearch = ({ createAlbum }) => {
           {showAdvancedSearch ? 'Hide advanced search' : 'Advanced search'}
         </button>
         {showAdvancedSearch && (
-          <AlbumAdvancedSearch onSearch={handleAdvancedSearch} />
+          <BookAdvancedSearch onSearch={handleAdvancedSearch} />
         )}
-
-        {debouncedAlbum && (
+        {debouncedBook && (
           <button onClick={hideResults}>
             {showResults ? 'Hide results' : 'Show results'}
           </button>
@@ -408,9 +375,9 @@ const AlbumSearch = ({ createAlbum }) => {
       </div>
       <div style={{ width: '100%' }}>
         {showResults && (
-          <Album
-            albumSearched={albumSearched.length ? albumSearched : album}
-            createAlbum={createAlbum}
+          <Book
+            bookSearched={bookSearched.length ? bookSearched : book}
+            createBook={createBook}
           />
         )}
       </div>
@@ -418,13 +385,13 @@ const AlbumSearch = ({ createAlbum }) => {
   );
 };
 
-Album.propTypes = {
-  albumSearched: PropTypes.array.isRequired,
-  createAlbum: PropTypes.func.isRequired,
+Book.propTypes = {
+  bookSearched: PropTypes.array.isRequired,
+  createBook: PropTypes.func.isRequired,
 };
 
-AlbumSearch.propTypes = {
-  createAlbum: PropTypes.func.isRequired,
+BookSearch.propTypes = {
+  createBook: PropTypes.func.isRequired,
 };
 
-export default AlbumSearch;
+export default BookSearch;

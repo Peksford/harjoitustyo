@@ -7,6 +7,7 @@ import userService from '../services/users';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import PropTypes from 'prop-types';
 
 const styles = {
   // albumContainer: {
@@ -71,7 +72,7 @@ const styles = {
   },
 };
 
-const Profile = ({ createAlbum, createBook, createGame, createMovie }) => {
+const Profile = ({ createObject }) => {
   const [followersData, setFollowersData] = useState(null);
   const [albums, setAlbums] = useState(true);
   const [books, setBooks] = useState(false);
@@ -97,12 +98,7 @@ const Profile = ({ createAlbum, createBook, createGame, createMovie }) => {
       {user && (
         <>
           <h2>Search stuff here</h2>
-          <Search
-            createAlbum={createAlbum}
-            createBook={createBook}
-            createMovie={createMovie}
-            createGame={createGame}
-          />
+          <Search createObject={createObject} />
         </>
       )}
       {followersData ? (
@@ -385,6 +381,10 @@ const Profile = ({ createAlbum, createBook, createGame, createMovie }) => {
       )}
     </>
   );
+};
+
+Profile.propTypes = {
+  createObject: PropTypes.func.isRequired,
 };
 
 export default Profile;

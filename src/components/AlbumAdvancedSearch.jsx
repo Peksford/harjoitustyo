@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 
 const AlbumAdvancedSearch = ({ onSearch }) => {
   const [searchParams, setSearchParams] = useState({
@@ -10,6 +11,8 @@ const AlbumAdvancedSearch = ({ onSearch }) => {
     language: '',
     style: '',
   });
+  const [showTooltip, setShowTooltip] = useState(false);
+
   const handleChange = (e) => {
     setSearchParams((prev) => ({
       ...prev,
@@ -23,7 +26,7 @@ const AlbumAdvancedSearch = ({ onSearch }) => {
   };
 
   return (
-    <div style={{ width: '70%' }}>
+    <div style={{ width: '90%' }}>
       <form onSubmit={handleSubmit}>
         <select
           name="type"
@@ -31,19 +34,46 @@ const AlbumAdvancedSearch = ({ onSearch }) => {
           value={searchParams.ean ? 'release' : searchParams.type}
           disabled={!!searchParams.ean}
           style={{ marginTop: '10px' }}
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
         >
-          <option value="master">Master Album</option>
-          <option value="release">Different versions</option>
+          <option value="master">Main Album</option>
+          <option value="release">Vinyl/CD Version</option>
         </select>
-        <select
-          name="sort"
-          onChange={handleChange}
-          style={{ marginTop: '10px' }}
-        >
-          <option value="relevancer">Relevance</option>
-          <option value="year">Year</option>
-          <option value="title">Title</option>
-        </select>
+        {showTooltip && (
+          <div
+            style={{
+              bottom: '100%',
+              left: '0',
+              backgroundColor: '#333',
+              color: '#fff',
+              padding: '6px 10px',
+              borderRadius: '6px',
+              fontSize: '14px',
+              whiteSpace: 'normal',
+              wordWrap: 'break-word',
+              maxWidth: '200px',
+              boxShadow: '0px 0px 5px rgba(0,0,0,0.2)',
+              zIndex: 10,
+            }}
+          >
+            &quot;Main Album&quot; shows the entire collection of versions for
+            an album, while &quot;Vinyl/CD&quot; Version filters for a specific
+            release format like Vinyl, CD or Digital region.
+          </div>
+        )}
+        <div>
+          Sort by:{' '}
+          <select
+            name="sort"
+            onChange={handleChange}
+            style={{ marginTop: '10px' }}
+          >
+            <option value="relevancer">Relevance</option>
+            <option value="year">Year</option>
+            <option value="title">Title</option>
+          </select>
+        </div>
         <input
           className="search-input"
           type="text"
@@ -109,6 +139,10 @@ const AlbumAdvancedSearch = ({ onSearch }) => {
       </form>
     </div>
   );
+};
+
+AlbumAdvancedSearch.propTypes = {
+  onSearch: PropTypes.func.isRequired,
 };
 
 export default AlbumAdvancedSearch;

@@ -5,9 +5,7 @@ import PropTypes from 'prop-types';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import gameService from '../services/games';
-import { useSelector } from 'react-redux';
 import GameAdvancedSearch from './GameAdvancedSearch';
-import genres from '../services/igdb_genres';
 
 const styles = {
   gameContainer: {
@@ -115,6 +113,7 @@ const useGame = (name) => {
       try {
         const response = await axios.get(
           'https://im-only-rating.fly.dev/api/games/search-game',
+          // 'http://localhost:3001/api/games/search-game',
           {
             params: {
               name: name,
@@ -143,6 +142,7 @@ const Game = ({ gameSearched, createGame }) => {
 
   const createNew = async ({ game }) => {
     const newGame = await createGame({
+      type: 'game',
       title: game.name || 'Untitled',
       url: game.url,
       release_date: game.first_release_date || null,
@@ -179,8 +179,6 @@ const Game = ({ gameSearched, createGame }) => {
     }
   };
 
-  console.log('game', gameSearched);
-
   return (
     <div>
       <h4>
@@ -195,6 +193,7 @@ const Game = ({ gameSearched, createGame }) => {
           const game_rating = addedGames.find(
             (added) => added.title === game.name
           );
+
           return (
             <div key={game.id}>
               <div style={styles.gameContainer}>
@@ -224,7 +223,9 @@ const Game = ({ gameSearched, createGame }) => {
                         {game.genres.map((genre) => genre.name).join(', ')}
                       </p>
                     )}
-
+                    {game.rating && (
+                      <p>IGDB rating: {Math.round(game.rating)}</p>
+                    )}
                     {game.url && (
                       <p>
                         <a
@@ -304,21 +305,6 @@ const Game = ({ gameSearched, createGame }) => {
                         )}
                       </Popup>
                     ) : (
-                      /* // onClick={() =>
-                      //   navigate(
-                      //     `/${user.username}/games/${
-                      //       addedGames.find(
-                      //         (added) =>
-                      //           added.whole_title === game.title &&
-                      //           added.year === Number(game.year)
-                      //       ).id
-                      //     }`
-                      //   )
-                      // } */
-                      /* className="button-text" */
-
-                      // Rate this game
-                      // </button>}
                       <button
                         onClick={() => createNew({ game })}
                         className="button-text"
@@ -351,29 +337,27 @@ const GameSearch = ({ createGame }) => {
 
   const handleAdvancedSearch = async (searchParams) => {
     try {
-      console.log('sending request with params', searchParams);
       setGameSearched([]);
       const response = await axios.get(
         'https://im-only-rating.fly.dev/api/games/search-game',
+        // 'http://localhost:3001/api/games/search-game',
         {
           params: {
             advancedName: searchParams.advancedName || '',
             genre: searchParams.genre || '',
             platform: searchParams.platform || '',
-            year: searchParams.year || '',
+            startYear: searchParams.startYear || '',
+            endYear: searchParams.endYear || '',
             company: searchParams.company || '',
             rating: searchParams.rating || '',
           },
         }
       );
-      console.log('response', response);
       setGameSearched(response.data);
     } catch (error) {
       console.error('Error making advanced search', error);
     }
   };
-
-  console.log('game searched', gameSearched);
 
   return (
     <>

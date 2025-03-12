@@ -217,8 +217,6 @@ const Movie = ({ movieSearched, createMovie }) => {
     if (inputDate) return new Intl.DateTimeFormat('fi-FI').format(date);
   };
 
-  console.log(movieSearched);
-
   return (
     <div>
       <h4>
@@ -389,21 +387,6 @@ const Movie = ({ movieSearched, createMovie }) => {
                       )}
                     </Popup>
                   ) : (
-                    /* // onClick={() =>
-                      //   navigate(
-                      //     `/${user.username}/movies/${
-                      //       addedMovies.find(
-                      //         (added) =>
-                      //           added.whole_title === movie.title &&
-                      //           added.year === Number(movie.year)
-                      //       ).id
-                      //     }`
-                      //   )
-                      // } */
-                    /* className="button-text" */
-
-                    // Rate this movie
-                    // </button>}
                     movie.media_type !== 'person' && (
                       <button
                         onClick={() => createNew(movie)}

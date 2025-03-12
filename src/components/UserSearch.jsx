@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -97,6 +96,7 @@ const User = ({ userSearched }) => {
   if (userSearched === null || userSearched === undefined) {
     return <div>not found</div>;
   }
+
   const albumRatings = userSearched.albums
     ? userSearched.albums.filter((album) => album.rating !== null)
     : null;
@@ -198,8 +198,8 @@ const UserSearch = () => {
   );
 };
 
-// User.propTypes = {
-//   userSearched: PropTypes.object.isRequired,
-// };
+User.propTypes = {
+  userSearched: PropTypes.object.isRequired,
+};
 
 export default UserSearch;

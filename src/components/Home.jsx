@@ -155,7 +155,7 @@ const Home = () => {
   if (userData) {
     return (
       <>
-        <UserMenu user={user} />
+        <UserMenu />
 
         {user?.username === username ? (
           <h1 style={{ textAlign: 'center' }}>Your latest albums</h1>

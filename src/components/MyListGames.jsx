@@ -2,20 +2,18 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import UserMenu from './UserMenu';
 import PropTypes from 'prop-types';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import userService from '../services/users';
+import { useSelector } from 'react-redux';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const styles = {
-  container: {
-    display: 'flex',
-  },
   card: {
     maxWidth: '150px',
-
     padding: '10px',
     textAlign: 'center',
     borderRadius: '5px',
@@ -23,8 +21,8 @@ const styles = {
     marginBottom: '50px',
   },
   thumbnail: {
-    width: '130px',
-    height: '180px',
+    width: '120px',
+    height: '170px',
     position: 'relative',
   },
   circle: {
@@ -50,53 +48,68 @@ const styles = {
   },
 };
 
-const MyListMovies = ({ user }) => {
+const MyListGames = () => {
   const { username } = useParams();
   const [userData, setUserData] = useState(null);
-  const [loggedInUserData, setLoggedInUserData] = useState(null);
   const [mutual, setMutual] = useState(false);
   const [highest, setHighest] = useState(false);
+  const userGames = useSelector((state) => state.games);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(
-          `https://im-only-rating.fly.dev/api/users/${username}`
-        );
-
-        const loggedInResponse = await axios.get(
-          `https://im-only-rating.fly.dev/api/users/${user.username}`
-        );
-
-        setUserData(response.data);
-        setLoggedInUserData(loggedInResponse.data);
+        const response = await userService.getUser(username);
+        setUserData(response);
       } catch (error) {
         console.error(error);
       }
     };
     fetchUser();
-  }, [username]);
+  }, [username, userGames]);
 
-  const mutualMovies =
-    userData && loggedInUserData
-      ? userData.movies.filter((movie1) => {
-          return loggedInUserData.movies.some(
-            (movie2) => movie2.whole_title === movie1.whole_title
+  const mutualGames =
+    userData && userGames
+      ? userData.games.filter((game1) => {
+          return userGames.some(
+            (game2) => game2.whole_title === game1.whole_title
           );
         })
       : null;
 
-  const highestMovies = userData
-    ? [...userData.movies].sort((a, b) => b.rating - a.rating)
+  const highestGames = userData
+    ? [...userData.games].sort((a, b) => b.rating - a.rating)
     : null;
 
-  const displayMovies = userData
-    ? mutual
-      ? mutualMovies
-      : highest
-      ? highestMovies
-      : userData.movies
+  const dateAdded = userData
+    ? userData.games.filter((game) => {
+        const endOfDay = new Date(endDate);
+        endOfDay.setHours(23, 59, 59, 999);
+        const addedDate = new Date(game.createdAt);
+        if (startDate && addedDate < startDate) return false;
+        if (endOfDay && addedDate > endOfDay) return false;
+        return true;
+      })
     : null;
+
+  const displayGames = userData
+    ? mutual
+      ? mutualGames
+      : highest
+      ? highestGames
+      : startDate && endDate
+      ? dateAdded
+      : userData.games
+    : null;
+
+  const handleDateChange = (date, field) => {
+    if (field === 'start') {
+      setStartDate(date);
+    } else if (field === 'end') {
+      setEndDate(date);
+    }
+  };
 
   if (userData) {
     return (
@@ -107,11 +120,7 @@ const MyListMovies = ({ user }) => {
             id="dropdown-secondary-button"
             // data-testid="dropdown-list"
             title={
-              mutual
-                ? 'Mutual movies'
-                : highest
-                ? 'Highest rating'
-                : 'All movies'
+              mutual ? 'Mutual games' : highest ? 'Highest rating' : 'All games'
             }
           >
             <Dropdown.Item
@@ -120,7 +129,7 @@ const MyListMovies = ({ user }) => {
                 setHighest(false);
               }}
             >
-              All movies
+              All games
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {
@@ -128,7 +137,7 @@ const MyListMovies = ({ user }) => {
                 setHighest(false);
               }}
             >
-              Mutual movies
+              Mutual games
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {
@@ -139,26 +148,45 @@ const MyListMovies = ({ user }) => {
               Highest rating
             </Dropdown.Item>
           </DropdownButton>
+          <div style={{ marginTop: '10px', marginBottom: '10px' }}>
+            Sort by addition date:{' '}
+            <DatePicker
+              selected={startDate}
+              onChange={(date) => handleDateChange(date, 'start')}
+              placeholderText="Start Date"
+              dateFormat="yyyy-MM-dd"
+              isClearable
+            />
+            <span> - </span>
+            <DatePicker
+              selected={endDate}
+              onChange={(date) => handleDateChange(date, 'end')}
+              placeholderText="End Date"
+              dateFormat="yyyy-MM-dd"
+              isClearable
+            />
+          </div>
         </div>
         <div className="album-container">
-          {displayMovies.map((movie) => (
-            <div key={movie.id} style={styles.card}>
+          {displayGames.map((game) => (
+            <div key={game.id} style={styles.card}>
               <Link
-                data-testid="movieTest"
-                to={`/${userData.username}/movies/${movie.id}`}
+                data-testid="gameTest"
+                to={`/${userData.username}/games/${game.id}`}
               >
-                {movie.thumbnail && (
+                {game.thumbnail && (
                   <img
-                    src={`https://www.themoviedb.org/t/p/w1280/${movie.thumbnail}`}
+                    src={game.thumbnail.replace(/t_thumb/, 't_cover_big')}
                     style={styles.thumbnail}
                   />
                 )}
-                {/* <img src={movie.thumbnail} style={styles.thumbnail} /> */}
+
+                {/* <img src={game.thumbnail} style={styles.thumbnail} /> */}
               </Link>
-              <div>{movie.title}</div>
-              {movie.rating ? (
+              <div>{game.title}</div>
+              {game.rating ? (
                 <div style={styles.circle}>
-                  <span style={styles.circleText}>{movie.rating}</span>
+                  <span style={styles.circleText}>{game.rating}</span>
                 </div>
               ) : null}
             </div>
@@ -171,10 +199,10 @@ const MyListMovies = ({ user }) => {
   }
 };
 
-MyListMovies.propTypes = {
+MyListGames.propTypes = {
   user: PropTypes.shape({
     id: PropTypes.number.isRequired,
   }),
 };
 
-export default MyListMovies;
+export default MyListGames;

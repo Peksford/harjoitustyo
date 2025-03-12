@@ -27,10 +27,11 @@ const albumSlice = createSlice({
 export const { appendAlbum, setAlbums, increaseLike, deleteAlbumId } =
   albumSlice.actions;
 
-export const createAlbum = (content) => {
+export const addAlbum = (content) => {
   return async (dispatch) => {
-    const NewAlbum = await albumService.create(content);
-    dispatch(appendAlbum(NewAlbum));
+    const newAlbum = await albumService.create(content);
+    dispatch(appendAlbum(newAlbum));
+    return newAlbum;
   };
 };
 

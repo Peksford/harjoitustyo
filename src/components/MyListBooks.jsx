@@ -2,13 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import UserMenu from './UserMenu';
 import PropTypes from 'prop-types';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import userService from '../services/users';
+import { useSelector } from 'react-redux';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const styles = {
   container: {
@@ -51,11 +52,14 @@ const styles = {
   },
 };
 
-const MyListBooks = ({ user, userAlbums }) => {
+const MyListBooks = () => {
   const { username } = useParams();
   const [userData, setUserData] = useState(null);
   const [mutual, setMutual] = useState(false);
   const [highest, setHighest] = useState(false);
+  const userBooks = useSelector((state) => state.books);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -67,12 +71,12 @@ const MyListBooks = ({ user, userAlbums }) => {
       }
     };
     fetchUser();
-  }, [username, userAlbums]);
+  }, [username, userBooks]);
 
   const mutualBooks =
-    userData && userAlbums
+    userData && userBooks
       ? userData.books.filter((book1) => {
-          return userAlbums.books.some(
+          return userBooks.some(
             (book2) => book2.whole_title === book1.whole_title
           );
         })
@@ -82,13 +86,34 @@ const MyListBooks = ({ user, userAlbums }) => {
     ? [...userData.books].sort((a, b) => b.rating - a.rating)
     : null;
 
+  const dateAdded = userData
+    ? userData.books.filter((book) => {
+        const endOfDay = new Date(endDate);
+        endOfDay.setHours(23, 59, 59, 999);
+        const addedDate = new Date(book.createdAt);
+        if (startDate && addedDate < startDate) return false;
+        if (endOfDay && addedDate > endOfDay) return false;
+        return true;
+      })
+    : null;
+
   const displayBooks = userData
     ? mutual
       ? mutualBooks
       : highest
       ? highestBooks
+      : startDate && endDate
+      ? dateAdded
       : userData.books
     : null;
+
+  const handleDateChange = (date, field) => {
+    if (field === 'start') {
+      setStartDate(date);
+    } else if (field === 'end') {
+      setEndDate(date);
+    }
+  };
 
   if (userData) {
     return (
@@ -127,6 +152,24 @@ const MyListBooks = ({ user, userAlbums }) => {
               Highest rating
             </Dropdown.Item>
           </DropdownButton>
+          <div style={{ marginTop: '10px', marginBottom: '10px' }}>
+            Sort by addition date:{' '}
+            <DatePicker
+              selected={startDate}
+              onChange={(date) => handleDateChange(date, 'start')}
+              placeholderText="Start Date"
+              dateFormat="yyyy-MM-dd"
+              isClearable
+            />
+            <span> - </span>
+            <DatePicker
+              selected={endDate}
+              onChange={(date) => handleDateChange(date, 'end')}
+              placeholderText="End Date"
+              dateFormat="yyyy-MM-dd"
+              isClearable
+            />
+          </div>
         </div>
         <div className="album-container">
           {displayBooks.map((book) => (
@@ -144,7 +187,9 @@ const MyListBooks = ({ user, userAlbums }) => {
 
                 {/* <img src={book.thumbnail} style={styles.thumbnail} /> */}
               </Link>
-              <div>{book.title}</div>
+              <Link to={`/${userData.username}/books/${book.id}`}>
+                <div>{book.title}</div>
+              </Link>
               {book.rating ? (
                 <div style={styles.circle}>
                   <span style={styles.circleText}>{book.rating}</span>

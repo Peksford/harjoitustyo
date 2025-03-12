@@ -1,13 +1,12 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import UserMenu from './UserMenu';
 import PropTypes from 'prop-types';
 import userService from '../services/users';
 
-const Followers = ({ user }) => {
+const Followers = () => {
   const { username } = useParams();
   const [userData, setUserData] = useState(null);
 
@@ -26,7 +25,7 @@ const Followers = ({ user }) => {
   if (userData) {
     return (
       <>
-        <UserMenu user={user} />
+        <UserMenu />
         <div>
           <h2>Followers</h2>
         </div>
