@@ -25,6 +25,7 @@ const getAccessToken = async () => {
     );
 
     accessToken = response.data.access_token;
+    console.log('tokeni', accessToken);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to search games' });
@@ -32,8 +33,16 @@ const getAccessToken = async () => {
 };
 
 router.get('/search-game', async (req, res) => {
-  const { name, genre, platform, year, company, rating, advancedName } =
-    req.query;
+  const {
+    name,
+    genre,
+    platform,
+    startYear,
+    endYear,
+    company,
+    rating,
+    advancedName,
+  } = req.query;
 
   console.log('query', req.query);
 
@@ -60,7 +69,12 @@ router.get('/search-game', async (req, res) => {
           },
         }
       );
-      companyId = companyResponse.data;
+      if (companyResponse.data.length > 0) {
+        companyId = companyResponse.data;
+      } else {
+        return res.json([]);
+      }
+
       console.log('response data', companyResponse.data);
     }
 
@@ -74,9 +88,11 @@ router.get('/search-game', async (req, res) => {
       // if (advancedName) filters.push(`search "${advancedName}"`);
       if (genre) filters.push(`genres = (${genre})`);
       if (platform) filters.push(`platforms = (${platform})`);
-      if (year) {
-        const startDate = new Date(year, 0, 1).getTime() / 1000;
-        const endDate = new Date(year, 11, 31).getTime() / 1000;
+      if (startYear && endYear) {
+        const startDate = Math.floor(Date.UTC(startYear, 0, 1, 0, 0, 0) / 1000);
+        const endDate = Math.floor(
+          Date.UTC(endYear, 11, 31, 23, 59, 59) / 1000
+        );
         filters.push(
           `first_release_date >= ${startDate} & first_release_date <= ${endDate}`
         );

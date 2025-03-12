@@ -6,19 +6,26 @@ const jwt = require('jsonwebtoken');
 const { tokenExtractor } = require('../util/middleware');
 
 router.get('/search-book', async (req, res) => {
-  const { name } = req.query;
+  const { name, title, author, language, subject, isbn } = req.query;
   const userAgent = 'RateApp (jonksu4@hotmail.com)';
   // console.log('searching', name);
   try {
+    const params = {
+      limit: 50,
+      sort: 'editions',
+    };
+    if (name) params.q = name;
+    if (title) params.title = title;
+    if (author) params.author = author;
+    if (language) params.language = language;
+    if (isbn) params.isbn = isbn;
+    if (subject) params.subject = subject;
+    console.log(params);
     const response = await axios.get('https://openlibrary.org/search.json', {
       headers: {
         'User-Agent': userAgent,
       },
-      params: {
-        title: name,
-        limit: 50,
-        sort: 'editions',
-      },
+      params,
     });
 
     res.json(response.data);
