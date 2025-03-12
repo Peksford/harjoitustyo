@@ -77,7 +77,9 @@ describe('when logged in', () => {
     // await expect(
     //   page.getByRole('heading', { name: 'Movies/tv' })
     // ).toBeVisible();
-    await expect(page.getByText('Return of the Jedi')).toBeVisible();
+    await expect(
+      page.getByText('Return of the Jedi', { exact: true })
+    ).toBeVisible();
     await expect(page.getByTestId('movieTest')).toBeVisible();
   });
 
@@ -224,7 +226,7 @@ describe('when logged in', () => {
   // });
 
   test('album can be deleted', async ({ page }) => {
-    await page.locator('#dropdown-secondary-button').click();
+    await page.getByRole('button', { name: 'kayttaja' }).click();
     await page.locator('text=My albums').click();
     await page.getByTestId('albumTest').click();
 
@@ -241,7 +243,7 @@ describe('when logged in', () => {
   });
 
   test('movie can be deleted', async ({ page }) => {
-    await page.locator('#dropdown-secondary-button').click();
+    await page.getByRole('button', { name: 'kayttaja' }).click();
     await page.locator('text=My movies').click();
 
     await page.getByTestId('movieTest').click();
@@ -258,7 +260,7 @@ describe('when logged in', () => {
   });
 
   test('book can be deleted', async ({ page }) => {
-    await page.locator('#dropdown-secondary-button').click();
+    await page.getByRole('button', { name: 'kayttaja' }).click();
     await page.locator('text=My books').click();
 
     await page.getByTestId('bookTest').click();
@@ -279,7 +281,7 @@ describe('when logged in', () => {
   });
 
   test('game can be deleted', async ({ page }) => {
-    await page.locator('#dropdown-secondary-button').click();
+    await page.getByRole('button', { name: 'kayttaja' }).click();
     await page.locator('text=My games').click();
 
     await page.getByTestId('gameTest').click();
