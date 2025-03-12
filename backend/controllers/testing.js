@@ -9,6 +9,7 @@ const Session = require('../models/session');
 router.post('/reset', async (request, response) => {
   console.log('checking');
   const user = await User.findOne({ where: { username: 'kayttaja' } });
+  console.log('TESTING', user);
 
   await Album.destroy({ where: { user_id: user.id } });
   await Movie.destroy({ where: { user_id: user.id } });
