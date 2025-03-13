@@ -30,6 +30,14 @@ jobs:
         run: npm run build
       - name: Install Playwright Browsers
         run: npx --prefix e2e_tests playwright install --with-deps
+      - name: Install flyctl
+        run: |
+          curl -sSL https://fly.io/install.sh | sh
+          sudo mv /home/runner/.fly/bin/flyctl /usr/local/bin/flyctl
+      - name: Proxy to fly
+        run: |
+          flyctl proxy 5432 -a im-only-rating-db &
+          FLY_PROXY_PIX=$!
       - name: Start backend
         run: |
           npm --prefix backend run start:test &
@@ -41,8 +49,6 @@ jobs:
           npm run dev &
           FRONTEND_PID=$!
           echo "Frontend PID: $FRONTEND_PID"
-      - name: Proxy to fly
-        run: flyctl proxy 5432 -a im-only-rating-db &
       - name: Debug DATABASE_URL
         run: |
           if [ -z "$DATABASE_URL" ]; then
@@ -56,11 +62,12 @@ jobs:
         run: npm run test:e2e
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      - name: Stop front- and backend
+      - name: Stop front, backend and fly
         run: |
           echo "Stopping front and backend"
           kill $BACKEND_PID
           kill $FRONTEND_PID
+          kill $FLY_PROXY_PID
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
