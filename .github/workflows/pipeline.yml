@@ -30,6 +30,12 @@ jobs:
         run: npm run build
       - name: Install Playwright Browsers
         run: npx --prefix e2e_tests playwright install --with-deps
+      - name: Start backend
+        run: |
+          npm --prefix backend run start:test &
+          sleep 10
+      - name: Start front-end
+        run: npm run dev
       - name: Debug DATABASE_URL
         run: |
           if [ -z "$DATABASE_URL" ]; then
