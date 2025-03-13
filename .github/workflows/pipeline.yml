@@ -36,8 +36,9 @@ jobs:
             echo "DATABASE_URL is not set!"
           else
             echo "DATABASE_URL is set."
-          env: 
-            DATABASE_URL: ${{ secrets.DATABASE_URL }}  
+          fi
+        env: 
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}  
       - name: e2e tests
         run: npm run test:e2e
         env:
