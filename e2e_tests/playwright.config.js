@@ -77,8 +77,9 @@ export default defineConfig({
   webServer: {
     command: 'npm --prefix ../backend run start:test',
     url: 'http://localhost:3001/api/health',
-    reuseExistingServer: true,
-    timeout: 30000
+    reuseExistingServer: !process.env.CI,
+    timeout: 30000,
+    stderr: 'inherit',
+    stdout: 'inherit',
   },
-  
 });
