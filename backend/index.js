@@ -48,10 +48,15 @@ app.get('*', (req, res) => {
 });
 
 const start = async () => {
-  await connectToDatabase();
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
+  try {
+    await connectToDatabase();
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error('Error starting the server:', err);
+    process.exit(1);
+  }
 };
 
 start();
