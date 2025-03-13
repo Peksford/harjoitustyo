@@ -35,7 +35,7 @@ jobs:
           curl -sSL https://fly.io/install.sh | sh
           sudo mv /home/runner/.fly/bin/flyctl /usr/local/bin/flyctl
       - name: Fly.io login
-        run: flyctl auth token
+        run: flyctl auth login
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
       - name: Proxy to fly
