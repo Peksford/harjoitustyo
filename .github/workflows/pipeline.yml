@@ -34,6 +34,10 @@ jobs:
         run: |
           curl -sSL https://fly.io/install.sh | sh
           sudo mv /home/runner/.fly/bin/flyctl /usr/local/bin/flyctl
+      - name: Fly.io login
+        run: flyctl auth token
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
       - name: Proxy to fly
         run: |
           flyctl proxy 5432 -a im-only-rating-db &
