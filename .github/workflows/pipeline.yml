@@ -34,8 +34,13 @@ jobs:
         run: |
           npm --prefix backend run start:test &
           sleep 10
+          BACKEND_PID=$!
+          echo "Backend PID: $BACKEND_PID"
       - name: Start front-end
-        run: npm run dev
+        run: |
+          npm run dev &
+          FRONTEND_PID=$!
+          echo "Frontend PID: $FRONTEND_PID"
       - name: Debug DATABASE_URL
         run: |
           if [ -z "$DATABASE_URL" ]; then
@@ -49,6 +54,11 @@ jobs:
         run: npm run test:e2e
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      - name: Stop front- and backend
+        run: |
+          echo "Stopping front and backend"
+          kill $BACKEND_PID
+          kill $FRONTEND_PID
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
