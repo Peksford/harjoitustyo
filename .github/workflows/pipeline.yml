@@ -41,6 +41,8 @@ jobs:
           npm run dev &
           FRONTEND_PID=$!
           echo "Frontend PID: $FRONTEND_PID"
+      - name: Proxy to fly
+        run: flyctl proxy 5432 -a im-only-rating-db
       - name: Debug DATABASE_URL
         run: |
           if [ -z "$DATABASE_URL" ]; then
