@@ -81,7 +81,7 @@ export default defineConfig({
     timeout: 30000
   },
   command: 'npm --prefix ../backend run start:test',
-  url: 'http://localhost:3001/api/health,
+  url: 'http://localhost:3001/api/health',
   reuseExistingServer: true,
   timeout: 30000
 });
