@@ -19,6 +19,8 @@ jobs:
           node-version: '20'
       - name: Install dependencies
         run: npm install
+      - name: Install dependencies (e2e)
+        run: npm --prefix e2e_tests install
       - name: Check style
         run: npm run lint
       - name: build
