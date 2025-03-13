@@ -30,7 +30,8 @@ jobs:
         run: npm run build
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Fly.io login
-        run: flyctl auth login --access-token
+        run: |
+          echo ${{ secrets.FLY_API_TOKEN }} | flyctl auth login --access-token
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
       - name: Proxy to fly
