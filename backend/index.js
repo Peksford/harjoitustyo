@@ -19,12 +19,14 @@ const booksRouter = require('./controllers/books');
 const moviesRouter = require('./controllers/movies');
 const gamesRouter = require('./controllers/games');
 const followRouter = require('./controllers/follow');
+const healthRouter = require('./controllers/health');
 
 app.use(cors());
 app.use(express.json());
 // app.use(express.static('dist'));
 app.use(express.static(path.join(__dirname, 'dist')));
 
+app.use('/api/health', healthRouter);
 app.use('/api/albums', albumRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);
