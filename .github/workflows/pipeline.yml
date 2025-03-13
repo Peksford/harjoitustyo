@@ -17,8 +17,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Install dependencies
+      - name: Install front-end dependencies
         run: npm install
+      - name: Install back-end dependencies
+        run: npm --prefix backend install
       - name: Install dependencies (e2e)
         run: npm --prefix e2e_tests install
       - name: Check style
