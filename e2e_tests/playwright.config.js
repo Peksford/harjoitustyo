@@ -78,5 +78,10 @@ export default defineConfig({
     command: 'npm --prefix .. run dev',
     url: 'http://localhost:5173',
     reuseExistingServer: !process.env.CI,
+    timeout: 30000
   },
+  command: 'npm --prefix ../backend run start:test',
+  url: 'http://localhost:3001/api/health,
+  reuseExistingServer: true,
+  timeout: 30000
 });
