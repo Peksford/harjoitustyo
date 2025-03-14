@@ -29,6 +29,8 @@ describe('Rate app', () => {
   });
   test('user can log in', async ({ page }) => {
     await test.step('user can log in', async () => {
+      const response = await request.get('http://localhost:3001/api/health');
+      console.log('Backend health check: ', response.status());
       await loginWith(page, 'kayttaja', 'salasana');
       await page.waitForNavigation({ waitUntil: 'load' });
       await page.waitForSelector('text=Welcome kayttaja');
