@@ -17,21 +17,25 @@ describe('Rate app', () => {
   });
 
   test('front page can be opened', async ({ page }) => {
-    await page.goto('http://[::1]:5173/kayttaja');
+    await test.step('front page can be opened', async () => {
+      await page.goto('http://[::1]:5173/kayttaja');
 
-    const locator = await page.getByText(
-      'kayttaja has not reviewed anything yet!'
-    );
-    await expect(locator).toBeVisible();
-    await expect(page.getByText('albums')).toBeVisible();
+      const locator = await page.getByText(
+        'kayttaja has not reviewed anything yet!'
+      );
+      await expect(locator).toBeVisible();
+      await expect(page.getByText('albums')).toBeVisible();
+    });
   });
   test('user can log in', async ({ page }) => {
-    await loginWith(page, 'kayttaja', 'salasana');
-    await page.waitForNavigation({ waitUntil: 'load' });
-    await page.waitForSelector('text=Welcome kayttaja');
-    const welcomeMessage = await page.getByText('Welcome kayttaja');
-    console.log('Welcome message found:', welcomeMessage);
-    await expect(page.getByText('Welcome kayttaja')).toBeVisible();
+    await test.step('user can log in', async () => {
+      await loginWith(page, 'kayttaja', 'salasana');
+      await page.waitForNavigation({ waitUntil: 'load' });
+      await page.waitForSelector('text=Welcome kayttaja');
+      const welcomeMessage = await page.getByText('Welcome kayttaja');
+      console.log('Welcome message found:', welcomeMessage);
+      await expect(page.getByText('Welcome kayttaja')).toBeVisible();
+    });
   });
 });
 //   test('login fails with wrong password', async ({ page }) => {
