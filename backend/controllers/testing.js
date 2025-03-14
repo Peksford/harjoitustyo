@@ -11,6 +11,11 @@ router.post('/reset', async (request, response) => {
   const user = await User.findOne({ where: { username: 'kayttaja' } });
   console.log('TESTING', user);
 
+  if (!user) {
+    console.log('User kayttaja not found');
+    return response.status(400).json({ error: 'User not found' });
+  }
+
   await Album.destroy({ where: { user_id: user.id } });
   await Movie.destroy({ where: { user_id: user.id } });
   await Book.destroy({ where: { user_id: user.id } });
@@ -18,7 +23,7 @@ router.post('/reset', async (request, response) => {
 
   await Session.destroy({ where: { username: 'kayttaja' } });
 
-  await User.destroy({ where: { id: user.id } });
+  // await User.destroy({ where: { id: user.id } });
 
   response.status(204).end();
 });
