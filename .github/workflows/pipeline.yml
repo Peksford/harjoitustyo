@@ -62,6 +62,13 @@ jobs:
           fi
         env: 
           DATABASE_URL: ${{ secrets.DATABASE_URL }}  
+      - name: Wait for Backend
+        run: |
+          for i in {1..10}; do
+            curl --fail http://127.0.0.1:3001/api/health && break
+            echo "Waiting for backend..."
+            sleep 3
+          done  
       - name: Install Playwright Browsers
         run: npx --prefix e2e_tests playwright install --with-deps
       - name: e2e tests
