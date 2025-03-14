@@ -23,7 +23,7 @@ router.post('/reset', async (request, response) => {
 
   await Session.destroy({ where: { username: 'kayttaja' } });
 
-  // await User.destroy({ where: { id: user.id } });
+  await User.destroy({ where: { id: user.id } });
 
   response.status(204).end();
 });
