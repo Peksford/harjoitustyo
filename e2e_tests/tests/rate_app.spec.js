@@ -3,8 +3,10 @@ const { loginWith, searchObject } = require('./helper');
 
 describe('Rate app', () => {
   beforeEach(async ({ page, request }) => {
-    let response = await request.post('http://0.0.0.0:3001/api/testing/reset');
-    console.log('Reset response', await response.text());
+    let response = await request.post('http://0.0.0.0:3001/api/testing/reset', {
+      timeout: 10000,
+    });
+    console.log('Reset response', await response);
     await request.post('http://0.0.0.0:3001/api/users', {
       data: {
         username: 'kayttaja',
@@ -25,6 +27,10 @@ describe('Rate app', () => {
   });
   test('user can log in', async ({ page }) => {
     await loginWith(page, 'kayttaja', 'salasana');
+    await page.waitForNavigation({ waitUntil: 'load' });
+    await page.waitForSelector('text=Welcome kayttaja');
+    const welcomeMessage = await page.getByText('Welcome kayttaja');
+    console.log('Welcome message found:', welcomeMessage);
     await expect(page.getByText('Welcome kayttaja')).toBeVisible();
   });
 });
