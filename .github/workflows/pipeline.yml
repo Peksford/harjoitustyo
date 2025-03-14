@@ -46,6 +46,7 @@ jobs:
           echo "Backend PID: $BACKEND_PID"
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          PORT: 3001
       - name: Start front-end
         run: |
           npm run dev &
