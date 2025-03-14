@@ -38,20 +38,6 @@ jobs:
           FLY_PROXY_PIX=$!
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-      - name: Debug DATABASE_URL
-        run: |
-          if [ -z "$DATABASE_URL" ]; then
-            echo "DATABASE_URL is not set!"
-          else
-            echo "DATABASE_URL is set."
-          fi
-        env: 
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}  
-      - name: Test for backend
-        run: curl -v http://127.0.0.1:3001/api/health
-      - name: Check if Backend is Listening on Port 3001
-        run: |
-          sudo netstat -tulnp | grep 3001 || echo "Port 3001 is not open"
       - name: Print the listening ports
         run: netstat -tulnp
       - name: Install Playwright Browsers
