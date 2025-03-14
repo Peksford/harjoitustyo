@@ -44,6 +44,8 @@ jobs:
           sleep 10
           BACKEND_PID=$!
           echo "Backend PID: $BACKEND_PID"
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
       - name: Start front-end
         run: |
           npm run dev &
