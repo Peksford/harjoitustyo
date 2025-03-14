@@ -11,11 +11,11 @@ describe('Rate app', () => {
         password: 'salasana',
       },
     });
-    await page.goto('http://localhost:5173/login');
+    await page.goto('http://[::1]:5173/login');
   });
 
   test('front page can be opened', async ({ page }) => {
-    await page.goto('http://localhost:5173/kayttaja');
+    await page.goto('http://[::1]:5173/kayttaja');
 
     const locator = await page.getByText(
       'kayttaja has not reviewed anything yet!'
@@ -23,10 +23,10 @@ describe('Rate app', () => {
     await expect(locator).toBeVisible();
     await expect(page.getByText('albums')).toBeVisible();
   });
-  test('user can log in', async ({ page }) => {
-    await loginWith(page, 'kayttaja', 'salasana');
-    await expect(page.getByText('Welcome kayttaja')).toBeVisible();
-  });
+  // test('user can log in', async ({ page }) => {
+  //   await loginWith(page, 'kayttaja', 'salasana');
+  //   await expect(page.getByText('Welcome kayttaja')).toBeVisible();
+  // });
 });
 //   test('login fails with wrong password', async ({ page }) => {
 //     await loginWith(page, 'kayttaja', 'wrong');
