@@ -31,7 +31,7 @@ jobs:
       - name: Fly.io login
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-        run: flyctl status
+        run: flyctl status -a im-only-rating-db
       - name: Proxy to fly
         run: |
           flyctl proxy 5432 -a im-only-rating-db &
