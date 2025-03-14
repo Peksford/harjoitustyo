@@ -40,7 +40,7 @@ jobs:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
       - name: Start backend
         run: |
-          npm --prefix backend run start:test & | tee backend/server.log &
+          npm --prefix backend run start:test | tee backend/server.log &
           sleep 10
           BACKEND_PID=$!
           echo "Backend PID: $BACKEND_PID"
