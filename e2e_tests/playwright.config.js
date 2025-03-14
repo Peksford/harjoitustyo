@@ -74,9 +74,16 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    command: 'cd ../backend && npm run start:test',
-    url: 'http://127.0.0.1:3001',
-    reuseExistingServer: !process.env.CI,
-  },
+  webServer: [
+    {
+      command: 'npm --prefix backend run start:test',
+      url: 'http://127.0.0.1:3001',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'npm --prefix run dev',
+      url: 'http://127.0.0.1:5173',
+      reuseExistingServer: !process.env.CI,
+    },
+  ],
 });
