@@ -27,7 +27,7 @@ describe('Rate app', () => {
       await expect(page.getByText('albums')).toBeVisible();
     });
   });
-  test('user can log in', async ({ page }) => {
+  test('user can log in', async ({ page, request }) => {
     await test.step('user can log in', async () => {
       const response = await request.get('http://localhost:3001/api/health');
       console.log('Backend health check: ', response.status());
