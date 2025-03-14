@@ -48,6 +48,8 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           PORT: 3001
           NODE_ENV: test
+      - name: Check if backend log file exists
+        run: ls -l backend/
       - name: Start front-end
         run: |
           npm run dev &
