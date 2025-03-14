@@ -1,4 +1,5 @@
 const loginWith = async (page, username, password) => {
+  console.log('what is page?', page);
   await page.goto('/login');
   await page.getByTestId('username').fill(username);
   await page.getByTestId('password').fill(password);
