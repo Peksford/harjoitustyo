@@ -13,12 +13,12 @@ describe('Rate app', () => {
         password: 'salasana',
       },
     });
-    await page.goto('http://[::1]:5173/login');
+    await page.goto('/login');
   });
 
   test('front page can be opened', async ({ page }) => {
     await test.step('front page can be opened', async () => {
-      await page.goto('http://[::1]:5173/kayttaja');
+      await page.goto('/kayttaja');
 
       const locator = await page.getByText(
         'kayttaja has not reviewed anything yet!'
