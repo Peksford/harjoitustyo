@@ -13,7 +13,7 @@ describe('Rate app', () => {
         password: 'salasana',
       },
     });
-    await page.goto('/login');
+    await page.goto('http://localhost:5173/login');
   });
 
   test('front page can be opened', async ({ page }) => {
