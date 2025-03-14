@@ -13,7 +13,7 @@ describe('Rate app', () => {
         password: 'salasana',
       },
     });
-    await page.goto('http://localhost:5173/login');
+    await page.goto('http://127.0.0.1:5173/login');
   });
 
   test('front page can be opened', async ({ page }) => {
@@ -29,7 +29,6 @@ describe('Rate app', () => {
   });
   test('user can log in', async ({ page, request }) => {
     await test.step('user can log in', async () => {
-      console.log('what is page?', await page);
       const response = await request.get('http://localhost:3001/api/health');
       console.log('Backend health check: ', await response.status());
       await loginWith(page, 'kayttaja', 'salasana');
