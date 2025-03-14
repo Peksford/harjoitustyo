@@ -47,6 +47,7 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           PORT: 3001
+          NODE_ENV: test
       - name: Start front-end
         run: |
           npm run dev &
