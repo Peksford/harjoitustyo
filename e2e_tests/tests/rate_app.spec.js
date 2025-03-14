@@ -3,8 +3,8 @@ const { loginWith, searchObject } = require('./helper');
 
 describe('Rate app', () => {
   beforeEach(async ({ page, request }) => {
-    await request.post('http://127.0.0.1/api/testing/reset');
-    await request.post('http://127.0.0.1/api/users', {
+    await request.post('http://127.0.0.1:3001/api/testing/reset');
+    await request.post('http://127.0.0.1:3001/api/users', {
       data: {
         username: 'kayttaja',
         password: 'salasana',
