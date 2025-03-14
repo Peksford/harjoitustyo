@@ -67,6 +67,8 @@ jobs:
       - name: Check if Backend is Listening on Port 3001
         run: |
           sudo netstat -tulnp | grep 3001 || echo "Port 3001 is not open"
+      - name: Print the listening ports
+        run: netstat -tulnp
       - name: Install Playwright Browsers
         run: npx --prefix e2e_tests playwright install --with-deps
       - name: e2e tests
