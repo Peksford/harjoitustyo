@@ -18,7 +18,7 @@ describe('Rate app', () => {
 
   test('front page can be opened', async ({ page }) => {
     await test.step('front page can be opened', async () => {
-      await page.goto('http://127.0.0.1/kayttaja');
+      await page.goto('http://127.0.0.1:5173/kayttaja');
 
       const locator = await page.getByText(
         'kayttaja has not reviewed anything yet!'
