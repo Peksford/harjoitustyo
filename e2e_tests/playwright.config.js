@@ -83,13 +83,13 @@ export default defineConfig({
       stdout: 'inherit',
       stderr: 'inherit',
     },
-    {
-      command: 'cd ../backend && npm run start:test &',
-      url: 'http://127.0.0.1:3001',
-      timeout: 120 * 100,
-      reuseExistingServer: !process.env.CI,
-      stdout: 'pipe',
-      stderr: 'pipe',
-    },
+    // {
+    //   command: 'cd ../backend && npm run start:test &',
+    //   url: 'http://127.0.0.1:3001',
+    //   timeout: 120 * 100,
+    //   reuseExistingServer: !process.env.CI,
+    //   stdout: 'pipe',
+    //   stderr: 'pipe',
+    // },
   ],
 });
