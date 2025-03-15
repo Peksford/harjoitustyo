@@ -53,9 +53,8 @@ jobs:
         run: npm run test:e2e
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
           DEBUG: pw:browser* pw:api pw:install
-          
       - name: Save Playwright logs
         if: always()
         run: |
