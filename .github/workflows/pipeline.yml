@@ -46,6 +46,20 @@ jobs:
         run: npm run test:e2e
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DEBUG: pw:browser* pw:api pw:install
+          
+      - name: Save Playwright logs
+        if: always()
+        run: |
+          mkdir -p artifacts
+          cp -r e2e_tests/playwright-report artifacts/
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: artifacts/
+          retention-days: 30
+
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
