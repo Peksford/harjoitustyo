@@ -78,12 +78,17 @@ export default defineConfig({
     {
       command: 'cd ../backend && npm run start:test',
       url: 'http://127.0.0.1:3001',
+      timeout: 120*1000
       reuseExistingServer: !process.env.CI,
     },
     {
       command: 'cd .. && npm run dev',
       url: 'http://127.0.0.1:5173',
+      timeout: 120 * 1000
       reuseExistingServer: !process.env.CI,
     },
   ],
+  use: {
+    baseURL = 'http://127.0.0.1:3001'
+  }
 });
