@@ -76,20 +76,20 @@ export default defineConfig({
   /* Run your local dev server before starting the tests */
   webServer: [
     {
-      command: 'cd ../backend && npm run start:test &',
-      url: 'http://127.0.0.1:3001',
-      timeout: 120 * 1000,
-      reuseExistingServer: !process.env.CI,
-      stdout: 'pipe',
-      stderr: 'pipe',
-    },
-    {
       command: 'cd .. && npm run dev',
       url: 'http://localhost:5173',
       timeout: 120 * 1000,
       reuseExistingServer: !process.env.CI,
       stdout: 'inherit',
       stderr: 'inherit',
+    },
+    {
+      command: 'cd ../backend && npm run start:test &',
+      url: 'http://127.0.0.1:3001',
+      timeout: 120 * 1000,
+      reuseExistingServer: !process.env.CI,
+      stdout: 'pipe',
+      stderr: 'pipe',
     },
   ],
 });
