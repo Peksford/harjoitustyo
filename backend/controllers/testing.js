@@ -7,9 +7,7 @@ const User = require('../models/user');
 const Session = require('../models/session');
 
 router.post('/reset', async (request, response) => {
-  console.log('checking');
   const user = await User.findOne({ where: { username: 'kayttaja' } });
-  console.log('TESTING', user);
 
   if (!user) {
     console.log('User kayttaja not found');
