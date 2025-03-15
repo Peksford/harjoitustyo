@@ -84,7 +84,8 @@ export default defineConfig({
     //   stderr: 'inherit',
     // },
     {
-      command: 'cd ../backend && npm run start:test &',
+      command:
+        'cd ../backend && npm run start:test & cd .. && npm run dev -- --host',
       url: 'http://127.0.0.1:3001',
       timeout: 120 * 100,
       reuseExistingServer: !process.env.CI,
