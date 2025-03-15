@@ -39,13 +39,13 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
-      - name: Start front-end
-        run: |
-          npm run dev &
-          FRONTEND_PID=$!
-          echo "Frontend PID: $FRONTEND_PID"
-      - name: Print the listening ports
-        run: netstat -tulnp
+     # - name: Start front-end
+     #   run: |
+      #    npm run dev &
+      #    FRONTEND_PID=$!
+      #    echo "Frontend PID: $FRONTEND_PID"
+      #- name: Print the listening ports
+      #  run: netstat -tulnp
         
       - name: Install Playwright Browsers
         run: npx --prefix e2e_tests playwright install --with-deps
