@@ -4,13 +4,13 @@ const { loginWith, searchObject } = require('./helper');
 describe('Rate app', () => {
   beforeEach(async ({ page, request }) => {
     let response = await request.post(
-      'http://localhost:3001/api/testing/reset',
+      'http://127.0.0.1:3001/api/testing/reset',
       {
         timeout: 10000,
       }
     );
     console.log('Reset response', await response.status());
-    await request.post('http://localhost:3001/api/users', {
+    await request.post('http://127.0.0.1:3001/api/users', {
       data: {
         username: 'kayttaja',
         password: 'salasana',
@@ -33,8 +33,6 @@ describe('Rate app', () => {
 
   test('user can log in', async ({ page, request }) => {
     await test.step('user can log in', async () => {
-      const response = await request.get('http://localhost:3001/api/health');
-      console.log('Backend health check: ', await response.status());
       await loginWith(page, 'kayttaja', 'salasana');
       await page.waitForNavigation({ waitUntil: 'load' });
       await page.waitForSelector('text=Welcome kayttaja');
