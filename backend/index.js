@@ -38,7 +38,7 @@ app.use('/api/follow', followRouter);
 
 if (process.env.NODE_ENV === 'test') {
   const testingRouter = require('./controllers/testing');
-  console.log('ANYTHING HERE TEST');
+  console.log('Test starting');
   app.use('/api/testing', testingRouter);
 }
 

@@ -8,7 +8,7 @@ const { tokenExtractor } = require('../util/middleware');
 router.get('/search-book', async (req, res) => {
   const { name, title, author, language, subject, isbn } = req.query;
   const userAgent = 'RateApp (jonksu4@hotmail.com)';
-  // console.log('searching', name);
+
   try {
     const params = {
       limit: 50,
@@ -20,7 +20,6 @@ router.get('/search-book', async (req, res) => {
     if (language) params.language = language;
     if (isbn) params.isbn = isbn;
     if (subject) params.subject = subject;
-    console.log(params);
     const response = await axios.get('https://openlibrary.org/search.json', {
       headers: {
         'User-Agent': userAgent,
@@ -47,9 +46,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', tokenExtractor, async (req, res, next) => {
   try {
-    console.log('Post request', req.body);
     const user = await User.findByPk(req.decodedToken.id);
-    console.log('user', user);
     const book = await Book.create({
       ...req.body,
       user_id: user.id,
@@ -66,8 +63,6 @@ router.get('/:id', async (req, res, next) => {
     // const user = await User.findByPk(req.decodedToken.id);
     const book = await Book.findByPk(req.params.id);
 
-    // console.log('user', user);
-    // console.log('book', book);
     res.json(book);
   } catch (error) {
     console.log(error);
@@ -87,8 +82,6 @@ router.put('/:id', tokenExtractor, async (req, res, next) => {
         .json({ error: 'Not authorized to change the rating.' });
     }
     const { rating } = req.body;
-
-    console.log('BOOK', rating);
 
     book.rating = rating;
     await book.save();

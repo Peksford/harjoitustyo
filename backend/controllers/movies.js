@@ -16,7 +16,6 @@ router.get('/', async (req, res) => {
 
 router.post('/', tokenExtractor, async (req, res, next) => {
   try {
-    console.log('testinfg');
     const user = await User.findByPk(req.decodedToken.id);
 
     const movie = await Movie.create({
@@ -35,8 +34,6 @@ router.get('/:id', async (req, res, next) => {
     // const user = await User.findByPk(req.decodedToken.id);
     const movie = await Movie.findByPk(req.params.id);
 
-    // console.log('user', user);
-    // console.log('movie', movie);
     res.json(movie);
   } catch (error) {
     console.log(error);
@@ -56,8 +53,6 @@ router.put('/:id', tokenExtractor, async (req, res, next) => {
         .json({ error: 'Not authorized to change the rating.' });
     }
     const { rating } = req.body;
-
-    console.log('MOVIE', rating);
 
     movie.rating = rating;
     await movie.save();

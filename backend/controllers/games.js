@@ -25,7 +25,6 @@ const getAccessToken = async () => {
     );
 
     accessToken = response.data.access_token;
-    console.log('tokeni', accessToken);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to search games' });
@@ -44,8 +43,6 @@ router.get('/search-game', async (req, res) => {
     advancedName,
   } = req.query;
 
-  console.log('query', req.query);
-
   try {
     if (!accessToken) await getAccessToken();
 
@@ -57,7 +54,6 @@ router.get('/search-game', async (req, res) => {
       where name ~*"${company}";
       limit 10;`;
 
-      console.log('Company query: ', companyQuery);
       const companyResponse = await axios.post(
         'https://api.igdb.com/v4/companies',
         companyQuery,
@@ -74,8 +70,6 @@ router.get('/search-game', async (req, res) => {
       } else {
         return res.json([]);
       }
-
-      console.log('response data', companyResponse.data);
     }
 
     let query = '';
@@ -123,8 +117,6 @@ router.get('/search-game', async (req, res) => {
         return res.status(400).json({ error: 'No valid filters' });
       }
     }
-
-    console.log('Final Query: ', query);
 
     const response = await axios.post('https://api.igdb.com/v4/games', query, {
       headers: {

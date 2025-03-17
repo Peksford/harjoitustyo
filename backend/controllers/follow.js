@@ -23,9 +23,6 @@ router.delete('/', tokenExtractor, async (req, res, next) => {
     const user = await User.findByPk(req.decodedToken.id);
     const followedId = req.headers.followed_id;
 
-    console.log('follower_id', user.id);
-    console.log('followed_id', Number(followedId));
-
     const followRow = await Follow.findOne({
       wher: { followed_id: followedId, follower_id: user.id },
     });

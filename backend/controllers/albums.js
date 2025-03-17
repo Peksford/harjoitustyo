@@ -33,8 +33,6 @@ router.get('/:id', async (req, res, next) => {
     // const user = await User.findByPk(req.decodedToken.id);
     const album = await Album.findByPk(req.params.id);
 
-    // console.log('user', user);
-    // console.log('album', album);
     res.json(album);
   } catch (error) {
     console.log(error);
