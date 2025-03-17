@@ -59,6 +59,10 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           VITE_TOKEN: ${{ secrets.VITE_TOKEN }}
+          VITE_TMDB_API_KEY: ${{ secrets.VITE_TMDB_API_KEY }}
+          OPEN_LIBRARY: ${{ secrets.OPEN_LIBRARY }}
+          VITE_TWITCH_CLIENT_ID: ${{ secrets.VITE_TWITCH_CLIENT_ID }}
+          VITE_TWITCH_CLIENT_SECRET: ${{ secrets.VITE_TWITCH_CLIENT_SECRET }}
       - name: Save Playwright logs
         if: always()
         run: |
