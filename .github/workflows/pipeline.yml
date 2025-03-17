@@ -59,6 +59,10 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           VITE_TOKEN: ${{ secrets.VITE_TOKEN }}
+          VITE_TMDB_API_KEY: ${{ secrets.VITE_TMDB_API_KEY }}
+          OPEN_LIBRARY: ${{ secrets.OPEN_LIBRARY }}
+          VITE_TWITCH_CLIENT_ID: ${{ secrets.VITE_TWITCH_CLIENT_ID }}
+          VITE_TWITCH_CLIENT_SECRET: ${{ secrets.VITE_TWITCH_CLIENT_SECRET }}
       - name: Save Playwright logs
         if: always()
         run: |
@@ -70,6 +74,11 @@ jobs:
           name: playwright-report
           path: artifacts/
           retention-days: 30
+      - name: Upload Playwright traces
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: e2e_tests/test-results/**/*.zip
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
