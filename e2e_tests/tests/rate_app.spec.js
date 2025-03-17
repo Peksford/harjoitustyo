@@ -4,10 +4,7 @@ const { loginWith, searchObject } = require('./helper');
 describe('Rate app', () => {
   beforeEach(async ({ page, request }) => {
     let response = await request.post(
-      'http://127.0.0.1:3001/api/testing/reset',
-      {
-        timeout: 10000,
-      }
+      'http://127.0.0.1:3001/api/testing/reset'
     );
     console.log('Reset response', await response.status());
     await request.post('http://127.0.0.1:3001/api/users', {
@@ -61,6 +58,7 @@ describe('Rate app', () => {
     test('a new album can be added and is on My albums-list', async ({
       page,
     }) => {
+      console.log(server.printHandlers());
       await searchObject(page, 'album', 'Abbey Road');
 
       await page.waitForSelector('text=The Beatles - Abbey Road', {
