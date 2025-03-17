@@ -49,11 +49,16 @@ jobs:
         
       - name: Install Playwright Browsers
         run: npx --prefix e2e_tests playwright install --with-deps
+        
+      - name: Print used ports
+        run: netstat -tulnp
+
       - name: e2e tests
         run: npm run test:e2e
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          VITE_TOKEN: ${{ secrets.VITE_TOKEN }}
       - name: Save Playwright logs
         if: always()
         run: |
