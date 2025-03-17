@@ -58,7 +58,6 @@ describe('Rate app', () => {
     test('a new album can be added and is on My albums-list', async ({
       page,
     }) => {
-      console.log(server.printHandlers());
       await searchObject(page, 'album', 'Abbey Road');
 
       await page.waitForSelector('text=The Beatles - Abbey Road', {
