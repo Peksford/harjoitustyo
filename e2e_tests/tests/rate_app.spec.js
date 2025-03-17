@@ -3,11 +3,14 @@ const { loginWith, searchObject } = require('./helper');
 
 describe('Rate app', () => {
   beforeEach(async ({ page, request }) => {
-    let response = await request.post('http://0.0.0.0:3001/api/testing/reset', {
-      timeout: 10000,
-    });
+    let response = await request.post(
+      'http://localhost:3001/api/testing/reset',
+      {
+        timeout: 10000,
+      }
+    );
     console.log('Reset response', await response.status());
-    await request.post('http://0.0.0.0:3001/api/users', {
+    await request.post('http://localhost:3001/api/users', {
       data: {
         username: 'kayttaja',
         password: 'salasana',
