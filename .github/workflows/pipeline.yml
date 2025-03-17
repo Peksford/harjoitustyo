@@ -63,6 +63,11 @@ jobs:
           OPEN_LIBRARY: ${{ secrets.OPEN_LIBRARY }}
           VITE_TWITCH_CLIENT_ID: ${{ secrets.VITE_TWITCH_CLIENT_ID }}
           VITE_TWITCH_CLIENT_SECRET: ${{ secrets.VITE_TWITCH_CLIENT_SECRET }}
+      - name: Deploy app
+        if: ${{ (github.event_name == 'push') && (!contains(join(github.event.head_commit.message, ', '), '#skip')) }}
+        run: cd backend && npm run deploy:full --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
       - name: Save Playwright logs
         if: always()
         run: |
