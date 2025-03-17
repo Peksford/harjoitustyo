@@ -75,99 +75,99 @@ describe('Rate app', () => {
       await expect(page.getByTestId('albumTest')).toBeVisible();
     });
 
-    // test('a new movie can be added', async ({ page }) => {
-    //   await searchObject(page, 'movie', 'Return of the Jedi');
+    test('a new movie can be added', async ({ page }) => {
+      await searchObject(page, 'movie', 'Return of the Jedi');
 
-    //   await page.waitForSelector('text=Return of the Jedi', {
-    //     timeout: 10000,
-    //   });
-    //   await page.getByRole('button', { name: 'Add' }).first().click();
-    //   await expect(
-    //     page.getByText('Return of the Jedi added on your list')
-    //   ).toBeVisible();
+      await page.waitForSelector('text=Return of the Jedi', {
+        timeout: 10000,
+      });
+      await page.getByRole('button', { name: 'Add' }).first().click();
+      await expect(
+        page.getByText('Return of the Jedi added on your list')
+      ).toBeVisible();
 
-    //   await page.locator('#dropdown-secondary-button').click();
+      await page.locator('#dropdown-secondary-button').click();
 
-    //   await page.locator('text=My movies').click();
-    //   // await expect(
-    //   //   page.getByRole('heading', { name: 'Movies/tv' })
-    //   // ).toBeVisible();
-    //   await expect(
-    //     page.getByText('Return of the Jedi', { exact: true })
-    //   ).toBeVisible();
-    //   await expect(page.getByTestId('movieTest')).toBeVisible();
-    // });
+      await page.locator('text=My movies').click();
+      // await expect(
+      //   page.getByRole('heading', { name: 'Movies/tv' })
+      // ).toBeVisible();
+      await expect(
+        page.getByText('Return of the Jedi', { exact: true })
+      ).toBeVisible();
+      await expect(page.getByTestId('movieTest')).toBeVisible();
+    });
 
-    // test('a new book can be added', async ({ page }) => {
-    //   await searchObject(
-    //     page,
-    //     'book',
-    //     "Harry Potter and the Philosopher's Stone"
-    //   );
+    test('a new book can be added', async ({ page }) => {
+      await searchObject(
+        page,
+        'book',
+        "Harry Potter and the Philosopher's Stone"
+      );
 
-    //   await page.waitForSelector(
-    //     "text=Harry Potter and the Philosopher's Stone",
-    //     {
-    //       timeout: 20000,
-    //     }
-    //   );
-    //   await page.getByRole('button', { name: 'Add' }).first().click();
-    //   await expect(
-    //     page.getByText(
-    //       "Harry Potter and the Philosopher's Stone added on your list"
-    //     )
-    //   ).toBeVisible();
+      await page.waitForSelector(
+        "text=Harry Potter and the Philosopher's Stone",
+        {
+          timeout: 20000,
+        }
+      );
+      await page.getByRole('button', { name: 'Add' }).first().click();
+      await expect(
+        page.getByText(
+          "Harry Potter and the Philosopher's Stone added on your list"
+        )
+      ).toBeVisible();
 
-    //   await page.locator('#dropdown-secondary-button').click();
+      await page.locator('#dropdown-secondary-button').click();
 
-    //   await page.locator('text=My books').click();
-    //   // await expect(page.getByRole('heading', { name: 'Books' })).toBeVisible();
-    //   await expect(
-    //     page.getByText("Harry Potter and the Philosopher's Stone")
-    //   ).toBeVisible();
-    //   await expect(page.getByTestId('bookTest')).toBeVisible();
-    // });
+      await page.locator('text=My books').click();
+      // await expect(page.getByRole('heading', { name: 'Books' })).toBeVisible();
+      await expect(
+        page.getByText("Harry Potter and the Philosopher's Stone")
+      ).toBeVisible();
+      await expect(page.getByTestId('bookTest')).toBeVisible();
+    });
 
-    // test('a new game can be added', async ({ page }) => {
-    //   await searchObject(page, 'game', 'Rocket League');
+    test('a new game can be added', async ({ page }) => {
+      await searchObject(page, 'game', 'Rocket League');
 
-    //   await page.waitForSelector('text=Rocket League', {
-    //     timeout: 10000,
-    //   });
-    //   await page.getByRole('button', { name: 'Add' }).first().click();
-    //   await expect(
-    //     page.getByText('Rocket League added on your list')
-    //   ).toBeVisible();
+      await page.waitForSelector('text=Rocket League', {
+        timeout: 10000,
+      });
+      await page.getByRole('button', { name: 'Add' }).first().click();
+      await expect(
+        page.getByText('Rocket League added on your list')
+      ).toBeVisible();
 
-    //   await page.locator('#dropdown-secondary-button').click();
+      await page.locator('#dropdown-secondary-button').click();
 
-    //   await page.locator('text=My games').click();
-    //   // await expect(page.getByRole('heading', { name: 'Games' })).toBeVisible();
-    //   await expect(page.getByText('Rocket League')).toBeVisible();
-    //   await expect(page.getByTestId('gameTest')).toBeVisible();
-    // });
+      await page.locator('text=My games').click();
+      // await expect(page.getByRole('heading', { name: 'Games' })).toBeVisible();
+      await expect(page.getByText('Rocket League')).toBeVisible();
+      await expect(page.getByTestId('gameTest')).toBeVisible();
+    });
 
-    // test('user can be searched and followed', async ({ page }) => {
-    //   await searchObject(page, 'user', 'JohnLennon');
+    test('user can be searched and followed', async ({ page }) => {
+      await searchObject(page, 'user', 'JohnLennon');
 
-    //   await page.waitForSelector('text=JohnLennon', {
-    //     timeout: 10000,
-    //   });
-    //   await page.getByRole('link', { name: 'JohnLennon' }).first().click();
-    //   await expect(
-    //     page.getByRole('heading', { name: 'JohnLennon', exact: true })
-    //   ).toBeVisible();
-    //   await page.getByRole('button', { name: 'Follow' }).click();
-    //   await expect(page.locator('text=Unfollow')).toBeVisible();
+      await page.waitForSelector('text=JohnLennon', {
+        timeout: 10000,
+      });
+      await page.getByRole('link', { name: 'JohnLennon' }).first().click();
+      await expect(
+        page.getByRole('heading', { name: 'JohnLennon', exact: true })
+      ).toBeVisible();
+      await page.getByRole('button', { name: 'Follow' }).click();
+      await expect(page.locator('text=Unfollow')).toBeVisible();
 
-    //   await page.getByRole('link', { name: 'Followers' }).click();
+      await page.getByRole('link', { name: 'Followers' }).click();
 
-    //   await expect(
-    //     page.getByRole('listitem').getByRole('link', { name: 'kayttaja' })
-    //   ).toBeVisible();
+      await expect(
+        page.getByRole('listitem').getByRole('link', { name: 'kayttaja' })
+      ).toBeVisible();
 
-    //   await page.getByRole('button', { name: 'Unfollow' }).click();
-    // });
+      await page.getByRole('button', { name: 'Unfollow' }).click();
+    });
 
     // test('album can be liked and is shown on the recommendations', async ({
     //   page,
