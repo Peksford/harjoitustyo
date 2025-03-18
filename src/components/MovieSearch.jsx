@@ -159,34 +159,28 @@ const Movie = ({ movieSearched, createMovie }) => {
   const [ratings, setRatings] = useState({});
 
   const createNew = async (movie) => {
-    if (movie.media_type === 'movie') {
+    console.log('Tv', movie);
+    try {
       const newMovie = await createMovie({
-        title: movie.title,
+        title: movie.media_type === 'movie' ? movie.title : movie.name,
         url: movie.id,
-        release_date: movie.release_date,
+        release_date:
+          movie.media_type === 'movie'
+            ? movie.release_date
+            : movie.first_air_date || 'Unknown',
         thumbnail: movie.poster_path,
-        whole_title: movie.title,
+        whole_title: movie.media_type === 'movie' ? movie.title : movie.name,
         tmdb_id: movie.id,
         type: movie.media_type,
         overview: movie.overview,
         heart: false,
       });
-      newMovie && setAddedMovies((prevMovies) => [...prevMovies, newMovie]);
+      if (newMovie) {
+        setAddedMovies((prevMovies) => [...prevMovies, newMovie]);
+      }
       return addedMovies;
-    } else {
-      const newMovie = await createMovie({
-        title: movie.name,
-        url: movie.id,
-        release_date: movie.first_air_date,
-        thumbnail: movie.poster_path,
-        whole_title: movie.name,
-        tmdb_id: movie.id,
-        type: movie.media_type,
-        overview: movie.overview,
-        heart: false,
-      });
-      newMovie && setAddedMovies((prevMovies) => [...prevMovies, newMovie]);
-      return addedMovies;
+    } catch (error) {
+      console.error('Error adding movie or tv show', error);
     }
   };
 
@@ -272,7 +266,7 @@ const Movie = ({ movieSearched, createMovie }) => {
                       </p>
                       <p>
                         <a
-                          href={`https://themoviedb.org/tc/${movie.id}`}
+                          href={`https://themoviedb.org/tv/${movie.id}`}
                           target="blank"
                           rel="noopener noreferrer"
                         >

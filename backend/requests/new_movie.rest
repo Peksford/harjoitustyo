@@ -1,0 +1,15 @@
+POST http://localhost:3001/api/movies
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIiwiaWQiOjUsImlhdCI6MTc0MjI4OTc1Mn0.9dBgDhcXDqDmmp8iuFO7ZZZcdm47t6dXfClsdVn0pwI
+
+{
+    "title": "testing",
+    "url": "1396",
+    "release_date": "2008-01-20",
+    "thumbnail": "/path/to/image.jpg",
+    "whole_title": "Testing",
+    "tmdb_id": "1396",
+    "type": "tv",
+    "overview": "A high school chemistry teacher turned meth manufacturer.",
+    "heart": false
+}

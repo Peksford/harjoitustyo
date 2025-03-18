@@ -197,7 +197,7 @@ const App = () => {
         dispatch(setNotification(`${newObject.title} added on your list`, 5));
 
         return newItem;
-      } else if (newObject.type === 'movie') {
+      } else if (newObject.type === 'movie' || newObject.type === 'tv') {
         const newItem = await dispatch(addMovie(newObject));
         dispatch(setNotification(`${newObject.title} added on your list`, 5));
         return newItem;
