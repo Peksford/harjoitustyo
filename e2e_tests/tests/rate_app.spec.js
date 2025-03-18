@@ -18,11 +18,9 @@ describe('Rate app', () => {
 
   test('front page can be opened', async ({ page }) => {
     await test.step('front page can be opened', async () => {
-      await page.goto('/kayttaja');
+      await page.goto('/');
 
-      const locator = await page.getByText(
-        'kayttaja has not reviewed anything yet!'
-      );
+      const locator = await page.getByText('Let It Rate');
       await expect(locator).toBeVisible();
       await expect(page.getByText('albums')).toBeVisible();
     });
