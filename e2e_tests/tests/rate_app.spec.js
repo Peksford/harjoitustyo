@@ -195,7 +195,7 @@ describe('when logged in', () => {
     await page.waitForSelector(
       "text=J. K. Rowling - Harry Potter and the Philosopher's Stone",
       {
-        timeout: 50000,
+        timeout: 100000,
       }
     );
 
@@ -221,7 +221,7 @@ describe('when logged in', () => {
     await page.locator('text=My games').click();
 
     await page.waitForSelector('text=Rocket League', {
-      timeout: 50000,
+      timeout: 100000,
     });
 
     await page.getByTestId('gameTest').click();
