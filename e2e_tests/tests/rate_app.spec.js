@@ -171,6 +171,10 @@ describe('when logged in', () => {
     await page.getByRole('button', { name: 'kayttaja' }).click();
     await page.locator('text=My movies').click();
 
+    await page.waitForSelector('text=Return of the Jedi', {
+      timeout: 50000,
+    });
+
     await page.getByTestId('movieTest').click();
     await expect(
       page.getByRole('heading', { name: 'Return of the Jedi' })
@@ -187,6 +191,13 @@ describe('when logged in', () => {
   test('book can be deleted', async ({ page }) => {
     await page.getByRole('button', { name: 'kayttaja' }).click();
     await page.locator('text=My books').click();
+
+    await page.waitForSelector(
+      "text=J. K. Rowling - Harry Potter and the Philosopher's Stone",
+      {
+        timeout: 50000,
+      }
+    );
 
     await page.getByTestId('bookTest').click();
     await expect(
@@ -208,6 +219,10 @@ describe('when logged in', () => {
   test('game can be deleted', async ({ page }) => {
     await page.getByRole('button', { name: 'kayttaja' }).click();
     await page.locator('text=My games').click();
+
+    await page.waitForSelector('text=Rocket League', {
+      timeout: 50000,
+    });
 
     await page.getByTestId('gameTest').click();
     await expect(
