@@ -1,17 +1,23 @@
 import React from 'react';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const AlbumAdvancedSearch = ({ onSearch }) => {
   const [searchParams, setSearchParams] = useState({
     artist: '',
     album: '',
-    year: '',
+    startYear: '',
+    endYear: '',
     type: 'master',
     language: '',
+    genre: '',
     style: '',
   });
   const [showTooltip, setShowTooltip] = useState(false);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   const handleChange = (e) => {
     setSearchParams((prev) => ({
@@ -23,6 +29,25 @@ const AlbumAdvancedSearch = ({ onSearch }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSearch(searchParams);
+  };
+
+  const handleDateChange = (date, field) => {
+    if (field === 'start') {
+      const year = date ? date.getFullYear() : null;
+      setStartDate(date);
+
+      setSearchParams((prev) => ({
+        ...prev,
+        startYear: year,
+      }));
+    } else if (field === 'end') {
+      const year = date ? date.getFullYear() : null;
+      setEndDate(date);
+      setSearchParams((prev) => ({
+        ...prev,
+        endYear: year,
+      }));
+    }
   };
 
   return (
@@ -90,19 +115,47 @@ const AlbumAdvancedSearch = ({ onSearch }) => {
           value={searchParams.album}
           onChange={handleChange}
         />
-        <input
+        <div style={{ marginTop: '10px', marginBottom: '10px' }}>
+          Release year:{' '}
+          <DatePicker
+            selected={startDate}
+            onChange={(date) => handleDateChange(date, 'start')}
+            placeholderText="Start Date"
+            dateFormat="yyyy"
+            showYearPicker
+            isClearable
+          />
+          <span> - </span>
+          <DatePicker
+            selected={endDate}
+            onChange={(date) => handleDateChange(date, 'end')}
+            placeholderText="End Date"
+            dateFormat="yyyy"
+            showYearPicker
+            isClearable
+          />
+        </div>
+        {/* <input
           className="search-input"
           type="text"
           name="year"
           placeholder="Year (e. g. 1962-1970)"
           value={searchParams.year}
           onChange={handleChange}
+        /> */}
+        <input
+          className="search-input"
+          type="text"
+          name="genre"
+          placeholder="Genre (e.g. Rock)"
+          value={searchParams.genre}
+          onChange={handleChange}
         />
         <input
           className="search-input"
           type="text"
           name="style"
-          placeholder="Style (e.g. Rock)"
+          placeholder="Style (e.g. Alternative Rock)"
           value={searchParams.style}
           onChange={handleChange}
         />

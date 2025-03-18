@@ -343,10 +343,14 @@ const AlbumSearch = ({ createAlbum }) => {
           params: {
             artist: searchParams.artist || undefined,
             release_title: searchParams.album || undefined,
-            year: searchParams.year || undefined,
+            year:
+              searchParams.startYear + '-' + searchParams.endYear || undefined,
+            // startYear: searchParams.startYear || '',
+            // endYear: searchParams.endYear || '',
             type: searchType,
             format: searchParams.format || undefined,
             country: searchParams.language || undefined,
+            genre: searchParams.genre || undefined,
             style: searchParams.style || undefined,
             sort: searchParams.sort || 'relevance',
             barcode: searchParams.ean || undefined,
