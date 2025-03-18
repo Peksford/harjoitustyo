@@ -7,11 +7,11 @@ on:
   pull_request:
     branches: [master]
     types: [opened, synchronize]
-    
+
 jobs:
   simple_deployment_pipeline:
     runs-on: ubuntu-20.04
-    
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -42,17 +42,17 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
-     # - name: Start front-end
-     #   run: |
+      # - name: Start front-end
+      #   run: |
       #    npm run dev &
       #    FRONTEND_PID=$!
       #    echo "Frontend PID: $FRONTEND_PID"
       #- name: Print the listening ports
       #  run: netstat -tulnp
-        
+
       - name: Install Playwright Browsers
         run: npx --prefix e2e_tests playwright install --with-deps
-        
+
       - name: Print used ports
         run: netstat -tulnp
 
@@ -66,9 +66,13 @@ jobs:
           OPEN_LIBRARY: ${{ secrets.OPEN_LIBRARY }}
           VITE_TWITCH_CLIENT_ID: ${{ secrets.VITE_TWITCH_CLIENT_ID }}
           VITE_TWITCH_CLIENT_SECRET: ${{ secrets.VITE_TWITCH_CLIENT_SECRET }}
+      - name: Copy Frontend Built to Backend
+        run: |
+          rm -rf backend/dist
+          cp -r dist backend/
       - name: Deploy app
         if: ${{ (github.event_name == 'push') && (!contains(join(github.event.head_commit.message, ', '), '#skip')) }}
-        run: rm -rf dist && cd .. && cp -r dist backend && cd backend && flyctl deploy
+        run: cd backend && flyctl deploy
         # run: cd backend && npm run deploy:full --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
@@ -95,4 +99,3 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
-
