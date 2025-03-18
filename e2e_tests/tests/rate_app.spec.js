@@ -71,6 +71,7 @@ describe('when logged in', () => {
     await page.locator('text=My albums').click();
     await expect(page.getByText('The Beatles - Abbey Road')).toBeVisible();
     await expect(page.getByTestId('albumTest')).toBeVisible();
+    console.log('Album added!');
   });
 
   test('a new movie can be added', async ({ page }) => {
@@ -94,6 +95,7 @@ describe('when logged in', () => {
       page.getByText('Return of the Jedi', { exact: true })
     ).toBeVisible();
     await expect(page.getByTestId('movieTest')).toBeVisible();
+    console.log('Movie added!');
   });
 
   test('a new book can be added', async ({ page }) => {
@@ -124,6 +126,7 @@ describe('when logged in', () => {
       page.getByText("Harry Potter and the Philosopher's Stone")
     ).toBeVisible();
     await expect(page.getByTestId('bookTest')).toBeVisible();
+    console.log('Book added!');
   });
 
   test('a new game can be added', async ({ page }) => {
@@ -143,6 +146,7 @@ describe('when logged in', () => {
     // await expect(page.getByRole('heading', { name: 'Games' })).toBeVisible();
     await expect(page.getByText('Rocket League')).toBeVisible();
     await expect(page.getByTestId('gameTest')).toBeVisible();
+    console.log('Game added!');
   });
 
   test('album can be deleted', async ({ page }) => {
@@ -165,6 +169,7 @@ describe('when logged in', () => {
     await expect(
       page.getByText('Abbey Road was removed from your list')
     ).toBeVisible();
+    console.log('Album deleted!');
   });
 
   test('movie can be deleted', async ({ page }) => {
@@ -186,6 +191,7 @@ describe('when logged in', () => {
     await expect(
       page.getByText('Return of the Jedi was removed from your list')
     ).toBeVisible();
+    console.log('Movie deleted!');
   });
 
   test('book can be deleted', async ({ page }) => {
@@ -214,6 +220,7 @@ describe('when logged in', () => {
         "Harry Potter and the Philosopher's Stone was removed from your list"
       )
     ).toBeVisible();
+    console.log('Book deleted!');
   });
 
   test('game can be deleted', async ({ page }) => {
@@ -235,6 +242,7 @@ describe('when logged in', () => {
     await expect(
       page.getByText('Rocket League was removed from your list')
     ).toBeVisible();
+    console.log('Game deleted!');
   });
 
   test('user can be searched and followed', async ({ page }) => {
@@ -257,6 +265,7 @@ describe('when logged in', () => {
     ).toBeVisible();
 
     await page.getByRole('button', { name: 'Unfollow' }).click();
+    console.log('User followed!');
   });
 
   // test('album can be liked and is shown on the recommendations', async ({
