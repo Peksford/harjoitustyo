@@ -49,6 +49,7 @@ describe('Rate app', () => {
     await expect(page.getByText('welcome kayttaja')).not.toBeVisible();
   });
 });
+
 describe('when logged in', () => {
   beforeEach(async ({ page }) => {
     await loginWith(page, 'kayttaja', 'salasana');
@@ -199,7 +200,7 @@ describe('when logged in', () => {
     await page.locator('text=My books').click();
 
     await page.waitForSelector(
-      "text=J. K. Rowling - Harry Potter and the Philosopher's Stone",
+      "text=Harry Potter and the Philosopher's Stone",
       {
         timeout: 100000,
       }
