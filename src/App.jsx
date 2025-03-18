@@ -36,6 +36,7 @@ import { setBooks, addBook } from './reducers/bookReducer';
 import { setMovies, addMovie } from './reducers/movieReducer';
 import { setGames, addGame } from './reducers/gameReducer';
 import PropTypes from 'prop-types';
+import Logo from './assets/Logo.png';
 
 const styles = {
   padding: {
@@ -264,8 +265,12 @@ const App = () => {
           </button>
         )}
       </div>
-      <Link to={`/`}>
-        <h1 style={{ textAlign: 'center' }}>Let It Rate</h1>
+      <Link to={`/`} style={{ textDecoration: 'none' }}>
+        <img
+          src={Logo}
+          alt="Logo"
+          style={{ width: '100%', maxWidth: '350px', height: 'auto' }}
+        />
       </Link>
       <Routes>
         {user === null ? (

@@ -48,9 +48,19 @@ h1, h2 {
   white-space: nowrap;
 }
 
+.example {
+  font-family: "aquatronik-variable",sans-serif;
+  font-variation-settings: 'wdth' 125;
+}
+
 .links-container a {
     text-decoration: none;
     color: inherit;
+}
+
+.example {
+  font-family: "aquatronik-variable",sans-serif;
+  font-variation-settings: 'wdth' 100;
 }
 
 .error {

@@ -97,7 +97,6 @@ const Profile = ({ createObject }) => {
     <>
       {user && (
         <>
-          <h2>Search stuff here</h2>
           <Search createObject={createObject} />
         </>
       )}
