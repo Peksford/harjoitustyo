@@ -269,7 +269,7 @@ const App = () => {
         <img
           src={Logo}
           alt="Logo"
-          style={{ width: '100%', maxWidth: '350px', height: 'auto' }}
+          style={{ width: '100%', maxWidth: '160px', height: 'auto' }}
         />
       </Link>
       <Routes>
