@@ -30,6 +30,7 @@ jobs:
         env:
           VITE_TOKEN: ${{ secrets.VITE_TOKEN }}
           VITE_TMDB_API_KEY: ${{ secrets.VITE_TMDB_API_KEY }}
+          ISBNDB_KEY: ${{ secrets.ISBNDB_KEY }}
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Fly.io login
         env:
