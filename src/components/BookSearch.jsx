@@ -111,7 +111,7 @@ const useBook = (name, type) => {
       try {
         if (type === 'ISBNDB') {
           const response = await axios.get(
-            'https://im-only-rating.fly.dev/api/books/search-book',
+            'https://im-only-rating.fly.dev/api/books/search-book-isbndb',
             // 'http://localhost:3001/api/books/search-book-isbndb',
             {
               params: {
@@ -195,8 +195,6 @@ const Book = ({ bookSearched, createBook, type }) => {
       console.error(error);
     }
   };
-
-  console.log('Book results', bookSearched);
 
   return (
     <div>
@@ -377,7 +375,6 @@ const BookSearch = ({ createBook }) => {
   const [showResults, setShowResults] = useState(true);
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const [bookSearched, setBookSearched] = useState([]);
-  // const [searchQuery, setSearchQuery] = useState('');
 
   const hideResults = () => setShowResults(!showResults);
   const hideSearch = () => setShowAdvancedSearch(!showAdvancedSearch);
@@ -388,8 +385,8 @@ const BookSearch = ({ createBook }) => {
     try {
       setBookSearched([]);
       const response = await axios.get(
-        'https://im-only-rating.fly.dev/api/books/search-book',
-        // 'http://localhost:3001/api/books/search-book',
+        // 'https://im-only-rating.fly.dev/api/books/search-book',
+        'http://localhost:3001/api/books/search-book',
         {
           params: {
             title: searchParams.title || '',
@@ -411,7 +408,7 @@ const BookSearch = ({ createBook }) => {
   const handleTypeChange = (event) => {
     setBookSearched([]);
     setType(event.target.value);
-    // setSearchQuery('');
+
     bookInput.onChange({ target: { value: '' } });
   };
 
@@ -444,7 +441,6 @@ const BookSearch = ({ createBook }) => {
           className="search-input"
           value={bookInput.value}
           onChange={(e) => {
-            // setSearchQuery(e.target.value);
             bookInput.onChange(e);
           }}
           // {...bookInput}
