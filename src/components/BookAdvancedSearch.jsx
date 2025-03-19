@@ -23,7 +23,7 @@ const BookAdvancedSearch = ({ onSearch }) => {
   };
 
   return (
-    <div style={{ width: '70%' }}>
+    <div style={{ width: '90%' }}>
       <form onSubmit={handleSubmit}>
         <input
           className="search-input"

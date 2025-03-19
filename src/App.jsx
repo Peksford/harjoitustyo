@@ -317,7 +317,12 @@ const App = () => {
         ) : null}
         <Route
           path="/:username/albums/:id"
-          element={<Album onUpdateAlbum={albumRatingUpdate} />}
+          element={
+            <Album
+              onUpdateAlbum={albumRatingUpdate}
+              createAlbum={createObject}
+            />
+          }
         />
         <Route
           path="/:username/books/:id"

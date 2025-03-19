@@ -33,6 +33,34 @@ router.get('/search-book', async (req, res) => {
   }
 });
 
+router.get('/search-book-isbndb', async (req, res) => {
+  const { name, title, author, language, subject, isbn } = req.query;
+  console.log('something?', req.query);
+
+  try {
+    let headers = {
+      'Content-Type': 'application/json',
+      Authorization: process.env.ISBNDB_KEY,
+    };
+
+    const url = `https://api2.isbndb.com/books/${encodeURIComponent(name)}`;
+    // if (name) params.q = name;
+    // if (title) params.title = title;
+    // if (author) params.author = author;
+    // if (language) params.language = language;
+    // if (isbn) params.isbn = isbn;
+    // if (subject) params.subject = subject;
+    const response = await axios.get(url, {
+      headers,
+      params: { page: 1, pageSize: 20, shouldMatchAll: 0 },
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 router.get('/', async (req, res) => {
   const books = await Book.findAll({
     include: {

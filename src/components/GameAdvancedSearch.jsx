@@ -15,6 +15,7 @@ const GameAdvancedSearch = ({ onSearch }) => {
     endYear: '',
     company: '',
     rating: '',
+    sortBy: 'relevance',
   });
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -62,7 +63,7 @@ const GameAdvancedSearch = ({ onSearch }) => {
   };
 
   return (
-    <div style={{ width: '70%' }}>
+    <div style={{ width: '110%' }}>
       <form onSubmit={handleSubmit}>
         <input
           className="search-input"
@@ -93,11 +94,7 @@ const GameAdvancedSearch = ({ onSearch }) => {
           />
         </div>
         Genre:{' '}
-        <select
-          name="genre"
-          onChange={handleChange}
-          style={{ marginTop: '10px' }}
-        >
+        <select name="genre" onChange={handleChange} style={{ width: '90%' }}>
           <option value="">Select a Genre</option>
           {sortedGenres.map((genre) => (
             <option key={genre.id} value={genre.id}>
@@ -106,20 +103,37 @@ const GameAdvancedSearch = ({ onSearch }) => {
           ))}
         </select>
         <div>
-          Platform:{' '}
+          Sort by:{' '}
           <select
-            name="platform"
+            name="sortBy"
             onChange={handleChange}
-            style={{ marginTop: '10px' }}
+            style={{ width: '90%' }}
           >
-            <option value="">Select a Platform</option>
-            {sortedPlatforms.map((platform) => (
-              <option key={platform.id} value={platform.id}>
-                {platform.name}
-              </option>
-            ))}
+            <option value="relevance">Relevance</option>
+            <option value="rating">Best rated</option>
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+            {/* <option value="">Select a Genre</option> */}
+            {/* {sortedGenres.map((genre) => (
+            <option key={genre.id} value={genre.id}>
+              {genre.name}
+            </option>
+          ))} */}
           </select>
         </div>
+        Platform:{' '}
+        <select
+          name="platform"
+          onChange={handleChange}
+          style={{ width: '90%' }}
+        >
+          <option value="">Select a Platform</option>
+          {sortedPlatforms.map((platform) => (
+            <option key={platform.id} value={platform.id}>
+              {platform.name}
+            </option>
+          ))}
+        </select>
         <input
           className="search-input"
           type="text"

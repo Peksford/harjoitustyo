@@ -336,6 +336,7 @@ const AlbumSearch = ({ createAlbum }) => {
       const searchType = searchParams.ean
         ? 'release'
         : searchParams.type || 'master';
+      console.log('SearchParams', searchParams);
       const response = await axios.get(
         'https://api.discogs.com/database/search',
         {

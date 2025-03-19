@@ -15,7 +15,7 @@ import { setNotification } from '../reducers/notificationReducer';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 
-const Album = ({ onUpdateAlbum }) => {
+const Album = ({ onUpdateAlbum, createAlbum }) => {
   const { username, id } = useParams();
   const [albumData, setAlbumData] = useState('');
   const [rating, setRating] = useState(0);
@@ -46,6 +46,9 @@ const Album = ({ onUpdateAlbum }) => {
     };
     fetchAlbum();
   }, [id, username]);
+
+  console.log('Logged in user', user);
+  console.log('albumdata', albumData);
 
   const handleHeartClick = async () => {
     try {
@@ -119,6 +122,29 @@ const Album = ({ onUpdateAlbum }) => {
       navigate(`/${username}/albums`);
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  console.log('albumdata', albumData);
+
+  const createNew = async ({ albumData }) => {
+    console.log('yes', albumData);
+    try {
+      const newAlbum = await createAlbum({
+        type: 'album',
+        artist: albumData.artist,
+        title: albumData.title,
+        url: albumData.url,
+        year: albumData.year,
+        thumbnail: albumData.thumbnail,
+        whole_title: albumData.whole_title,
+        discogs_id: albumData.discogs_id,
+        heart: false,
+      });
+      return newAlbum;
+    } catch (error) {
+      console.error(error);
+      return null;
     }
   };
 
@@ -198,24 +224,41 @@ const Album = ({ onUpdateAlbum }) => {
             ) : null}
             <div style={styles.buttonContainer}></div>
             <div>
-              <button onClick={handleClickOpen}>Remove</button>
-              <Dialog
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-              >
-                <DialogTitle id="alert-dialog-title">
-                  {`Do you want to remove ${albumData.title} from your list?`}
-                </DialogTitle>
-                <DialogActions>
-                  <Button onClick={handleClose}>No</Button>
-                  <Button onClick={() => deleteAlbum(albumData.id)} autoFocus>
-                    {' '}
-                    Yes
-                  </Button>
-                </DialogActions>
-              </Dialog>
+              {user.user_id === albumData.user_id ? (
+                <>
+                  <button onClick={handleClickOpen}>Remove</button>
+
+                  <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      {`Do you want to remove ${albumData.title} from your list?`}
+                    </DialogTitle>
+                    <DialogActions>
+                      <Button onClick={handleClose}>No</Button>
+                      <Button
+                        onClick={() => deleteAlbum(albumData.id)}
+                        autoFocus
+                      >
+                        {' '}
+                        Yes
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => createNew({ albumData })}
+                    className="button-text"
+                  >
+                    Add to your list
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>

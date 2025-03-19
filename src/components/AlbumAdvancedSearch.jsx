@@ -94,7 +94,7 @@ const AlbumAdvancedSearch = ({ onSearch }) => {
             onChange={handleChange}
             style={{ marginTop: '10px' }}
           >
-            <option value="relevancer">Relevance</option>
+            <option value="relevance">Relevance</option>
             <option value="year">Year</option>
             <option value="title">Title</option>
           </select>

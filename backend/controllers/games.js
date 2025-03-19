@@ -41,6 +41,7 @@ router.get('/search-game', async (req, res) => {
     company,
     rating,
     advancedName,
+    sortBy,
   } = req.query;
 
   try {
@@ -97,26 +98,33 @@ router.get('/search-game', async (req, res) => {
 
       if (filters.length > 0 && !advancedName) {
         query = `
-        where ${filters.join(' & ')};
-        fields id,name, genres.name, rating, cover.url, first_release_date, summary, involved_companies, url;
-        limit 50;
-        `;
+        where ${filters.join(' & ')};`;
       } else if (advancedName && filters.length > 0) {
         query = `
-    search "${advancedName}"; where ${filters.join(' & ')};
-    fields id,name, genres.name, rating, cover.url, first_release_date, summary, involved_companies, url;
-    limit 50;
-    `;
+    search "${advancedName}"; where ${filters.join(' & ')};`;
       } else if (advancedName && filters.length === 0) {
         query = `
-    search "${advancedName}";
-    fields id,name, genres.name, rating, cover.url, first_release_date, summary, involved_companies, url;
-    limit 50;
-    `;
+    search "${advancedName}";`;
       } else {
         return res.status(400).json({ error: 'No valid filters' });
       }
     }
+    if (sortBy === 'rating') {
+      query = query + ` sort rating desc;`;
+    }
+    if (sortBy === 'newest') {
+      query = query + ` sort first_release_date desc;`;
+    }
+
+    if (sortBy === 'oldest') {
+      query = query + ` sort first_release_date asc;`;
+    }
+
+    query =
+      query +
+      `fields id,name, genres.name, rating, cover.url, first_release_date, summary, involved_companies, url;
+    limit 50;`;
+    console.log('Final query: ', query);
 
     const response = await axios.post('https://api.igdb.com/v4/games', query, {
       headers: {
