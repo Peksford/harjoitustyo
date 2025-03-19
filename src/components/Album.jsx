@@ -346,6 +346,7 @@ Album.propTypes = {
     id: PropTypes.number.isRequired,
   }),
   onUpdateAlbum: PropTypes.func,
+  createAlbum: PropTypes.func.isRequired,
 };
 
 export default Album;

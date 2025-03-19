@@ -101,9 +101,6 @@ const useDebounce = (value, delay) => {
 
 const useBook = (name, type) => {
   const [bookSearched, setBookSearched] = useState([]);
-
-  console.log('what the type', type);
-
   useEffect(() => {
     if (!name) {
       setBookSearched([]);
@@ -486,6 +483,7 @@ const BookSearch = ({ createBook }) => {
 Book.propTypes = {
   bookSearched: PropTypes.array.isRequired,
   createBook: PropTypes.func.isRequired,
+  type: PropTypes.string,
 };
 
 BookSearch.propTypes = {
