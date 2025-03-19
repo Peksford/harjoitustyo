@@ -25,7 +25,7 @@ module.exports = {
         allowNull: true,
       },
       thumbnail: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.TEXT,
         allowNull: true,
       },
       created_at: {
@@ -47,6 +47,14 @@ module.exports = {
       heart: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
+      },
+      source: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
+      synopsis: {
+        type: DataTypes.TEXT,
+        allowNull: true,
       },
     });
 

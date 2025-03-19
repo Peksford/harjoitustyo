@@ -115,6 +115,7 @@ const MyListBooks = () => {
     }
   };
 
+  console.log(displayBooks);
   if (userData) {
     return (
       <>
@@ -178,7 +179,9 @@ const MyListBooks = () => {
                 data-testid="bookTest"
                 to={`/${userData.username}/books/${book.id}`}
               >
-                {book.thumbnail && (
+                {book.source === 'ISBNDB' ? (
+                  <img src={book.thumbnail} style={styles.thumbnail} />
+                ) : (
                   <img
                     src={`https://covers.openlibrary.org/b/id/${book.thumbnail}-L.jpg`}
                     style={styles.thumbnail}

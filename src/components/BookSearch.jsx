@@ -23,7 +23,7 @@ const styles = {
     justifyContent: 'space-between',
   },
   thumbnail: {
-    width: '220px',
+    width: '200px',
     height: '330px',
     objectFit: 'cover',
   },
@@ -111,8 +111,8 @@ const useBook = (name, type) => {
       try {
         if (type === 'ISBNDB') {
           const response = await axios.get(
-            'https://im-only-rating.fly.dev/api/books/search-book-isbndb',
-            // 'http://localhost:3001/api/books/search-book-isbndb',
+            // 'https://im-only-rating.fly.dev/api/books/search-book-isbndb',
+            'http://localhost:3001/api/books/search-book-isbndb',
             {
               params: {
                 name: name,
@@ -123,8 +123,8 @@ const useBook = (name, type) => {
           setBookSearched(response.data.books);
         } else {
           const response = await axios.get(
-            'https://im-only-rating.fly.dev/api/books/search-book',
-            // 'http://localhost:3001/api/books/search-book-isbndb',
+            // 'https://im-only-rating.fly.dev/api/books/search-book',
+            'http://localhost:3001/api/books/search-book-isbndb',
             {
               params: {
                 name: name,
@@ -150,30 +150,54 @@ const Book = ({ bookSearched, createBook, type }) => {
     return <div>not found</div>;
   }
 
+  console.log('testing', bookSearched);
+
   const [addedBooks, setAddedBooks] = useState([]);
   const [ratings, setRatings] = useState({});
 
   const createNew = async ({ book }) => {
     try {
-      const newBook = await createBook({
-        type: 'book',
-        author: book.author_name?.[0] || 'Unknown',
-        title: book.title || 'Untitled',
-        url: book.key,
-        year: book.first_publish_year || null,
-        thumbnail: book.cover_i,
-        whole_title: book.author_name[0] + ' - ' + book.title,
-        key: book.key,
-        heart: false,
-      });
-      newBook && setAddedBooks((prevBooks) => [...prevBooks, newBook]);
+      if (type === 'openLibrary') {
+        const newBook = await createBook({
+          type: 'book',
+          source: 'openLibrary',
+          author: book.author_name?.join(', ') || 'Unknown',
+          title: book.title || 'Untitled',
+          url: book.key,
+          year: book.first_publish_year || null,
+          thumbnail: book.cover_i,
+          whole_title: book.author_name[0] + ' - ' + book.title,
+          key: book.key,
+          heart: false,
+        });
+        newBook && setAddedBooks((prevBooks) => [...prevBooks, newBook]);
 
-      return addedBooks;
+        return addedBooks;
+      } else {
+        console.log('adding book', book);
+        const newBook = await createBook({
+          type: 'book',
+          source: 'ISBNDB',
+          author: book.authors?.join(', ') || 'Unknown',
+          title: book.title || 'Untitled',
+          url: book.isbn13,
+          year: book.date_published.split('-')[0] || null,
+          thumbnail: book.image,
+          whole_title: book.authors?.join(', ') + ' - ' + book.title,
+          key: book.isbn,
+          synopsis: book.synopsis,
+          heart: false,
+        });
+        newBook && setAddedBooks((prevBooks) => [...prevBooks, newBook]);
+
+        return addedBooks;
+      }
     } catch (error) {
       console.error(error);
     }
   };
 
+  console.log('added books', addedBooks);
   const changeRating = async (newRating, addedBook) => {
     setRatings((prevRatings) => ({
       ...prevRatings,
@@ -203,8 +227,9 @@ const Book = ({ bookSearched, createBook, type }) => {
           addedBooks.length > 0 &&
           addedBooks.some(
             (added) =>
-              added.title === book.title &&
-              added.year === Number(book.first_publish_year)
+              (added.title === book.title &&
+                added.year === Number(book.first_publish_year)) ||
+              Number(book.date_published.split('-')[0])
           );
         const book_rating = addedBooks.find(
           (added) => added.title === book.title
@@ -268,7 +293,9 @@ const Book = ({ bookSearched, createBook, type }) => {
                           Authors: <i>{book.authors.join(', ')}</i>
                         </p>
                       ))}
-                    {book.date_published && <p>Year: {book.date_published}</p>}
+                    {book.date_published && (
+                      <p>Year: {book.date_published.split('-')[0]}</p>
+                    )}
                     {book.isbn13 && (
                       <p>
                         <a
@@ -289,7 +316,11 @@ const Book = ({ bookSearched, createBook, type }) => {
             <div style={styles.buttonContainer}>
               {alreadyAdded ? (
                 <Popup
-                  trigger={<button className="button-text">Rate</button>}
+                  trigger={
+                    <button style={{ width: '50%' }} className="button-text">
+                      Rate
+                    </button>
+                  }
                   modal
                   nested
                   contentStyle={{ maxWidth: '95vw', width: '600px' }}
@@ -384,20 +415,47 @@ const BookSearch = ({ createBook }) => {
   const handleAdvancedSearch = async (searchParams) => {
     try {
       setBookSearched([]);
-      const response = await axios.get(
-        // 'https://im-only-rating.fly.dev/api/books/search-book',
-        'http://localhost:3001/api/books/search-book',
-        {
-          params: {
-            title: searchParams.title || '',
-            author: searchParams.author || '',
-            language: searchParams.language || '',
-            subject: searchParams.subject,
-            isbn: searchParams.isbn || '',
-          },
-        }
-      );
-      setBookSearched(response.data.docs);
+      if (type === 'openLibrary') {
+        const response = await axios.get(
+          // 'https://im-only-rating.fly.dev/api/books/search-book',
+          'http://localhost:3001/api/books/search-book',
+          {
+            params: {
+              title: searchParams.title || '',
+              author: searchParams.author || '',
+              language: searchParams.language || '',
+              subject: searchParams.subject,
+              isbn: searchParams.isbn || '',
+            },
+          }
+        );
+        setBookSearched(response.data.docs);
+      } else {
+        const response = await axios.get(
+          // 'https://im-only-rating.fly.dev/api/books/search-book',
+          'http://localhost:3001/api/books/search-book-isbndb',
+          {
+            params: {
+              query: searchParams.query,
+              column: searchParams.column || '',
+              year: searchParams.year || '',
+              edition: searchParams.edition || '',
+              title: searchParams.title || '',
+              author: searchParams.author || '',
+              language: searchParams.language || '',
+              subject: searchParams.subject,
+              isbn: searchParams.isbn || '',
+            },
+          }
+        );
+        response.data.books
+          ? setBookSearched(response.data.books)
+          : setBookSearched(
+              Array.isArray(response.data.book)
+                ? response.data.book
+                : [response.data.book]
+            );
+      }
     } catch (error) {
       console.error('Error making advanced search', error);
     }
@@ -455,7 +513,7 @@ const BookSearch = ({ createBook }) => {
           {showAdvancedSearch ? 'Hide advanced search' : 'Advanced search'}
         </button>
         {showAdvancedSearch && (
-          <BookAdvancedSearch onSearch={handleAdvancedSearch} />
+          <BookAdvancedSearch onSearch={handleAdvancedSearch} type={type} />
         )}
         {debouncedBook && (
           <button onClick={hideResults}>

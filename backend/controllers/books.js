@@ -34,7 +34,17 @@ router.get('/search-book', async (req, res) => {
 });
 
 router.get('/search-book-isbndb', async (req, res) => {
-  const { name, title, author, language, subject, isbn } = req.query;
+  const {
+    query,
+    column,
+    year,
+    title,
+    edition,
+    author,
+    language,
+    subject,
+    isbn,
+  } = req.query;
   console.log('something?', req.query);
 
   try {
@@ -42,18 +52,42 @@ router.get('/search-book-isbndb', async (req, res) => {
       'Content-Type': 'application/json',
       Authorization: process.env.ISBNDB_KEY,
     };
+    let baseUrl = 'https://api2.isbndb.com';
+    // if (name) url = `https://api2.isbndb.com/books/${encodeURIComponent(name)}`;
+    // // if (name) params.q = name;
+    // // if (title) params.title = title;
+    // if (author)
+    //   url = `https://api2.isbndb.com/author/${encodeURIComponent(author)}`;
+    // // if (isbn) params.isbn = isbn;
+    // // if (subject) params.subject = subject;
+    let params = {};
 
-    const url = `https://api2.isbndb.com/books/${encodeURIComponent(name)}`;
-    // if (name) params.q = name;
-    // if (title) params.title = title;
+    if (isbn) {
+      url = `${baseUrl}/book/${encodeURIComponent(isbn)}`;
+    } else if (query) {
+      console.log('here?');
+      params = {
+        page: 1,
+        pageSize: 20,
+      };
+
+      // params.query = query;
+      params.column = column;
+      params.year = year;
+      params.edition = edition;
+      params.language = language;
+      url = `${baseUrl}/books/${query}`;
+    }
+
     // if (author) params.author = author;
-    // if (language) params.language = language;
-    // if (isbn) params.isbn = isbn;
+
+    // if (name) url = `${baseUrl}/books/${encodeURIComponent(name)}`
+    // if (title) params.title = title;
+
     // if (subject) params.subject = subject;
-    const response = await axios.get(url, {
-      headers,
-      params: { page: 1, pageSize: 20, shouldMatchAll: 0 },
-    });
+    // if (isbn) params.isbn = isbn;
+
+    const response = await axios.get(url, { headers, params });
 
     res.json(response.data);
   } catch (error) {

@@ -208,7 +208,9 @@ const Home = () => {
                 data-testid="albumTest"
                 to={`/${username}/books/${book.id}`}
               >
-                {book.thumbnail && (
+                {book.source === 'ISBNDB' ? (
+                  <img src={book.thumbnail} style={styles.thumbnailBook} />
+                ) : (
                   <img
                     src={`https://covers.openlibrary.org/b/id/${book.thumbnail}-L.jpg`}
                     style={styles.thumbnailBook}

@@ -129,7 +129,6 @@ const Album = ({ onUpdateAlbum, createAlbum }) => {
   console.log('userdata', user.id);
 
   const createNew = async ({ albumData }) => {
-    console.log('yes', albumData);
     try {
       const newAlbum = await createAlbum({
         type: 'album',
@@ -225,7 +224,7 @@ const Album = ({ onUpdateAlbum, createAlbum }) => {
             ) : null}
             <div style={styles.buttonContainer}></div>
             <div>
-              {user.id === albumData.user_id ? (
+              {user && user.id === albumData.user_id ? (
                 <>
                   <button onClick={handleClickOpen}>Remove</button>
 

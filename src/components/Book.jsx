@@ -15,7 +15,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { useSelector } from 'react-redux';
 
-const Book = ({ onUpdateBook }) => {
+const Book = ({ onUpdateBook, createBook }) => {
   const { username, id } = useParams();
   const [bookData, setBookData] = useState('');
   const [rating, setRating] = useState(0);
@@ -86,30 +86,34 @@ const Book = ({ onUpdateBook }) => {
 
   const [description, setDescription] = useState([]);
 
-  useEffect(() => {
-    const releaseInfo = async () => {
-      if (descriptionFetched) return;
-      //   const token = import.meta.env.VITE_TOKEN;
-      try {
-        if (bookData) {
-          const data = await axios.get(
-            `https://openlibrary.org${bookData.url}.json`,
-            {
-              //   headers: {
-              //     Authorization: `Discogs token=${token}`,
-              //   },
-            }
-          );
-          const fetchedDescription = data.data.description || '';
-          setDescription(fetchedDescription);
-          setDescriptionFetched(true);
+  console.log('book data', bookData);
+
+  if (bookData.source !== 'ISBNDB') {
+    useEffect(() => {
+      const releaseInfo = async () => {
+        if (descriptionFetched) return;
+        //   const token = import.meta.env.VITE_TOKEN;
+        try {
+          if (bookData) {
+            const data = await axios.get(
+              `https://openlibrary.org${bookData.url}.json`,
+              {
+                //   headers: {
+                //     Authorization: `Discogs token=${token}`,
+                //   },
+              }
+            );
+            const fetchedDescription = data.data.description || '';
+            setDescription(fetchedDescription);
+            setDescriptionFetched(true);
+          }
+        } catch (error) {
+          console.error(error);
         }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    releaseInfo();
-  }, [bookData, descriptionFetched]);
+      };
+      releaseInfo();
+    }, [bookData, descriptionFetched]);
+  }
 
   const deleteBook = async (id) => {
     try {
@@ -133,6 +137,47 @@ const Book = ({ onUpdateBook }) => {
     setOpen(false);
   };
 
+  const createNew = async ({ bookData }) => {
+    try {
+      console.log('bobokad', bookData);
+      if (bookData.source !== 'ISBNDB') {
+        const newBook = await createBook({
+          type: 'book',
+          source: 'openLibrary',
+          author: bookData.author || 'Unknown',
+          title: bookData.title || 'Untitled',
+          url: bookData.url,
+          year: bookData.year || null,
+          thumbnail: bookData.thumbnail,
+          whole_title: bookData.whole_title,
+          key: bookData.key,
+          heart: false,
+        });
+
+        return newBook;
+      } else {
+        console.log('adding bookData', bookData);
+        const newBook = await createBook({
+          type: 'bookData',
+          source: 'ISBNDB',
+          author: bookData.author || 'Unknown',
+          title: bookData.title || 'Untitled',
+          url: bookData.url,
+          year: bookData.year || null,
+          thumbnail: bookData.thumbnail,
+          whole_title: bookData.whole_title,
+          key: bookData.key,
+          synopsis: bookData.synopsis,
+          heart: false,
+        });
+
+        return newBook;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
       <div>
@@ -151,7 +196,7 @@ const Book = ({ onUpdateBook }) => {
             <Heart isActive={active || false} onClick={handleHeartClick} />
           </p>
           <h3>{bookData.year}</h3>
-          {description.value ? (
+          {description.value || bookData.synopsis ? (
             <p
               style={{
                 fontSize: '14px',
@@ -159,7 +204,9 @@ const Book = ({ onUpdateBook }) => {
                 wordWrap: 'break-word',
               }}
             >
-              {description.value}
+              {description.value
+                ? description.value
+                : bookData?.synopsis.replace(/<br\s*\/?>/g, '\n')}
             </p>
           ) : (
             <p
@@ -169,7 +216,7 @@ const Book = ({ onUpdateBook }) => {
                 wordWrap: 'break-end',
               }}
             >
-              {description}
+              {description && description}
             </p>
           )}
           {bookData.user_id === (user?.id || 0) ? (
@@ -193,19 +240,37 @@ const Book = ({ onUpdateBook }) => {
           ) : null}
         </div>
         <div style={styles.thumbNailContainer}>
-          <p>
-            <a
-              href={`https://openlibrary.org${bookData.key}`}
-              target="blank"
-              rel="noopener noreferrer"
-            >
-              Open Library
-            </a>
-          </p>
-          <img
-            src={`https://covers.openlibrary.org/b/id/${bookData.thumbnail}-L.jpg`}
-            style={styles.thumbnail}
-          />
+          {bookData.source !== 'ISBNDB' ? (
+            <>
+              <p>
+                <a
+                  href={`https://openlibrary.org${bookData.key}`}
+                  target="blank"
+                  rel="noopener noreferrer"
+                >
+                  Open Library
+                </a>
+              </p>
+              <img
+                src={`https://covers.openlibrary.org/b/id/${bookData.thumbnail}-L.jpg`}
+                style={styles.thumbnail}
+              />
+            </>
+          ) : (
+            <>
+              <p>
+                <a
+                  href={`https://isbndb.com/book/${bookData.url}`}
+                  target="blank"
+                  rel="noopener noreferrer"
+                >
+                  ISBNDB
+                </a>
+              </p>
+              <img src={bookData.thumbnail} style={styles.thumbnail} />
+            </>
+          )}
+
           {bookData.rating ? (
             <div>
               {/* {bookData.user_id}'s rating */}
@@ -216,24 +281,38 @@ const Book = ({ onUpdateBook }) => {
           ) : null}
           <div style={styles.buttonContainer}></div>
           <div>
-            <button onClick={handleClickOpen}>Remove</button>
-            <Dialog
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle id="alert-dialog-title">
-                {`Do you want to remove ${bookData.title} from your list?`}
-              </DialogTitle>
-              <DialogActions>
-                <Button onClick={handleClose}>No</Button>
-                <Button onClick={() => deleteBook(bookData.id)} autoFocus>
-                  {' '}
-                  Yes
-                </Button>
-              </DialogActions>
-            </Dialog>
+            {user && user.id === bookData.user_id ? (
+              <>
+                <button onClick={handleClickOpen}>Remove</button>
+
+                <Dialog
+                  open={open}
+                  onClose={handleClose}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">
+                    {`Do you want to remove ${bookData.title} from your list?`}
+                  </DialogTitle>
+                  <DialogActions>
+                    <Button onClick={handleClose}>No</Button>
+                    <Button onClick={() => deleteBook(bookData.id)} autoFocus>
+                      {' '}
+                      Yes
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => createNew({ bookData })}
+                  className="button-text"
+                >
+                  Add to your list
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -311,6 +390,7 @@ Book.propTypes = {
     id: PropTypes.number.isRequired,
   }),
   onUpdateBook: PropTypes.func,
+  createBook: PropTypes.func.isRequired,
 };
 
 export default Book;

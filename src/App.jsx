@@ -326,7 +326,9 @@ const App = () => {
         />
         <Route
           path="/:username/books/:id"
-          element={<Book onUpdateBook={bookRatingUpdate} />}
+          element={
+            <Book onUpdateBook={bookRatingUpdate} createBook={createObject} />
+          }
         />
         <Route
           path="/:username/movies/:id"

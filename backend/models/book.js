@@ -46,6 +46,14 @@ Book.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
     },
+    source: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    synopsis: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,

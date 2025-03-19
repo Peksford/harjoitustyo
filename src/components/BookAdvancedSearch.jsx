@@ -2,8 +2,12 @@ import React from 'react';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 
-const BookAdvancedSearch = ({ onSearch }) => {
+const BookAdvancedSearch = ({ onSearch, type }) => {
   const [searchParams, setSearchParams] = useState({
+    query: '',
+    column: '',
+    year: '',
+    edition: '',
     title: '',
     author: '',
     subject: '',
@@ -21,7 +25,73 @@ const BookAdvancedSearch = ({ onSearch }) => {
     e.preventDefault();
     onSearch(searchParams);
   };
+  if (type === 'ISBNDB') {
+    return (
+      <div style={{ width: '90%' }}>
+        <form onSubmit={handleSubmit}>
+          <input
+            className="search-input"
+            type="text"
+            name="query"
+            placeholder="Query"
+            value={searchParams.query}
+            onChange={handleChange}
+          />
+          Search only in this category:{' '}
+          <select
+            name="column"
+            onChange={handleChange}
+            style={{ marginTop: '10px', width: '30%' }}
+            disabled={!searchParams.query}
+          >
+            <option value=" "></option>
+            <option value="title">Title</option>
+            <option value="author">Author</option>
 
+            {/* <option value="">Select a Genre</option> */}
+            {/* {sortedGenres.map((genre) => (
+            <option key={genre.id} value={genre.id}>
+              {genre.name}
+            </option>
+          ))} */}
+          </select>
+          <input
+            className="search-input"
+            type="text"
+            name="year"
+            placeholder="Year"
+            value={searchParams.year}
+            onChange={handleChange}
+            disabled={!searchParams.query}
+          />
+          <input
+            className="search-input"
+            type="text"
+            name="edition"
+            placeholder="Edition"
+            value={searchParams.edition}
+            onChange={handleChange}
+            disabled={!searchParams.query}
+          />
+          <input
+            className="search-input"
+            type="text"
+            name="language"
+            placeholder="Language"
+            value={searchParams.language}
+            onChange={handleChange}
+            disabled={!searchParams.query}
+          />
+          <button
+            type="submit"
+            style={{ marginTop: '10px', marginBottom: '10px' }}
+          >
+            Search
+          </button>
+        </form>
+      </div>
+    );
+  }
   return (
     <div style={{ width: '90%' }}>
       <form onSubmit={handleSubmit}>
@@ -81,6 +151,7 @@ const BookAdvancedSearch = ({ onSearch }) => {
 
 BookAdvancedSearch.propTypes = {
   onSearch: PropTypes.func.isRequired,
+  type: PropTypes.string,
 };
 
 export default BookAdvancedSearch;
