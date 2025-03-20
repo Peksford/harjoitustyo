@@ -109,9 +109,14 @@ const useBook = (name, type) => {
 
     const searchBook = async () => {
       try {
+        const baseURL =
+          import.meta.env.MODE === 'development'
+            ? 'http://localhost:3001'
+            : 'https://im-only-rating.fly.dev';
+
         if (type === 'ISBNDB') {
           const response = await axios.get(
-            'https://im-only-rating.fly.dev/api/books/search-book-isbndb',
+            `${baseURL}/api/books/search-book-isbndb`,
             // 'http://localhost:3001/api/books/search-book-isbndb',
             {
               params: {
@@ -123,7 +128,7 @@ const useBook = (name, type) => {
           setBookSearched(response.data.books);
         } else {
           const response = await axios.get(
-            'https://im-only-rating.fly.dev/api/books/search-book',
+            `${baseURL}/api/books/search-book`,
             // 'http://localhost:3001/api/books/search-book',
             {
               params: {
@@ -415,9 +420,14 @@ const BookSearch = ({ createBook }) => {
   const handleAdvancedSearch = async (searchParams) => {
     try {
       setBookSearched([]);
+      const baseURL =
+        import.meta.env.MODE === 'development'
+          ? 'http://localhost:3001'
+          : 'https://im-only-rating.fly.dev';
+
       if (type === 'openLibrary') {
         const response = await axios.get(
-          'https://im-only-rating.fly.dev/api/books/search-book',
+          `${baseURL}/api/books/search-book`,
           // 'http://localhost:3001/api/books/search-book',
           {
             params: {
@@ -432,7 +442,7 @@ const BookSearch = ({ createBook }) => {
         setBookSearched(response.data.docs);
       } else {
         const response = await axios.get(
-          'https://im-only-rating.fly.dev/api/books/search-book-isbndb',
+          `${baseURL}/api/books/search-book-isbndb`,
           // 'http://localhost:3001/api/books/search-book-isbndb',
           {
             params: {
