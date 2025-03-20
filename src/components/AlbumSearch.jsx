@@ -6,6 +6,8 @@ import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import albumService from '../services/albums';
 import AlbumAdvancedSearch from './AlbumAdvancedSearch';
+import discogsLogo from '../assets/discogsLogo.png';
+import discogsButton from '../assets/discogsButton.webp';
 
 const styles = {
   albumContainer: {
@@ -228,7 +230,21 @@ const Album = ({ albumSearched, createAlbum }) => {
                         target="blank"
                         rel="noopener noreferrer"
                       >
-                        Discogs
+                        <button
+                          style={{
+                            backgroundColor: 'black',
+                            padding: '6px 14px',
+                          }}
+                        >
+                          <img
+                            src={discogsButton}
+                            style={{
+                              width: '100%',
+                              maxWidth: '100px',
+                              height: 'auto',
+                            }}
+                          />
+                        </button>
                       </a>
                     </p>
                   )}
@@ -368,7 +384,20 @@ const AlbumSearch = ({ createAlbum }) => {
 
   return (
     <>
-      <div style={{ width: '70%' }}>
+      <div
+        style={{
+          width: '90%',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          marginTop: '10px',
+        }}
+      >
+        <img
+          src={discogsLogo}
+          style={{ width: '100%', maxWidth: '100px', height: 'auto' }}
+        />
+
         <input
           className="search-input"
           {...albumInput}
@@ -376,22 +405,23 @@ const AlbumSearch = ({ createAlbum }) => {
           placeholder="Search for an album"
           onFocus={() => setShowResults(true)}
         />
-        <button
-          onClick={hideSearch}
-          style={{ marginTop: '10px', marginBottom: '10px' }}
-        >
-          {showAdvancedSearch ? 'Hide advanced search' : 'Advanced search'}
-        </button>
-        {showAdvancedSearch && (
-          <AlbumAdvancedSearch onSearch={handleAdvancedSearch} />
-        )}
-
-        {debouncedAlbum && (
-          <button onClick={hideResults}>
-            {showResults ? 'Hide results' : 'Show results'}
-          </button>
-        )}
       </div>
+      <button
+        onClick={hideSearch}
+        style={{ marginTop: '10px', marginBottom: '10px', marginRight: '10px' }}
+      >
+        {showAdvancedSearch ? 'Hide advanced search' : 'Advanced search'}
+      </button>
+      {showAdvancedSearch && (
+        <AlbumAdvancedSearch onSearch={handleAdvancedSearch} />
+      )}
+
+      {debouncedAlbum && (
+        <button onClick={hideResults}>
+          {showResults ? 'Hide results' : 'Show results'}
+        </button>
+      )}
+
       <div style={{ width: '100%' }}>
         {showResults && (
           <Album

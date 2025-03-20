@@ -8,6 +8,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PropTypes from 'prop-types';
+import discogsButton from '../assets/discogsButton.webp';
 
 const styles = {
   // albumContainer: {
@@ -201,7 +202,22 @@ const Profile = ({ createObject }) => {
                                   target="blank"
                                   rel="noopener noreferrer"
                                 >
-                                  Discogs
+                                  <button
+                                    style={{
+                                      backgroundColor: 'black',
+                                      marginTop: '10px',
+                                      padding: '6px 14px',
+                                    }}
+                                  >
+                                    <img
+                                      src={discogsButton}
+                                      style={{
+                                        width: '100%',
+                                        maxWidth: '100px',
+                                        height: 'auto',
+                                      }}
+                                    />
+                                  </button>
                                 </a>
                               </p>
                             )}

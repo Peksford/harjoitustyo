@@ -14,6 +14,7 @@ import Button from '@mui/material/Button';
 import { setNotification } from '../reducers/notificationReducer';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
+import discogsButton from '../assets/discogsButton.webp';
 
 const Album = ({ onUpdateAlbum, createAlbum }) => {
   const { username, id } = useParams();
@@ -211,7 +212,22 @@ const Album = ({ onUpdateAlbum, createAlbum }) => {
                 target="blank"
                 rel="noopener noreferrer"
               >
-                Discogs
+                <button
+                  style={{
+                    backgroundColor: 'black',
+                    padding: '8px 16px',
+                    marginTop: '10px',
+                  }}
+                >
+                  <img
+                    src={discogsButton}
+                    style={{
+                      width: '100%',
+                      maxWidth: '100px',
+                      height: 'auto',
+                    }}
+                  />
+                </button>
               </a>
             </p>
             <img src={albumData.thumbnail} style={styles.thumbnail} />
