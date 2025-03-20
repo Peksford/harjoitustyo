@@ -47,8 +47,9 @@ const styles = {
     justifyContent: 'flex-end',
     width: '100%',
     padding: '10px',
-    top: 0,
-    right: 0,
+
+    // top: 0,
+    // right: 0,
   },
 };
 
@@ -71,6 +72,7 @@ const App = () => {
   const userBooks = useSelector((state) => state.books);
   const userMovies = useSelector((state) => state.movies);
   const userGames = useSelector((state) => state.games);
+  const [pageLoaded, setPageLoaded] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -112,6 +114,17 @@ const App = () => {
     };
     fetchAlbums();
   }, [dispatch, user]);
+
+  useEffect(() => {
+    setPageLoaded(false);
+    const timer = setTimeout(() => {
+      setPageLoaded(true);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
+
+  console.log('page loaded', pageLoaded);
+  console.log('current location', location.pathname);
 
   const albumRatingUpdate = (updatedAlbum) => {
     setAlbums((preAlbums) =>
@@ -269,7 +282,7 @@ const App = () => {
         <img
           src={Logo}
           alt="Logo"
-          style={{ width: '100%', maxWidth: '160px', height: 'auto' }}
+          style={{ width: '100%', maxWidth: '200px', height: 'auto' }}
         />
       </Link>
       <Routes>
@@ -344,6 +357,16 @@ const App = () => {
         />
         <Route path="/signup" element={<SignUp />} />
       </Routes>
+      {/* {((userAlbums.length > 1) ||
+        userMovies.length > 1 ||
+        userBooks.length > 1 ||
+        userGames.length > 1) && ( */}
+      {pageLoaded ? (
+        <footer className="footer">
+          This website uses TMDB and the TMDB APIs but is not endorsed,
+          certified, or otherwise approved by TMDB.
+        </footer>
+      ) : null}
     </div>
   );
 };

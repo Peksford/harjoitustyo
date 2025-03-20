@@ -10,6 +10,7 @@ import userService from '../services/users';
 import { useSelector } from 'react-redux';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import igdbLogo from '../assets/IGDB_logo.svg.png';
 
 const styles = {
   card: {
@@ -148,6 +149,15 @@ const MyListGames = () => {
               Highest rating
             </Dropdown.Item>
           </DropdownButton>
+          <img
+            src={igdbLogo}
+            style={{
+              width: '100%',
+              maxWidth: '100px',
+              height: 'auto',
+              marginTop: '10px',
+            }}
+          />
           <div style={{ marginTop: '10px', marginBottom: '10px' }}>
             Sort by addition date:{' '}
             <DatePicker

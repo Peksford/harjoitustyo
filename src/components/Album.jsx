@@ -39,7 +39,7 @@ const Album = ({ onUpdateAlbum, createAlbum }) => {
           setActive(album.heart || false);
           setRating(album.rating || 0);
         } else {
-          return setAlbumData(null);
+          return null;
         }
       } catch (error) {
         console.error(error);
@@ -126,9 +126,6 @@ const Album = ({ onUpdateAlbum, createAlbum }) => {
     }
   };
 
-  console.log('albumdata', albumData.user_id);
-  console.log('userdata', user.id);
-
   const createNew = async ({ albumData }) => {
     try {
       const newAlbum = await createAlbum({
@@ -169,7 +166,7 @@ const Album = ({ onUpdateAlbum, createAlbum }) => {
             home page
           </div>
         </div>
-        <div className="container">
+        <div>
           <div style={styles.albumInfo}>
             <h2>{albumData.whole_title}</h2>
             <div>
@@ -298,11 +295,6 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     marginRight: '100px',
-
-    '@media (maxWidth: 768px)': {
-      marginRight: '0',
-      textAlign: 'center',
-    },
   },
   thumbNailContainer: {
     display: 'flex',

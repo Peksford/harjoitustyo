@@ -10,6 +10,7 @@ import userService from '../services/users';
 import { useSelector } from 'react-redux';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import tmdbLogo from '../assets/tmdbLogo.svg';
 
 const styles = {
   container: {
@@ -175,6 +176,19 @@ const MyListMovies = () => {
             />
           </div>
         </div>
+        <Link to={'https://www.themoviedb.org/'}>
+          <img
+            src={tmdbLogo}
+            style={{
+              width: '100%',
+              maxWidth: '70px',
+              height: 'auto',
+              backgroundColor: '#0d253f',
+              padding: '10px',
+              borderRadius: '8px',
+            }}
+          />
+        </Link>
         <div className="album-container">
           {displayMovies.map((movie) => (
             <div key={movie.id} style={styles.card}>

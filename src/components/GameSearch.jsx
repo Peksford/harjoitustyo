@@ -6,6 +6,7 @@ import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import gameService from '../services/games';
 import GameAdvancedSearch from './GameAdvancedSearch';
+import igdbLogo from '../assets/IGDB_logo.svg.png';
 
 const styles = {
   gameContainer: {
@@ -364,7 +365,20 @@ const GameSearch = ({ createGame }) => {
 
   return (
     <>
-      <div style={{ width: '70%' }}>
+      <div
+        style={{
+          width: '90%',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          marginTop: '10px',
+        }}
+      >
+        <img
+          src={igdbLogo}
+          style={{ width: '100%', maxWidth: '100px', height: 'auto' }}
+        />
+
         <input
           className="search-input"
           {...gameInput}
@@ -372,22 +386,23 @@ const GameSearch = ({ createGame }) => {
           placeholder="Search for a game"
           onFocus={() => setShowResults(true)}
         />
-        <button
-          onClick={hideSearch}
-          style={{ marginTop: '10px', marginBottom: '10px' }}
-        >
-          {showAdvancedSearch ? 'Hide advanced search' : 'Advanced search'}
-        </button>
-        {showAdvancedSearch && (
-          <GameAdvancedSearch onSearch={handleAdvancedSearch} />
-        )}
-
-        {debouncedGame && (
-          <button onClick={hideResults}>
-            {showResults ? 'Hide results' : 'Show results'}
-          </button>
-        )}
       </div>
+      <button
+        onClick={hideSearch}
+        style={{ marginTop: '10px', marginBottom: '10px' }}
+      >
+        {showAdvancedSearch ? 'Hide advanced search' : 'Advanced search'}
+      </button>
+      {showAdvancedSearch && (
+        <GameAdvancedSearch onSearch={handleAdvancedSearch} />
+      )}
+
+      {debouncedGame && (
+        <button onClick={hideResults}>
+          {showResults ? 'Hide results' : 'Show results'}
+        </button>
+      )}
+
       <div style={{ width: '100%' }}>
         {showResults && (
           <Game

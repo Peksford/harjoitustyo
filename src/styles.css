@@ -238,3 +238,15 @@ button {
     border-radius: 5px;
     cursor: pointer;
   }
+
+  .footer {
+    /* position: fixed; */
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    padding: 10px;
+    background-color: black;    
+    color: white;
+    font-size: 14px;
+    margin-top: 10px;
+  }

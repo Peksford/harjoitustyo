@@ -13,6 +13,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { useSelector } from 'react-redux';
+import tmdbLogo from '../assets/tmdbLogo.svg';
 
 const Movie = ({ onUpdateMovie }) => {
   const { username, id } = useParams();
@@ -115,7 +116,7 @@ const Movie = ({ onUpdateMovie }) => {
             back to <Link to={`/${username}`}>{username}</Link> home page
           </div>
         </div>
-        <div className="container">
+        <div>
           <div style={styles.movieInfo}>
             <h2>{movieData.whole_title}</h2>
             <div>
@@ -169,7 +170,17 @@ const Movie = ({ onUpdateMovie }) => {
                   target="blank"
                   rel="noopener noreferrer"
                 >
-                  The Movie Database
+                  <img
+                    src={tmdbLogo}
+                    style={{
+                      width: '100%',
+                      maxWidth: '80px',
+                      height: 'auto',
+                      backgroundColor: '#0d253f',
+                      padding: '10px',
+                      borderRadius: '8px',
+                    }}
+                  />
                 </a>
               </p>
             ) : (
@@ -179,7 +190,17 @@ const Movie = ({ onUpdateMovie }) => {
                   target="blank"
                   rel="noopener noreferrer"
                 >
-                  The Movie Database
+                  <img
+                    src={tmdbLogo}
+                    style={{
+                      width: '100%',
+                      maxWidth: '80px',
+                      height: 'auto',
+                      backgroundColor: '#0d253f',
+                      padding: '10px',
+                      borderRadius: '8px',
+                    }}
+                  />
                 </a>
               </p>
             )}

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import movieService from '../services/movies';
+import tmdbLogo from '../assets/tmdbLogo.svg';
 
 const styles = {
   movieContainer: {
@@ -254,7 +255,17 @@ const Movie = ({ movieSearched, createMovie }) => {
                           target="blank"
                           rel="noopener noreferrer"
                         >
-                          The Movie Database
+                          <img
+                            src={tmdbLogo}
+                            style={{
+                              width: '100%',
+                              maxWidth: '70px',
+                              height: 'auto',
+                              backgroundColor: '#0d253f',
+                              padding: '10px',
+                              borderRadius: '8px',
+                            }}
+                          />
                         </a>
                       </p>
                     </>
@@ -270,7 +281,17 @@ const Movie = ({ movieSearched, createMovie }) => {
                           target="blank"
                           rel="noopener noreferrer"
                         >
-                          The Movie Database
+                          <img
+                            src={tmdbLogo}
+                            style={{
+                              width: '100%',
+                              maxWidth: '70px',
+                              height: 'auto',
+                              backgroundColor: '#0d253f',
+                              padding: '10px',
+                              borderRadius: '8px',
+                            }}
+                          />
                         </a>
                       </p>
                     </>
@@ -422,7 +443,27 @@ const MovieSearch = ({ createMovie }) => {
 
   return (
     <>
-      <div style={{ width: '70%' }}>
+      <div
+        style={{
+          width: '90%',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          marginTop: '10px',
+        }}
+      >
+        <img
+          src={tmdbLogo}
+          style={{
+            width: '100%',
+            maxWidth: '70px',
+            height: 'auto',
+            backgroundColor: '#0d253f',
+            padding: '10px',
+            borderRadius: '8px',
+            marginBottom: '10px',
+          }}
+        />
         <input
           className="search-input"
           {...movieInput}
@@ -430,13 +471,13 @@ const MovieSearch = ({ createMovie }) => {
           placeholder="Search for a movie, tv show or person"
           onFocus={() => setShowResults(true)}
         />
-
-        {debouncedMovie && (
-          <button onClick={hideResults}>
-            {showResults ? 'Hide results' : 'Show results'}
-          </button>
-        )}
       </div>
+      {debouncedMovie && (
+        <button style={{ marginBottom: '10px' }} onClick={hideResults}>
+          {showResults ? 'Hide results' : 'Show results'}
+        </button>
+      )}
+
       <div style={{ width: '100%' }}>
         {showResults && (
           <Movie movieSearched={movie} createMovie={createMovie} />

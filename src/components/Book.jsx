@@ -14,12 +14,15 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { useSelector } from 'react-redux';
+import isbndbLogo from '../assets/isbndb.png';
+import openLibraryLogo from '../assets/openLibrarylogo.png';
 
 const Book = ({ onUpdateBook, createBook }) => {
   const { username, id } = useParams();
   const [bookData, setBookData] = useState('');
   const [rating, setRating] = useState(0);
   const [descriptionFetched, setDescriptionFetched] = useState(false);
+  const [description, setDescription] = useState([]);
   const [active, setActive] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -27,6 +30,56 @@ const Book = ({ onUpdateBook, createBook }) => {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user);
+
+  useEffect(() => {
+    const fetchBook = async () => {
+      try {
+        const book = await bookService.getBook(id);
+        const user = await userService.getUserBooks(username);
+
+        if (user[0].user_id === book.user_id) {
+          setBookData(book);
+          setActive(book.heart || false);
+        } else {
+          return null;
+        }
+        setRating(book.rating);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchBook();
+  }, [id, username]);
+
+  useEffect(() => {
+    const releaseInfo = async () => {
+      if (descriptionFetched) return;
+      try {
+        if (bookData) {
+          console.log('bookish data', bookData);
+          const data = await axios.get(
+            `https://openlibrary.org${bookData.url}.json`,
+            {
+              //   headers: {
+              //     Authorization: `Discogs token=${token}`,
+              //   },
+            }
+          );
+          const fetchedDescription = data?.data?.description || '';
+          setDescription(fetchedDescription);
+          setDescriptionFetched(true);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    releaseInfo();
+  }, [bookData, descriptionFetched]);
+
+  if (!bookData) return null;
+  if (!user) return null;
+
+  console.log('username', username);
 
   const handleHeartClick = async () => {
     try {
@@ -63,58 +116,6 @@ const Book = ({ onUpdateBook, createBook }) => {
     }
   };
 
-  useEffect(() => {
-    if (!user) return;
-    const fetchBook = async () => {
-      try {
-        const book = await bookService.getBook(id);
-        const user = await userService.getUserBooks(username);
-
-        if (user[0].user_id === book.user_id) {
-          setBookData(book);
-          setActive(book.heart || false);
-        } else {
-          return null;
-        }
-        setRating(book.rating);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchBook();
-  }, [id, user]);
-
-  const [description, setDescription] = useState([]);
-
-  console.log('book data', bookData);
-
-  if (bookData.source !== 'ISBNDB') {
-    useEffect(() => {
-      const releaseInfo = async () => {
-        if (descriptionFetched) return;
-        //   const token = import.meta.env.VITE_TOKEN;
-        try {
-          if (bookData) {
-            const data = await axios.get(
-              `https://openlibrary.org${bookData.url}.json`,
-              {
-                //   headers: {
-                //     Authorization: `Discogs token=${token}`,
-                //   },
-              }
-            );
-            const fetchedDescription = data.data.description || '';
-            setDescription(fetchedDescription);
-            setDescriptionFetched(true);
-          }
-        } catch (error) {
-          console.error(error);
-        }
-      };
-      releaseInfo();
-    }, [bookData, descriptionFetched]);
-  }
-
   const deleteBook = async (id) => {
     try {
       setOpen(true);
@@ -139,7 +140,6 @@ const Book = ({ onUpdateBook, createBook }) => {
 
   const createNew = async ({ bookData }) => {
     try {
-      console.log('bobokad', bookData);
       if (bookData.source !== 'ISBNDB') {
         const newBook = await createBook({
           type: 'book',
@@ -156,7 +156,6 @@ const Book = ({ onUpdateBook, createBook }) => {
 
         return newBook;
       } else {
-        console.log('adding bookData', bookData);
         const newBook = await createBook({
           type: 'bookData',
           source: 'ISBNDB',
@@ -185,9 +184,60 @@ const Book = ({ onUpdateBook, createBook }) => {
           back to <Link to={`/${username}`}>{username}</Link> Home page
         </div>
       </div>
-      <div className="container">
+      <div>
         <div style={styles.bookInfo}>
-          <h2>{bookData.whole_title}</h2>
+          <h2>{bookData?.whole_title}</h2>
+          {bookData?.source === 'openLibrary' ? (
+            <>
+              <p>
+                <a
+                  href={`https://openlibrary.org${bookData.key}`}
+                  target="blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src={openLibraryLogo}
+                    style={{
+                      width: '100%',
+                      maxWidth: '120px',
+                      height: 'auto',
+                      backgroundColor: 'white',
+                      padding: '8px',
+                      borderRadius: '8px',
+                    }}
+                  />
+                </a>
+              </p>
+              <img
+                src={`https://covers.openlibrary.org/b/id/${bookData.thumbnail}-L.jpg`}
+                style={styles.thumbnail}
+              />
+            </>
+          ) : (
+            <>
+              <p>
+                <a
+                  href={`https://isbndb.com/book/${bookData.url}`}
+                  target="blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src={isbndbLogo}
+                    style={{
+                      width: '100%',
+                      maxWidth: '150px',
+                      height: 'auto',
+                      backgroundColor: 'black',
+                      padding: '8px',
+                      borderRadius: '8px',
+                    }}
+                  />
+                </a>
+              </p>
+              <img src={bookData.thumbnail} style={styles.thumbnail} />
+            </>
+          )}
+
           <div>
             {username} added this on{' '}
             {new Date(bookData.createdAt).toLocaleDateString()}
@@ -219,7 +269,7 @@ const Book = ({ onUpdateBook, createBook }) => {
               {description && description}
             </p>
           )}
-          {bookData.user_id === (user?.id || 0) ? (
+          {bookData?.user_id === (user?.id || 0) ? (
             <div style={styles.sliderContainer}>
               <label htmlFor="rating-slider">Your Rating</label>
               <input
@@ -240,37 +290,6 @@ const Book = ({ onUpdateBook, createBook }) => {
           ) : null}
         </div>
         <div style={styles.thumbNailContainer}>
-          {bookData.source !== 'ISBNDB' ? (
-            <>
-              <p>
-                <a
-                  href={`https://openlibrary.org${bookData.key}`}
-                  target="blank"
-                  rel="noopener noreferrer"
-                >
-                  Open Library
-                </a>
-              </p>
-              <img
-                src={`https://covers.openlibrary.org/b/id/${bookData.thumbnail}-L.jpg`}
-                style={styles.thumbnail}
-              />
-            </>
-          ) : (
-            <>
-              <p>
-                <a
-                  href={`https://isbndb.com/book/${bookData.url}`}
-                  target="blank"
-                  rel="noopener noreferrer"
-                >
-                  ISBNDB
-                </a>
-              </p>
-              <img src={bookData.thumbnail} style={styles.thumbnail} />
-            </>
-          )}
-
           {bookData.rating ? (
             <div>
               {/* {bookData.user_id}'s rating */}

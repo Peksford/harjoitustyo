@@ -6,6 +6,8 @@ import bookService from '../services/books';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import BookAdvancedSearch from './BookAdvancedSearch';
+import isbndbLogo from '../assets/isbndb.png';
+import openLibraryLogo from '../assets/openLibrarylogo.png';
 
 const styles = {
   bookContainer: {
@@ -273,7 +275,17 @@ const Book = ({ bookSearched, createBook, type }) => {
                           target="blank"
                           rel="noopener noreferrer"
                         >
-                          Open Library
+                          <img
+                            src={openLibraryLogo}
+                            style={{
+                              width: '100%',
+                              maxWidth: '120px',
+                              height: 'auto',
+                              backgroundColor: 'white',
+                              padding: '8px',
+                              borderRadius: '8px',
+                            }}
+                          />
                         </a>
                       </p>
                     )}
@@ -308,7 +320,17 @@ const Book = ({ bookSearched, createBook, type }) => {
                           target="blank"
                           rel="noopener noreferrer"
                         >
-                          ISBNDB
+                          <img
+                            src={isbndbLogo}
+                            style={{
+                              width: '100%',
+                              maxWidth: '110px',
+                              height: 'auto',
+                              backgroundColor: 'black',
+                              padding: '8px',
+                              borderRadius: '8px',
+                            }}
+                          />
                         </a>
                       </p>
                     )}
@@ -492,7 +514,17 @@ const BookSearch = ({ createBook }) => {
               checked={type === 'ISBNDB'}
               onChange={handleTypeChange}
             />{' '}
-            ISBNDB
+            <img
+              src={isbndbLogo}
+              style={{
+                width: '100%',
+                maxWidth: '110px',
+                height: 'auto',
+                backgroundColor: 'black',
+                padding: '8px',
+                borderRadius: '8px',
+              }}
+            />
           </label>
           <label style={{ marginRight: '10px' }}>
             <input
@@ -502,7 +534,17 @@ const BookSearch = ({ createBook }) => {
               checked={type === 'openLibrary'}
               onChange={handleTypeChange}
             />{' '}
-            Open Libary
+            <img
+              src={openLibraryLogo}
+              style={{
+                width: '100%',
+                maxWidth: '120px',
+                height: 'auto',
+                backgroundColor: 'white',
+                padding: '8px',
+                borderRadius: '8px',
+              }}
+            />
           </label>
         </div>
         <input

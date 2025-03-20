@@ -13,6 +13,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { useSelector } from 'react-redux';
+import igdbLogo from '../assets/IGDB_logo.svg.png';
 
 const Game = ({ onUpdateGame }) => {
   const { username, id } = useParams();
@@ -111,7 +112,7 @@ const Game = ({ onUpdateGame }) => {
             back to <Link to={`/${username}`}>{username}</Link> home page
           </div>
         </div>
-        <div className="container">
+        <div className="">
           <div style={styles.gameInfo}>
             <h2>{gameData.whole_title}</h2>
             <div>
@@ -121,6 +122,16 @@ const Game = ({ onUpdateGame }) => {
             <p data-testid="heart" style={{ width: '4rem' }}>
               <Heart isActive={active || false} onClick={handleHeartClick} />
             </p>
+            <a href={gameData.url} target="blank" rel="noopener noreferrer">
+              <img
+                src={igdbLogo}
+                style={{ width: '100%', maxWidth: '100px', height: 'auto' }}
+              />
+            </a>
+            <img
+              src={gameData.thumbnail.replace(/t_thumb/, 't_cover_big')}
+              style={styles.thumbnail}
+            />
             {gameData.genres && <h3>Genres: {gameData.genres}</h3>}
             {gameData.release_date && (
               <h3>
@@ -140,7 +151,6 @@ const Game = ({ onUpdateGame }) => {
                 {gameData.summary}
               </p>
             )}
-
             {gameData.user_id === (user?.id || 0) ? (
               <div style={styles.sliderContainer}>
                 <label htmlFor="rating-slider">Your Rating</label>
@@ -162,15 +172,6 @@ const Game = ({ onUpdateGame }) => {
             ) : null}
           </div>
           <div style={styles.thumbNailContainer}>
-            <p>
-              <a href={gameData.url} target="blank" rel="noopener noreferrer">
-                IGDB
-              </a>
-            </p>
-            <img
-              src={gameData.thumbnail.replace(/t_thumb/, 't_cover_big')}
-              style={styles.thumbnail}
-            />
             {gameData.rating ? (
               <div>
                 <div style={styles.circle}>
@@ -218,7 +219,7 @@ const styles = {
   gameInfo: {
     display: 'flex',
     flexDirection: 'column',
-    marginRight: '100px',
+    marginRight: '10%',
   },
   thumbNailContainer: {
     display: 'flex',
@@ -226,8 +227,8 @@ const styles = {
     alignItems: 'center',
   },
   thumbnail: {
-    width: '250px',
-    height: '330px',
+    width: '180px',
+    height: '200px',
     objectFit: 'cover',
     marginBottom: '8px',
   },

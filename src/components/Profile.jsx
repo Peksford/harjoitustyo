@@ -9,6 +9,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PropTypes from 'prop-types';
 import discogsButton from '../assets/discogsButton.webp';
+import tmdbLogo from '../assets/tmdbLogo.svg';
 
 const styles = {
   // albumContainer: {
@@ -266,7 +267,17 @@ const Profile = ({ createObject }) => {
                                   target="blank"
                                   rel="noopener noreferrer"
                                 >
-                                  The Movie Database
+                                  <img
+                                    src={tmdbLogo}
+                                    style={{
+                                      width: '100%',
+                                      maxWidth: '80px',
+                                      height: 'auto',
+                                      backgroundColor: '#0d253f',
+                                      padding: '10px',
+                                      borderRadius: '8px',
+                                    }}
+                                  />
                                 </a>
                               </p>
                             ) : (
@@ -276,7 +287,17 @@ const Profile = ({ createObject }) => {
                                   target="blank"
                                   rel="noopener noreferrer"
                                 >
-                                  The Movie Database
+                                  <img
+                                    src={tmdbLogo}
+                                    style={{
+                                      width: '100%',
+                                      maxWidth: '80px',
+                                      height: 'auto',
+                                      backgroundColor: '#0d253f',
+                                      padding: '10px',
+                                      borderRadius: '8px',
+                                    }}
+                                  />
                                 </a>
                               </p>
                             )}
