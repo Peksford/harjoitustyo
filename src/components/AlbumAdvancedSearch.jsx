@@ -58,7 +58,7 @@ const AlbumAdvancedSearch = ({ onSearch }) => {
           onChange={handleChange}
           value={searchParams.ean ? 'release' : searchParams.type}
           disabled={!!searchParams.ean}
-          style={{ marginTop: '10px' }}
+          style={{ marginTop: '10px', position: 'relative' }}
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
         >
@@ -68,8 +68,7 @@ const AlbumAdvancedSearch = ({ onSearch }) => {
         {showTooltip && (
           <div
             style={{
-              bottom: '100%',
-              left: '0',
+              marginLeft: '25%',
               backgroundColor: '#333',
               color: '#fff',
               padding: '6px 10px',
@@ -77,9 +76,8 @@ const AlbumAdvancedSearch = ({ onSearch }) => {
               fontSize: '14px',
               whiteSpace: 'normal',
               wordWrap: 'break-word',
-              maxWidth: '200px',
+              // maxWidth: '200px',
               boxShadow: '0px 0px 5px rgba(0,0,0,0.2)',
-              zIndex: 10,
             }}
           >
             &quot;Main Album&quot; shows the entire collection of versions for
