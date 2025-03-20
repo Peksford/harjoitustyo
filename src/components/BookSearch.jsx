@@ -124,7 +124,7 @@ const useBook = (name, type) => {
         } else {
           const response = await axios.get(
             'https://im-only-rating.fly.dev/api/books/search-book',
-            // 'http://localhost:3001/api/books/search-book-isbndb',
+            // 'http://localhost:3001/api/books/search-book',
             {
               params: {
                 name: name,
@@ -432,7 +432,7 @@ const BookSearch = ({ createBook }) => {
         setBookSearched(response.data.docs);
       } else {
         const response = await axios.get(
-          'https://im-only-rating.fly.dev/api/books/search-book',
+          'https://im-only-rating.fly.dev/api/books/search-book-isbndb',
           // 'http://localhost:3001/api/books/search-book-isbndb',
           {
             params: {
