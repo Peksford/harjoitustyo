@@ -14,6 +14,8 @@ const BookAdvancedSearch = ({ onSearch, type }) => {
     language: '',
     isbn: '',
   });
+  const [showTooltip, setShowTooltip] = useState(false);
+
   const handleChange = (e) => {
     setSearchParams((prev) => ({
       ...prev,
@@ -33,28 +35,49 @@ const BookAdvancedSearch = ({ onSearch, type }) => {
             className="search-input"
             type="text"
             name="query"
-            placeholder="Query"
+            placeholder="Query (e.g. author, title, keyword)"
             value={searchParams.query}
             onChange={handleChange}
           />
           Search only in this category:{' '}
-          <select
-            name="column"
-            onChange={handleChange}
-            style={{ marginTop: '10px', width: '30%' }}
-            disabled={!searchParams.query}
-          >
-            <option value=" "></option>
-            <option value="title">Title</option>
-            <option value="author">Author</option>
-
-            {/* <option value="">Select a Genre</option> */}
-            {/* {sortedGenres.map((genre) => (
-            <option key={genre.id} value={genre.id}>
-              {genre.name}
-            </option>
-          ))} */}
-          </select>
+          <div>
+            <select
+              name="column"
+              onChange={handleChange}
+              style={{ marginTop: '10px', width: '55%' }}
+              disabled={!searchParams.query}
+              onMouseEnter={() => setShowTooltip(true)}
+              onMouseLeave={() => setShowTooltip(false)}
+            >
+              <option value="">Search in both categories</option>
+              <option value="title">Title</option>
+              <option value="author">Author</option>
+            </select>
+            {showTooltip && (
+              <div
+                style={{
+                  marginLeft: '55%',
+                  backgroundColor: '#333',
+                  color: '#fff',
+                  padding: '6px 10px',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  whiteSpace: 'normal',
+                  wordWrap: 'break-word',
+                  maxWidth: '250px',
+                  boxShadow: '0px 0px 5px rgba(0,0,0,0.2)',
+                }}
+              >
+                `` - Empty value search in both
+                <br />
+                <hr />
+                Title - Only searches books with title
+                <br />
+                <hr />
+                Author - Only searches books by the given Author
+              </div>
+            )}
+          </div>
           <input
             className="search-input"
             type="text"

@@ -273,7 +273,10 @@ const App = () => {
           </div>
         )}
         {user && (
-          <button style={{ marginLeft: '5px' }} onClick={handleLogout}>
+          <button
+            style={{ marginLeft: '5px', backgroundColor: 'black' }}
+            onClick={handleLogout}
+          >
             Logout
           </button>
         )}
