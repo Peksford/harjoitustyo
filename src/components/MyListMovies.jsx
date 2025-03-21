@@ -61,6 +61,9 @@ const MyListMovies = () => {
   const userMovies = useSelector((state) => state.movies);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [alphabetical, setAlphabetical] = useState(false);
+  const [searchWord, setSearchWord] = useState('');
+  const [sortedByYear, setSortedByYear] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -98,6 +101,26 @@ const MyListMovies = () => {
       })
     : null;
 
+  const sortedByYearMovies = userData
+    ? [...userData.movies].sort(
+        (a, b) => new Date(b.release_date) - new Date(a.release_date)
+      )
+    : null;
+
+  const alphabeticalMovies = userData
+    ? [...userData.movies].sort((a, b) =>
+        a.whole_title.localeCompare(b.whole_title)
+      )
+    : null;
+
+  const searchMovie = (searchWord) => {
+    if (!userData) return [];
+    const searchedMovie = userData.movies.filter((movie) =>
+      movie.whole_title.toLowerCase().includes(searchWord.toLowerCase())
+    );
+    return searchedMovie;
+  };
+
   const displayMovies = userData
     ? mutual
       ? mutualMovies
@@ -105,8 +128,16 @@ const MyListMovies = () => {
       ? highestMovies
       : startDate && endDate
       ? dateAdded
+      : alphabetical
+      ? alphabeticalMovies
+      : searchWord
+      ? searchMovie(searchWord)
+      : sortedByYear
+      ? sortedByYearMovies
       : userData.movies
     : null;
+
+  console.log('displayed', displayMovies);
 
   const handleDateChange = (date, field) => {
     if (field === 'start') {
@@ -114,6 +145,10 @@ const MyListMovies = () => {
     } else if (field === 'end') {
       setEndDate(date);
     }
+  };
+
+  const onChange = (event) => {
+    setSearchWord(event.target.value);
   };
 
   if (userData) {
@@ -156,6 +191,25 @@ const MyListMovies = () => {
             >
               Highest rating
             </Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => {
+                setHighest(false);
+                setMutual(false);
+                setAlphabetical(true);
+              }}
+            >
+              Alphabetically
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => {
+                setHighest(false);
+                setMutual(false);
+                setAlphabetical(false);
+                setSortedByYear(true);
+              }}
+            >
+              Newest releases
+            </Dropdown.Item>
           </DropdownButton>
           <div style={{ marginTop: '10px', marginBottom: '10px' }}>
             Sort by addition date:{' '}
@@ -173,6 +227,15 @@ const MyListMovies = () => {
               placeholderText="End Date"
               dateFormat="yyyy-MM-dd"
               isClearable
+            />
+          </div>
+          <div style={{ width: '50%' }}>
+            <input
+              className="search-input"
+              onChange={onChange}
+              value={searchWord}
+              data-testid="Search movie"
+              placeholder="Search"
             />
           </div>
         </div>

@@ -60,6 +60,9 @@ const MyListBooks = () => {
   const userBooks = useSelector((state) => state.books);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [alphabetical, setAlphabetical] = useState(false);
+  const [searchWord, setSearchWord] = useState('');
+  const [sortedByYear, setSortedByYear] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -97,6 +100,24 @@ const MyListBooks = () => {
       })
     : null;
 
+  const sortedByYearBooks = userData
+    ? [...userData.books].sort((a, b) => b.year - a.year)
+    : null;
+
+  const alphabeticalBooks = userData
+    ? [...userData.books].sort((a, b) =>
+        a.whole_title.localeCompare(b.whole_title)
+      )
+    : null;
+
+  const searchBook = (searchWord) => {
+    if (!userData) return [];
+    const searchedBook = userData.books.filter((book) =>
+      book.whole_title.toLowerCase().includes(searchWord.toLowerCase())
+    );
+    return searchedBook;
+  };
+
   const displayBooks = userData
     ? mutual
       ? mutualBooks
@@ -104,6 +125,12 @@ const MyListBooks = () => {
       ? highestBooks
       : startDate && endDate
       ? dateAdded
+      : alphabetical
+      ? alphabeticalBooks
+      : searchWord
+      ? searchBook(searchWord)
+      : sortedByYear
+      ? sortedByYearBooks
       : userData.books
     : null;
 
@@ -113,6 +140,9 @@ const MyListBooks = () => {
     } else if (field === 'end') {
       setEndDate(date);
     }
+  };
+  const onChange = (event) => {
+    setSearchWord(event.target.value);
   };
 
   console.log(displayBooks);
@@ -152,6 +182,25 @@ const MyListBooks = () => {
             >
               Highest rating
             </Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => {
+                setHighest(false);
+                setMutual(false);
+                setAlphabetical(true);
+              }}
+            >
+              Alphabetically
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => {
+                setHighest(false);
+                setMutual(false);
+                setAlphabetical(false);
+                setSortedByYear(true);
+              }}
+            >
+              Newest releases
+            </Dropdown.Item>
           </DropdownButton>
           <div style={{ marginTop: '10px', marginBottom: '10px' }}>
             Sort by addition date:{' '}
@@ -169,6 +218,15 @@ const MyListBooks = () => {
               placeholderText="End Date"
               dateFormat="yyyy-MM-dd"
               isClearable
+            />
+          </div>
+          <div style={{ width: '50%' }}>
+            <input
+              className="search-input"
+              onChange={onChange}
+              value={searchWord}
+              data-testid="Search book"
+              placeholder="Search"
             />
           </div>
         </div>

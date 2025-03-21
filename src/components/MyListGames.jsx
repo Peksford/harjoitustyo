@@ -57,6 +57,9 @@ const MyListGames = () => {
   const userGames = useSelector((state) => state.games);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [alphabetical, setAlphabetical] = useState(false);
+  const [searchWord, setSearchWord] = useState('');
+  const [sortedByYear, setSortedByYear] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -94,6 +97,24 @@ const MyListGames = () => {
       })
     : null;
 
+  const sortedByYearGames = userData
+    ? [...userData.games].sort((a, b) => b.release_date - a.release_date)
+    : null;
+
+  const alphabeticalGames = userData
+    ? [...userData.games].sort((a, b) =>
+        a.whole_title.localeCompare(b.whole_title)
+      )
+    : null;
+
+  const searchGame = (searchWord) => {
+    if (!userData) return [];
+    const searchedGame = userData.games.filter((game) =>
+      game.whole_title.toLowerCase().includes(searchWord.toLowerCase())
+    );
+    return searchedGame;
+  };
+
   const displayGames = userData
     ? mutual
       ? mutualGames
@@ -101,6 +122,12 @@ const MyListGames = () => {
       ? highestGames
       : startDate && endDate
       ? dateAdded
+      : alphabetical
+      ? alphabeticalGames
+      : searchWord
+      ? searchGame(searchWord)
+      : sortedByYear
+      ? sortedByYearGames
       : userData.games
     : null;
 
@@ -110,6 +137,10 @@ const MyListGames = () => {
     } else if (field === 'end') {
       setEndDate(date);
     }
+  };
+
+  const onChange = (event) => {
+    setSearchWord(event.target.value);
   };
 
   if (userData) {
@@ -148,6 +179,25 @@ const MyListGames = () => {
             >
               Highest rating
             </Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => {
+                setHighest(false);
+                setMutual(false);
+                setAlphabetical(true);
+              }}
+            >
+              Alphabetically
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => {
+                setHighest(false);
+                setMutual(false);
+                setAlphabetical(false);
+                setSortedByYear(true);
+              }}
+            >
+              Newest releases
+            </Dropdown.Item>
           </DropdownButton>
           <img
             src={igdbLogo}
@@ -174,6 +224,15 @@ const MyListGames = () => {
               placeholderText="End Date"
               dateFormat="yyyy-MM-dd"
               isClearable
+            />
+          </div>
+          <div style={{ width: '50%' }}>
+            <input
+              className="search-input"
+              onChange={onChange}
+              value={searchWord}
+              data-testid="Search game"
+              placeholder="Search"
             />
           </div>
         </div>

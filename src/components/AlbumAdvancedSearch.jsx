@@ -33,7 +33,7 @@ const AlbumAdvancedSearch = ({ onSearch }) => {
 
   const handleDateChange = (date, field) => {
     if (field === 'start') {
-      const year = date ? date.getFullYear() : null;
+      const year = date ? date.getFullYear() : '';
       setStartDate(date);
 
       setSearchParams((prev) => ({
@@ -41,7 +41,7 @@ const AlbumAdvancedSearch = ({ onSearch }) => {
         startYear: year,
       }));
     } else if (field === 'end') {
-      const year = date ? date.getFullYear() : null;
+      const year = date ? date.getFullYear() : '';
       setEndDate(date);
       setSearchParams((prev) => ({
         ...prev,

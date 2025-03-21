@@ -62,6 +62,9 @@ const MyList = () => {
   const userAlbums = useSelector((state) => state.albums);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [alphabetical, setAlphabetical] = useState(false);
+  const [searchWord, setSearchWord] = useState('');
+  const [sortedByYear, setSortedByYear] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -88,6 +91,10 @@ const MyList = () => {
     ? [...userData.albums].sort((a, b) => b.rating - a.rating)
     : null;
 
+  const sortedByYearAlbums = userData
+    ? [...userData.albums].sort((a, b) => b.year - a.year)
+    : null;
+
   const dateAdded = userData
     ? userData.albums.filter((album) => {
         const endOfDay = new Date(endDate);
@@ -99,6 +106,20 @@ const MyList = () => {
       })
     : null;
 
+  const alphabeticalAlbums = userData
+    ? [...userData.albums].sort((a, b) =>
+        a.whole_title.localeCompare(b.whole_title)
+      )
+    : null;
+
+  const searchAlbum = (searchWord) => {
+    if (!userData) return [];
+    const searchedAlbum = userData.albums.filter((album) =>
+      album.whole_title.toLowerCase().includes(searchWord.toLowerCase())
+    );
+    return searchedAlbum;
+  };
+
   const displayAlbums = userData
     ? mutual
       ? mutualAlbums
@@ -106,8 +127,16 @@ const MyList = () => {
       ? highestAlbums
       : startDate && endDate
       ? dateAdded
+      : alphabetical
+      ? alphabeticalAlbums
+      : searchWord
+      ? searchAlbum(searchWord)
+      : sortedByYear
+      ? sortedByYearAlbums
       : userData.albums
     : null;
+
+  // console.log('Aakkosjärjestys', displayAlbums);
 
   const handleDateChange = (date, field) => {
     if (field === 'start') {
@@ -115,6 +144,10 @@ const MyList = () => {
     } else if (field === 'end') {
       setEndDate(date);
     }
+  };
+
+  const onChange = (event) => {
+    setSearchWord(event.target.value);
   };
 
   if (userData) {
@@ -130,6 +163,8 @@ const MyList = () => {
                 ? 'Mutual albums'
                 : highest
                 ? 'Highest rating'
+                : alphabetical
+                ? 'Alphabetically'
                 : 'All albums'
             }
           >
@@ -137,6 +172,7 @@ const MyList = () => {
               onClick={() => {
                 setMutual(false);
                 setHighest(false);
+                setAlphabetical(false);
               }}
             >
               All albums
@@ -145,6 +181,7 @@ const MyList = () => {
               onClick={() => {
                 setMutual(true);
                 setHighest(false);
+                setAlphabetical(false);
               }}
             >
               Mutual albums
@@ -153,9 +190,29 @@ const MyList = () => {
               onClick={() => {
                 setHighest(true);
                 setMutual(false);
+                setAlphabetical(false);
               }}
             >
               Highest rating
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => {
+                setHighest(false);
+                setMutual(false);
+                setAlphabetical(true);
+              }}
+            >
+              Alphabetically
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => {
+                setHighest(false);
+                setMutual(false);
+                setAlphabetical(false);
+                setSortedByYear(true);
+              }}
+            >
+              Newest releases
             </Dropdown.Item>
           </DropdownButton>
           <div style={{ marginTop: '10px', marginBottom: '10px' }}>
@@ -176,6 +233,15 @@ const MyList = () => {
               isClearable
             />
           </div>
+          <div style={{ width: '50%' }}>
+            <input
+              className="search-input"
+              onChange={onChange}
+              value={searchWord}
+              data-testid="Search album"
+              placeholder="Search"
+            />
+          </div>
         </div>
 
         <div className="album-container">
@@ -188,6 +254,11 @@ const MyList = () => {
                 <img src={album.thumbnail} style={styles.thumbnail} />
               </Link>
               <div style={styles.title}>{album.whole_title}</div>
+              {album.year && (
+                <div>
+                  <i>{album.year}</i>
+                </div>
+              )}
               {album.rating ? (
                 <div style={styles.circle}>
                   <span style={styles.circleText}>{album.rating}</span>
