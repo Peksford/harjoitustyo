@@ -20,7 +20,7 @@ const styles = {
     textAlign: 'center',
     margin: '5px',
     width: '150px',
-    marginBottom: '50px',
+    marginBottom: '65px',
     paddingBottom: '1px',
   },
   thumbnail: {
@@ -82,7 +82,7 @@ const MyList = () => {
     userData && userAlbums
       ? userData.albums.filter((album1) => {
           return userAlbums.some(
-            (album2) => album2.whole_title === album1.whole_title
+            (album2) => album2.discogs_id === album1.discogs_id
           );
         })
       : null;
@@ -119,6 +119,8 @@ const MyList = () => {
     );
     return searchedAlbum;
   };
+
+  console.log('mutual', mutualAlbums);
 
   const displayAlbums = userData
     ? mutual
