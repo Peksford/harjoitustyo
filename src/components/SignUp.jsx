@@ -63,7 +63,13 @@ const SignUp = () => {
 
   return (
     <div className="login-container">
-      <h2>Sign Up to Let it Rate</h2>
+      <div style={{ textAlign: 'center', marginTop: '10%' }}>
+        <h1>Welcome to Let it Rate!</h1>
+        Keep track of your favorite books, movies, music, and games—all in one
+        place. Easily browse your ratings, discover new favorites, and compare
+        with friends. Sign up now and start building your collection!
+      </div>
+      <h2>Sign Up</h2>
       <ErrorMessage message={errorMessage} />
       <Form onSubmit={handleSignUp}>
         <Form.Group>

@@ -68,7 +68,7 @@ const LoginForm = () => {
 
   return (
     <div className="login-container">
-      <h2>Log in to page</h2>
+      <h2>Log in </h2>
       <ErrorMessage message={errorMessage} />
       <Form onSubmit={handleLogin}>
         <Form.Group>
