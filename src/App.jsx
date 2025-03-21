@@ -44,12 +44,18 @@ const styles = {
   },
   container: {
     display: 'flex',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     width: '100%',
-    padding: '10px',
+    padding: '5px',
 
     // top: 0,
     // right: 0,
+  },
+  rightSection: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '15px',
   },
 };
 
@@ -233,61 +239,56 @@ const App = () => {
       <Notification />
       <ErrorMessage message={errorMessage} />
       <div style={styles.container}>
-        {user ? (
-          <Link style={styles.padding} to={`/${user.username}`}>
-            My profile
-          </Link>
-        ) : (
+        <Link to={`/`} style={{ textDecoration: 'none' }}>
+          <img
+            src={Logo}
+            alt="Logo"
+            style={{ width: '100%', maxWidth: '160px', height: 'auto' }}
+          />
+        </Link>
+        {!user && (
           <Link style={styles.padding} to="/signup">
             Sign up
           </Link>
         )}
-        <Link style={styles.padding} to="/search">
-          Search
-        </Link>
-        {!user && (
-          <Link style={styles.padding} to="/login">
-            login
+        <div style={styles.rightSection}>
+          <Link style={styles.padding} to="/search">
+            Search
           </Link>
-        )}
-        {user && (
-          <div>
-            <DropdownButton
-              id="dropdown-secondary-button"
-              // data-testid="dropdown-list"
-              title={user.username}
-            >
-              <Dropdown.Item as={Link} to={`/${user.username}/albums`}>
-                My albums
-              </Dropdown.Item>
-              <Dropdown.Item as={Link} to={`/${user.username}/movies`}>
-                My movies
-              </Dropdown.Item>
-              <Dropdown.Item as={Link} to={`/${user.username}/books`}>
-                My books
-              </Dropdown.Item>
-              <Dropdown.Item as={Link} to={`/${user.username}/games`}>
-                My games
-              </Dropdown.Item>
-            </DropdownButton>
-          </div>
-        )}
-        {user && (
-          <button
-            style={{ marginLeft: '5px', backgroundColor: 'rgb(209, 129, 11)' }}
-            onClick={handleLogout}
-          >
-            Logout
-          </button>
-        )}
+          {!user && (
+            <Link style={styles.padding} to="/login">
+              login
+            </Link>
+          )}
+          {user && (
+            <div>
+              <DropdownButton
+                id="dropdown-secondary-button"
+                // data-testid="dropdown-list"
+                title={user.username}
+              >
+                <Dropdown.Item as={Link} to={`/${user.username}`}>
+                  My profile
+                </Dropdown.Item>
+                <Dropdown.Item as={Link} to={`/${user.username}/albums`}>
+                  My albums
+                </Dropdown.Item>
+                <Dropdown.Item as={Link} to={`/${user.username}/movies`}>
+                  My movies
+                </Dropdown.Item>
+                <Dropdown.Item as={Link} to={`/${user.username}/books`}>
+                  My books
+                </Dropdown.Item>
+                <Dropdown.Item as={Link} to={`/${user.username}/games`}>
+                  My games
+                </Dropdown.Item>
+                <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+              </DropdownButton>
+            </div>
+          )}
+        </div>
       </div>
-      <Link to={`/`} style={{ textDecoration: 'none' }}>
-        <img
-          src={Logo}
-          alt="Logo"
-          style={{ width: '100%', maxWidth: '200px', height: 'auto' }}
-        />
-      </Link>
+
       <Routes>
         {
           // user === null ? (
