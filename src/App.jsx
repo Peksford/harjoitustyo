@@ -274,7 +274,7 @@ const App = () => {
         )}
         {user && (
           <button
-            style={{ marginLeft: '5px', backgroundColor: 'black' }}
+            style={{ marginLeft: '5px', backgroundColor: 'rgb(209, 129, 11)' }}
             onClick={handleLogout}
           >
             Logout

@@ -120,8 +120,6 @@ const MyList = () => {
     return searchedAlbum;
   };
 
-  console.log('mutual', mutualAlbums);
-
   const displayAlbums = userData
     ? mutual
       ? mutualAlbums
@@ -204,7 +202,7 @@ const MyList = () => {
                 setAlphabetical(true);
               }}
             >
-              Alphabetically
+              (A-Ö)
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {
@@ -235,7 +233,7 @@ const MyList = () => {
               isClearable
             />
           </div>
-          <div style={{ width: '50%' }}>
+          <div style={{ width: '50%', marginBottom: '10px' }}>
             <input
               className="search-input"
               onChange={onChange}
