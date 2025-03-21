@@ -294,16 +294,17 @@ const App = () => {
           // user === null ? (
           //   <Route path="*" element={<p>Loading...</p>} />
           // ) :
-          user ? (
+          user && (
             <>
               <Route
                 path="/"
                 element={<Profile createObject={createObject} />}
               />
             </>
-          ) : (
-            <Route path="*" element={<Navigate to="/login" replace />} />
           )
+          // ) : (
+          //   <Route path="*" element={<Navigate to="/login" replace />} />
+          // )
         }
         <Route
           path="/search"
