@@ -112,9 +112,17 @@ const useGame = (name) => {
 
     const searchGame = async () => {
       try {
+        const baseURL =
+          import.meta.env.MODE === 'development'
+            ? 'http://localhost:3001'
+            : 'https://im-only-rating.fly.dev';
+
         const response = await axios.get(
           // 'https://im-only-rating.fly.dev/api/games/search-game',
-          'http://localhost:3001/api/games/search-game',
+          // 'http://localhost:3001/api/games/search-game',
+          `${baseURL}/api/games/search-game`,
+          // 'http://localhost:3001/api/books/search-book-isbndb',
+
           {
             params: {
               name: name,
