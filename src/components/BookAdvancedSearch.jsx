@@ -35,7 +35,7 @@ const BookAdvancedSearch = ({ onSearch, type }) => {
             className="search-input"
             type="text"
             name="query"
-            placeholder="Query (e.g. author, title, keyword)"
+            placeholder="Query (e.g. author, title, keyword, isbn)"
             value={searchParams.query}
             onChange={handleChange}
           />

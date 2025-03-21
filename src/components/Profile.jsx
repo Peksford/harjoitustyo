@@ -10,6 +10,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import PropTypes from 'prop-types';
 import discogsButton from '../assets/discogsButton.webp';
 import tmdbLogo from '../assets/tmdbLogo.svg';
+import openLibraryLogo from '../assets/openLibrarylogo.png';
+import isbndbLogo from '../assets/isbndb.png';
+import igdbLogo from '../assets/IGDB_logo.svg.png';
 
 const styles = {
   // albumContainer: {
@@ -349,7 +352,14 @@ const Profile = ({ createObject }) => {
                                   target="blank"
                                   rel="noopener noreferrer"
                                 >
-                                  IGDB
+                                  <img
+                                    src={igdbLogo}
+                                    style={{
+                                      width: '100%',
+                                      maxWidth: '100px',
+                                      height: 'auto',
+                                    }}
+                                  />
                                 </a>
                               </p>
                             )}
@@ -371,9 +381,14 @@ const Profile = ({ createObject }) => {
                             }}
                           >
                             <Link to={`${item.username}/books/${book.id}`}>
-                              {book.thumbnail && (
+                              {book.source === 'openLibrary' ? (
                                 <img
                                   src={`https://covers.openlibrary.org/b/id/${book.thumbnail}-L.jpg`}
+                                  style={styles.bookThumbnail}
+                                />
+                              ) : (
+                                <img
+                                  src={book.thumbnail}
                                   style={styles.bookThumbnail}
                                 />
                               )}
@@ -391,14 +406,44 @@ const Profile = ({ createObject }) => {
                             style={{ display: 'flex', flexDirection: 'column' }}
                           >
                             <span>{book.whole_title}</span>
-                            {book.key && (
+                            {book.source === 'openLibrary' ? (
                               <p>
                                 <a
                                   href={`https://openlibrary.org${book.key}`}
                                   target="blank"
                                   rel="noopener noreferrer"
                                 >
-                                  Open Library
+                                  <img
+                                    src={openLibraryLogo}
+                                    style={{
+                                      width: '100%',
+                                      maxWidth: '120px',
+                                      height: 'auto',
+                                      backgroundColor: 'white',
+                                      padding: '8px',
+                                      borderRadius: '8px',
+                                    }}
+                                  />
+                                </a>
+                              </p>
+                            ) : (
+                              <p>
+                                <a
+                                  href={`https://isbndb.com/book/${book.isbn13}`}
+                                  target="blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <img
+                                    src={isbndbLogo}
+                                    style={{
+                                      width: '100%',
+                                      maxWidth: '110px',
+                                      height: 'auto',
+                                      backgroundColor: 'black',
+                                      padding: '8px',
+                                      borderRadius: '8px',
+                                    }}
+                                  />
                                 </a>
                               </p>
                             )}
