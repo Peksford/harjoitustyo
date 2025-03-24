@@ -230,13 +230,17 @@ const Book = ({ bookSearched, createBook, type }) => {
   return (
     <div>
       {bookSearched.map((book) => {
+        console.log('bookiou', book);
         const alreadyAdded =
           addedBooks.length > 0 &&
           addedBooks.some(
             (added) =>
-              (added.title === book.title &&
-                added.year === Number(book.first_publish_year)) ||
-              Number(book.date_published.split('-')[0])
+              added.title === book.title &&
+              (added.year === Number(book.first_publish_year) ||
+                (book.date_published &&
+                  added.year === Number(book.date_published.split('-')[0])))
+            //   Number(book.first_publish_year)) ||
+            // (book.date_published && Number(book.date_published.split('-')[0]))
           );
         const book_rating = addedBooks.find(
           (added) => added.title === book.title
@@ -436,8 +440,6 @@ const BookSearch = ({ createBook }) => {
 
   const hideResults = () => setShowResults(!showResults);
   const hideSearch = () => setShowAdvancedSearch(!showAdvancedSearch);
-
-  console.log('Bookiou', book);
 
   const handleAdvancedSearch = async (searchParams) => {
     try {

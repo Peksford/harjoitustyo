@@ -395,7 +395,7 @@ const AlbumSearch = ({ createAlbum }) => {
       >
         <img
           src={discogsLogo}
-          style={{ width: '100%', maxWidth: '100px', height: 'auto' }}
+          style={{ width: '100%', maxWidth: '70px', height: 'auto' }}
         />
 
         <input
