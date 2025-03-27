@@ -35,8 +35,8 @@ const styles = {
     padding: '10px',
   },
   thumbnailBook: {
-    width: '170px',
-    height: '230px',
+    width: '150px',
+    height: '200px',
     objectFit: 'cover',
     padding: '10px',
   },
@@ -99,6 +99,11 @@ const Home = () => {
 
   if (!username) return null;
 
+  const getWeekNumber = (date = new Date()) => {
+    const oneJan = new Date(date.getFullYear(), 0, 1);
+    const numberOfDays = Math.floor((date - oneJan) / (24 * 60 * 60 * 1000));
+    return Math.ceil((numberOfDays + oneJan.getDay() + 1) / 7);
+  };
   // const currentMonth = () => {
   //   const currentDate = new Date();
   //   console.log('Current date', currentDate);
@@ -156,6 +161,148 @@ const Home = () => {
     return (
       <>
         <UserMenu />
+        {user?.username === username ? (
+          <h1 style={{ textAlign: 'center' }}>
+            Your top picks of the week {getWeekNumber()}
+          </h1>
+        ) : (
+          <h1 style={{ textAlign: 'center' }}>
+            {username}&apos;s top picks of the week {getWeekNumber()}
+          </h1>
+        )}
+
+        <div>
+          {heartAlbum || heartMovie || heartBook || heartGame ? (
+            <div>
+              <div className="home-container">
+                {heartAlbum ? (
+                  <div style={styles.item}>
+                    <div style={{ textAlign: 'center' }}>
+                      <p>
+                        <Link to={`/${username}/albums/${heartAlbum.id}`}>
+                          <img
+                            src={heartAlbum.thumbnail}
+                            style={{ width: '170px' }}
+                          />
+                        </Link>
+                      </p>
+                      <div>{heartAlbum.whole_title}</div>
+                      {heartAlbum.rating ? (
+                        <p style={styles.circle}>
+                          <span style={styles.circleText}>
+                            {heartAlbum.rating}
+                          </span>
+                        </p>
+                      ) : (
+                        <div>{null}</div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div>{null}</div>
+                )}
+                {heartMovie ? (
+                  <div style={styles.item}>
+                    <div style={{ textAlign: 'center' }}>
+                      <p>
+                        <Link to={`/${username}/movies/${heartMovie.id}`}>
+                          <img
+                            src={`https://www.themoviedb.org/t/p/w1280/${heartMovie.thumbnail}`}
+                            style={{ width: '150px' }}
+                          />
+                        </Link>
+                      </p>
+                      <div>{heartMovie.whole_title}</div>
+                      {heartMovie.rating ? (
+                        <p style={styles.circle}>
+                          <span style={styles.circleText}>
+                            {heartMovie.rating}
+                          </span>
+                        </p>
+                      ) : (
+                        <div>{null}</div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div>{null}</div>
+                )}
+                {heartBook ? (
+                  <div style={styles.item}>
+                    <div style={{ textAlign: 'center' }}>
+                      <p>
+                        <Link to={`/${username}/books/${heartBook.id}`}>
+                          <img
+                            src={`https://covers.openlibrary.org/b/id/${heartBook.thumbnail}-L.jpg`}
+                            style={{ width: '110px' }}
+                          />
+                        </Link>
+                      </p>
+                      <div>{heartBook.whole_title}</div>
+                      {heartBook.rating ? (
+                        <p style={styles.circle}>
+                          <span style={styles.circleText}>
+                            {heartBook.rating}
+                          </span>
+                        </p>
+                      ) : (
+                        <div>{null}</div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div>{null}</div>
+                )}
+                {heartGame ? (
+                  <div style={styles.item}>
+                    <div style={{ textAlign: 'center' }}>
+                      <p>
+                        <Link to={`/${username}/games/${heartGame.id}`}>
+                          <img
+                            src={heartGame.thumbnail.replace(
+                              /t_thumb/,
+                              't_cover_big'
+                            )}
+                            style={{ width: '150px' }}
+                          />
+                        </Link>
+                      </p>
+                      <div>{heartGame.title}</div>
+                      {heartGame.rating ? (
+                        <p style={styles.circle}>
+                          <span style={styles.circleText}>
+                            {heartGame.rating}
+                          </span>
+                        </p>
+                      ) : (
+                        <div>{null}</div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div>{null}</div>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div>{username} has no top picks </div>
+          )}
+          <hr />
+          {/* {user.username} has reviewed{' '}
+          <ul>
+            <li>
+              {albums.length > 1 ? (
+                <div>{albums.length} albums</div>
+              ) : (
+                <div>{albums.length} album</div>
+              )}
+            </li>
+            <li>
+              with average rating of{' '}
+              {albums.reduce((a, b) => a + b.rating, 0) / albums.length}
+            </li>
+          </ul> */}
+        </div>
 
         {user?.username === username ? (
           <h1 style={{ textAlign: 'center' }}>Your latest albums</h1>
@@ -171,7 +318,7 @@ const Home = () => {
               >
                 <img src={album.thumbnail} style={styles.thumbnailAlbum} />
               </Link>
-              <div style={styles.title}>{album.title}</div>
+              <div style={styles.title}>{album.whole_title}</div>
               {album.rating ? (
                 <div style={styles.circle}>
                   <span style={styles.circleText}>{album.rating}</span>
@@ -217,7 +364,7 @@ const Home = () => {
                   />
                 )}
               </Link>
-              <div style={styles.title}>{book.title}</div>
+              <div style={styles.title}>{book.whole_title}</div>
               {book.rating ? (
                 <div style={styles.circle}>
                   <span style={styles.circleText}>{book.rating}</span>
@@ -325,139 +472,6 @@ const Home = () => {
           Show all
         </Link>
         <hr />
-
-        <h2>Recommendations</h2>
-        <div>
-          {heartAlbum || heartMovie || heartBook || heartGame ? (
-            <div>
-              <div className="home-container">
-                {heartAlbum ? (
-                  <div style={styles.item}>
-                    <div style={{ textAlign: 'center' }}>
-                      <p>
-                        <Link to={`/${username}/albums/${heartAlbum.id}`}>
-                          <img
-                            src={heartAlbum.thumbnail}
-                            style={{ width: '170px' }}
-                          />
-                        </Link>
-                      </p>
-                      <div>{heartAlbum.title}</div>
-                      {heartAlbum.rating ? (
-                        <p style={styles.circle}>
-                          <span style={styles.circleText}>
-                            {heartAlbum.rating}
-                          </span>
-                        </p>
-                      ) : (
-                        <div>{null}</div>
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <div>{null}</div>
-                )}
-                {heartMovie ? (
-                  <div style={styles.item}>
-                    <div style={{ textAlign: 'center' }}>
-                      <p>
-                        <Link to={`/${username}/movies/${heartMovie.id}`}>
-                          <img
-                            src={`https://www.themoviedb.org/t/p/w1280/${heartMovie.thumbnail}`}
-                            style={{ width: '150px' }}
-                          />
-                        </Link>
-                      </p>
-                      <div>{heartMovie.whole_title}</div>
-                      {heartMovie.rating ? (
-                        <p style={styles.circle}>
-                          <span style={styles.circleText}>
-                            {heartMovie.rating}
-                          </span>
-                        </p>
-                      ) : (
-                        <div>{null}</div>
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <div>{null}</div>
-                )}
-                {heartBook ? (
-                  <div style={styles.item}>
-                    <div style={{ textAlign: 'center' }}>
-                      <p>
-                        <Link to={`/${username}/books/${heartBook.id}`}>
-                          <img
-                            src={`https://covers.openlibrary.org/b/id/${heartBook.thumbnail}-L.jpg`}
-                            style={{ width: '140px' }}
-                          />
-                        </Link>
-                      </p>
-                      <div>{heartBook.title}</div>
-                      {heartBook.rating ? (
-                        <p style={styles.circle}>
-                          <span style={styles.circleText}>
-                            {heartBook.rating}
-                          </span>
-                        </p>
-                      ) : (
-                        <div>{null}</div>
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <div>{null}</div>
-                )}
-                {heartGame ? (
-                  <div style={styles.item}>
-                    <div style={{ textAlign: 'center' }}>
-                      <p>
-                        <Link to={`/${username}/games/${heartGame.id}`}>
-                          <img
-                            src={heartGame.thumbnail.replace(
-                              /t_thumb/,
-                              't_cover_big'
-                            )}
-                            style={{ width: '150px' }}
-                          />
-                        </Link>
-                      </p>
-                      <div>{heartGame.title}</div>
-                      {heartGame.rating ? (
-                        <p style={styles.circle}>
-                          <span style={styles.circleText}>
-                            {heartGame.rating}
-                          </span>
-                        </p>
-                      ) : (
-                        <div>{null}</div>
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <div>{null}</div>
-                )}
-              </div>
-            </div>
-          ) : (
-            <div>{username} has not reviewed anything yet!</div>
-          )}
-          {/* {user.username} has reviewed{' '}
-          <ul>
-            <li>
-              {albums.length > 1 ? (
-                <div>{albums.length} albums</div>
-              ) : (
-                <div>{albums.length} album</div>
-              )}
-            </li>
-            <li>
-              with average rating of{' '}
-              {albums.reduce((a, b) => a + b.rating, 0) / albums.length}
-            </li>
-          </ul> */}
-        </div>
       </>
     );
   } else {

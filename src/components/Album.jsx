@@ -170,8 +170,39 @@ const Album = ({ onUpdateAlbum, createAlbum }) => {
               {username} added this on{' '}
               {new Date(albumData.createdAt).toLocaleDateString()}
             </div>
-            <p data-testid="heart" style={{ width: '4rem' }}>
-              <Heart isActive={active || false} onClick={handleHeartClick} />
+
+            <p
+              data-testid="heart"
+              style={{
+                width: '7rem',
+                position: 'relative',
+                display: 'inline-block',
+              }}
+            >
+              <Heart
+                isActive={active || false}
+                onClick={handleHeartClick}
+                style={{
+                  fontSize: '3rem',
+                  display: 'block',
+                  textAlign: 'cenSorrter',
+                }}
+              />
+              <span
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  color: 'white',
+                  fontSize: '0.8rem',
+                  textAlign: 'center',
+                  fontWeight: 'bold',
+                  padding: '0 5px',
+                }}
+              >
+                {active ? 'Pick of the week' : ''}
+              </span>
             </p>
             <h3>{albumData.year}</h3>
             <ol>

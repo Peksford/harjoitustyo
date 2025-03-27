@@ -129,8 +129,7 @@ const App = () => {
     return () => clearTimeout(timer);
   }, [location.pathname]);
 
-  console.log('page loaded', pageLoaded);
-  console.log('current location', location.pathname);
+  console.log('stuff', userAlbums);
 
   const albumRatingUpdate = (updatedAlbum) => {
     setAlbums((preAlbums) =>

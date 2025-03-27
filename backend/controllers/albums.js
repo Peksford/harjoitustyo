@@ -66,13 +66,25 @@ router.put('/heart/:id', tokenExtractor, async (req, res) => {
     const album = await Album.findByPk(req.params.id);
     const user = await User.findByPk(req.decodedToken.id);
 
+    const getWeekNumber = (date = new Date()) => {
+      const oneJan = new Date(date.getFullYear(), 0, 1);
+      const numberOfDays = Math.floor((date - oneJan) / (24 * 60 * 60 * 1000));
+      return Math.ceil((numberOfDays + oneJan.getDay() + 1) / 7);
+    };
+
     if (album.user_id !== req.decodedToken.id) {
       return res
         .status(404)
         .json({ error: 'Not authorized to change the heart.' });
     }
     await Album.update({ heart: false }, { where: { user_id: user.id } });
-    await Album.update({ heart: true }, { where: { id: album.id } });
+    await Album.update(
+      {
+        heart: true,
+        pick_of_the_week: [new Date().getFullYear(), getWeekNumber()],
+      },
+      { where: { id: album.id } }
+    );
 
     const updatedAlbum = await Album.findByPk(req.params.id);
 

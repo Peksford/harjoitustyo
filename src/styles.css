@@ -115,7 +115,7 @@ button {
   }
   .radio-group {
     margin-top: 20px;
-    accent-color: #6a659c;
+    accent-color: rgb(209, 129, 11);
   }
 
   .search-input {
@@ -142,6 +142,11 @@ button {
   }
 
   .dropdown-item {
+    color: #ffffff !important
+  }
+
+  .dropdown-item:hover {
+    background-color: rgb(209, 129, 11) !important;
     color: #ffffff !important
   }
 
@@ -256,6 +261,6 @@ button {
 
   .dropdown-toggle {
     background-color: rgb(209, 129, 11) !important; 
-    color: rgb(0, 0, 0) !important; /* Change text color */
+    color: rgb(0, 0, 0) !important; 
     border-color: rgb(209, 129, 11) !important;
 }

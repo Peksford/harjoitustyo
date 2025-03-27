@@ -162,7 +162,7 @@ const MyList = () => {
                 : highest
                 ? 'Highest rating'
                 : alphabetical
-                ? 'Alphabetically'
+                ? 'A-Ö'
                 : 'All albums'
             }
           >
@@ -200,7 +200,7 @@ const MyList = () => {
                 setAlphabetical(true);
               }}
             >
-              (A-Ö)
+              A-Ö
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {

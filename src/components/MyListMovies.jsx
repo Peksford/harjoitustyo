@@ -162,6 +162,8 @@ const MyListMovies = () => {
                 ? 'Mutual movies'
                 : highest
                 ? 'Highest rating'
+                : alphabetical
+                ? 'A-Ö'
                 : 'All movies'
             }
           >
@@ -196,7 +198,7 @@ const MyListMovies = () => {
                 setAlphabetical(true);
               }}
             >
-              Alphabetically
+              A-Ö
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {

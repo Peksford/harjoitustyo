@@ -154,7 +154,13 @@ const MyListBooks = () => {
             id="dropdown-secondary-button"
             // data-testid="dropdown-list"
             title={
-              mutual ? 'Mutual books' : highest ? 'Highest rating' : 'All books'
+              mutual
+                ? 'Mutual books'
+                : highest
+                ? 'Highest rating'
+                : alphabetical
+                ? 'A-Ö'
+                : 'All books'
             }
           >
             <Dropdown.Item
@@ -188,7 +194,7 @@ const MyListBooks = () => {
                 setAlphabetical(true);
               }}
             >
-              Alphabetically
+              A-Ö
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {

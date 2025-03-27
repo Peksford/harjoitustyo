@@ -199,7 +199,8 @@ const UserSearch = () => {
 };
 
 User.propTypes = {
-  userSearched: PropTypes.object.isRequired,
+  userSearched: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
+    .isRequired,
 };
 
 export default UserSearch;

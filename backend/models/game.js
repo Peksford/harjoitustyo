@@ -58,6 +58,10 @@ Game.init(
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    pick_of_the_week: {
+      type: DataTypes.ARRAY(DataTypes.INTEGER),
+      allowNull: true,
+    },
   },
   {
     sequelize,

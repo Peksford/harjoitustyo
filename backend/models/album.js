@@ -54,6 +54,10 @@ Album.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
     },
+    pick_of_the_week: {
+      type: DataTypes.ARRAY(DataTypes.INTEGER),
+      allowNull: true,
+    },
   },
   {
     sequelize,

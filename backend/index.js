@@ -20,6 +20,7 @@ const moviesRouter = require('./controllers/movies');
 const gamesRouter = require('./controllers/games');
 const followRouter = require('./controllers/follow');
 const healthRouter = require('./controllers/health');
+require('./cronjob');
 
 app.use(cors());
 app.use(express.json());
