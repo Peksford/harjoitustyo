@@ -55,8 +55,7 @@ const Book = ({ onUpdateBook, createBook }) => {
     const releaseInfo = async () => {
       if (descriptionFetched) return;
       try {
-        if (bookData) {
-          console.log('bookish data', bookData);
+        if (bookData.source === 'openLibrary') {
           const data = await axios.get(
             `https://openlibrary.org${bookData.url}.json`,
             {
@@ -78,8 +77,6 @@ const Book = ({ onUpdateBook, createBook }) => {
 
   if (!bookData) return null;
   if (!user) return null;
-
-  console.log('username', username);
 
   const handleHeartClick = async () => {
     try {

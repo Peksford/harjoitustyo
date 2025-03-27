@@ -136,8 +136,6 @@ const MyList = () => {
       : userData.albums
     : null;
 
-  // console.log('Aakkosjärjestys', displayAlbums);
-
   const handleDateChange = (date, field) => {
     if (field === 'start') {
       setStartDate(date);

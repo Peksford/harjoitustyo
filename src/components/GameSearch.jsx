@@ -315,6 +315,7 @@ const Game = ({ gameSearched, createGame }) => {
                       </Popup>
                     ) : (
                       <button
+                        style={{ width: '100px' }}
                         onClick={() => createNew({ game })}
                         className="button-text"
                       >
@@ -347,10 +348,13 @@ const GameSearch = ({ createGame }) => {
   const handleAdvancedSearch = async (searchParams) => {
     try {
       setGameSearched([]);
-      console.log('search params', searchParams);
+      const baseURL =
+        import.meta.env.MODE === 'development'
+          ? 'http://localhost:3001'
+          : 'https://im-only-rating.fly.dev';
       const response = await axios.get(
         // 'https://im-only-rating.fly.dev/api/games/search-game',
-        'http://localhost:3001/api/games/search-game',
+        `${baseURL}/api/games/search-game`,
         {
           params: {
             advancedName: searchParams.advancedName || '',

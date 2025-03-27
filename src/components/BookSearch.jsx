@@ -157,8 +157,6 @@ const Book = ({ bookSearched, createBook, type }) => {
     return <div>not found</div>;
   }
 
-  console.log('testing', bookSearched);
-
   const [addedBooks, setAddedBooks] = useState([]);
   const [ratings, setRatings] = useState({});
 
@@ -181,7 +179,6 @@ const Book = ({ bookSearched, createBook, type }) => {
 
         return addedBooks;
       } else {
-        console.log('adding book', book);
         const newBook = await createBook({
           type: 'book',
           source: 'ISBNDB',
@@ -204,7 +201,6 @@ const Book = ({ bookSearched, createBook, type }) => {
     }
   };
 
-  console.log('added books', addedBooks);
   const changeRating = async (newRating, addedBook) => {
     setRatings((prevRatings) => ({
       ...prevRatings,
@@ -230,7 +226,6 @@ const Book = ({ bookSearched, createBook, type }) => {
   return (
     <div>
       {bookSearched.map((book) => {
-        console.log('bookiou', book);
         const alreadyAdded =
           addedBooks.length > 0 &&
           addedBooks.some(
@@ -494,8 +489,6 @@ const BookSearch = ({ createBook }) => {
       console.error('Error making advanced search', error);
     }
   };
-
-  console.log('book searched', bookSearched);
 
   const handleTypeChange = (event) => {
     setBookSearched([]);

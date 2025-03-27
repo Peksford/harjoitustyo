@@ -160,7 +160,6 @@ const Movie = ({ movieSearched, createMovie }) => {
   const [ratings, setRatings] = useState({});
 
   const createNew = async (movie) => {
-    console.log('Tv', movie);
     try {
       const newMovie = await createMovie({
         title: movie.media_type === 'movie' ? movie.title : movie.name,

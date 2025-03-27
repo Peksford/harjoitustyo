@@ -63,7 +63,7 @@ const GameAdvancedSearch = ({ onSearch }) => {
   };
 
   return (
-    <div style={{ width: '110%' }}>
+    <div style={{ width: '70%' }}>
       <form onSubmit={handleSubmit}>
         <input
           className="search-input"
@@ -94,7 +94,7 @@ const GameAdvancedSearch = ({ onSearch }) => {
           />
         </div>
         Genre:{' '}
-        <select name="genre" onChange={handleChange} style={{ width: '90%' }}>
+        <select name="genre" onChange={handleChange} style={{ width: '40%' }}>
           <option value="">Select a Genre</option>
           {sortedGenres.map((genre) => (
             <option key={genre.id} value={genre.id}>
@@ -107,7 +107,7 @@ const GameAdvancedSearch = ({ onSearch }) => {
           <select
             name="sortBy"
             onChange={handleChange}
-            style={{ width: '90%' }}
+            style={{ width: '40%', marginTop: '10px' }}
           >
             <option value="relevance">Relevance</option>
             <option value="rating">Best rated</option>
@@ -125,7 +125,7 @@ const GameAdvancedSearch = ({ onSearch }) => {
         <select
           name="platform"
           onChange={handleChange}
-          style={{ width: '90%' }}
+          style={{ width: '40%', marginTop: '10px' }}
         >
           <option value="">Select a Platform</option>
           {sortedPlatforms.map((platform) => (

@@ -145,7 +145,6 @@ const MyListBooks = () => {
     setSearchWord(event.target.value);
   };
 
-  console.log(displayBooks);
   if (userData) {
     return (
       <>

@@ -11,6 +11,7 @@ import gameService from '../services/games';
 import followService from '../services/follow';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import Logo from '../assets/Logo.png';
 
 import {
   notificationHide,
@@ -64,7 +65,13 @@ const SignUp = () => {
   return (
     <div className="login-container">
       <div style={{ textAlign: 'center', marginTop: '10%' }}>
-        <h1>Welcome to Let it Rate!</h1>
+        <h1>
+          <img
+            src={Logo}
+            alt="Logo"
+            style={{ width: '100%', maxWidth: '300px', height: 'auto' }}
+          />
+        </h1>
         Keep track of your favorite books, movies, music, and games—all in one
         place. Easily browse your ratings, discover new favorites, and compare
         with friends. Sign up now and start building your collection!

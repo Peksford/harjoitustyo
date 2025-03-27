@@ -48,9 +48,6 @@ const Album = ({ onUpdateAlbum, createAlbum }) => {
     fetchAlbum();
   }, [id, username]);
 
-  console.log('Logged in user', user);
-  console.log('albumdata', albumData);
-
   const handleHeartClick = async () => {
     try {
       const updatedHeart = await albumService.heartClick(albumData.id, {

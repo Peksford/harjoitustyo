@@ -137,8 +137,6 @@ const MyListMovies = () => {
       : userData.movies
     : null;
 
-  console.log('displayed', displayMovies);
-
   const handleDateChange = (date, field) => {
     if (field === 'start') {
       setStartDate(date);

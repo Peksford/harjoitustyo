@@ -221,109 +221,115 @@ const Album = ({ albumSearched, createAlbum }) => {
               <div style={styles.albumContainer}>
                 <img src={album.cover_image} style={styles.thumbnail} />
                 <div style={styles.albumInfo}>
-                  <p>{album.title}</p>
-                  {album.year && <p>Year: {album.year}</p>}
-                  {album.uri && (
-                    <p>
-                      <a
-                        href={`https://www.discogs.com${album.uri}`}
-                        target="blank"
-                        rel="noopener noreferrer"
+                  <div>
+                    <p>{album.title}</p>
+                    {album.year && <p>Year: {album.year}</p>}
+                  </div>
+                  <div>
+                    {alreadyAdded ? (
+                      <Popup
+                        trigger={<button className="button-text">Rate</button>}
+                        modal
+                        nested
+                        contentStyle={{ maxWidth: '95vw', width: '600px' }}
                       >
-                        <button
-                          style={{
-                            backgroundColor: 'black',
-                            padding: '6px 14px',
-                          }}
-                        >
-                          <img
-                            src={discogsButton}
-                            style={{
-                              width: '100%',
-                              maxWidth: '100px',
-                              height: 'auto',
-                            }}
-                          />
-                        </button>
-                      </a>
-                    </p>
-                  )}
-                </div>
-                <div>
-                  {alreadyAdded ? (
-                    <Popup
-                      trigger={<button className="button-text">Rate</button>}
-                      modal
-                      nested
-                      contentStyle={{ maxWidth: '95vw', width: '600px' }}
-                    >
-                      {(close) => (
-                        <div className="modal-container">
-                          <div className="modal-header">{album.title}</div>
-                          {album_rating && ratings[album_rating.id] ? (
-                            <div style={styles.circle}>
-                              <span style={styles.circleText}>
-                                {ratings[album_rating.id]}
-                              </span>
-                            </div>
-                          ) : null}
-                          <div className="modal-content">
-                            <div style={styles.sliderContainer}>
-                              <label htmlFor="rating-slider">Your Rating</label>
-                              <input
-                                type="range"
-                                min="0"
-                                max="10"
-                                step="0.1"
-                                value={
-                                  (album_rating && ratings[album_rating.id]) ||
-                                  0
-                                }
-                                onChange={(e) =>
-                                  changeRating(
-                                    parseFloat(e.target.value),
-                                    addedAlbums.find(
-                                      (added) =>
-                                        added.whole_title === album.title
+                        {(close) => (
+                          <div className="modal-container">
+                            <div className="modal-header">{album.title}</div>
+                            {album_rating && ratings[album_rating.id] ? (
+                              <div style={styles.circle}>
+                                <span style={styles.circleText}>
+                                  {ratings[album_rating.id]}
+                                </span>
+                              </div>
+                            ) : null}
+                            <div className="modal-content">
+                              <div style={styles.sliderContainer}>
+                                <label htmlFor="rating-slider">
+                                  Your Rating
+                                </label>
+                                <input
+                                  type="range"
+                                  min="0"
+                                  max="10"
+                                  step="0.1"
+                                  value={
+                                    (album_rating &&
+                                      ratings[album_rating.id]) ||
+                                    0
+                                  }
+                                  onChange={(e) =>
+                                    changeRating(
+                                      parseFloat(e.target.value),
+                                      addedAlbums.find(
+                                        (added) =>
+                                          added.whole_title === album.title
+                                      )
                                     )
-                                  )
-                                }
-                                style={styles.slider}
-                              />
-                              <div style={styles.silderNumbers}>
-                                <span>0</span>
-                                <span>1</span>
-                                <span>2</span>
-                                <span>3</span>
-                                <span>4</span>
-                                <span>5</span>
-                                <span>6</span>
-                                <span>7</span>
-                                <span>8</span>
-                                <span>9</span>
-                                <span>10</span>
+                                  }
+                                  style={styles.slider}
+                                />
+                                <div style={styles.silderNumbers}>
+                                  <span>0</span>
+                                  <span>1</span>
+                                  <span>2</span>
+                                  <span>3</span>
+                                  <span>4</span>
+                                  <span>5</span>
+                                  <span>6</span>
+                                  <span>7</span>
+                                  <span>8</span>
+                                  <span>9</span>
+                                  <span>10</span>
+                                </div>
                               </div>
                             </div>
+                            <div className="modal-actions">
+                              <button
+                                className="close-btn"
+                                onClick={() => close()}
+                              >
+                                Close
+                              </button>
+                            </div>
                           </div>
-                          <div className="modal-actions">
-                            <button
-                              className="close-btn"
-                              onClick={() => close()}
-                            >
-                              Close
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </Popup>
-                  ) : (
-                    <button
-                      onClick={() => createNew({ album })}
-                      className="button-text"
-                    >
-                      Add
-                    </button>
-                  )}
+                        )}
+                      </Popup>
+                    ) : (
+                      <button
+                        onClick={() => createNew({ album })}
+                        className="button-text"
+                      >
+                        Add
+                      </button>
+                    )}
+                    {album.uri && (
+                      <p>
+                        <a
+                          href={`https://www.discogs.com${album.uri}`}
+                          target="blank"
+                          rel="noopener noreferrer"
+                        >
+                          <button
+                            style={{
+                              backgroundColor: 'black',
+                              padding: '6px 14px',
+                              marginTop: '10px',
+                            }}
+                          >
+                            <img
+                              src={discogsButton}
+                              style={{
+                                width: '100%',
+                                maxWidth: '60px',
+                                height: 'auto',
+                              }}
+                            />
+                          </button>
+                        </a>
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
               <hr style={styles.separator} />
@@ -352,7 +358,7 @@ const AlbumSearch = ({ createAlbum }) => {
       const searchType = searchParams.ean
         ? 'release'
         : searchParams.type || 'master';
-      console.log('SearchParams', searchParams);
+
       const response = await axios.get(
         'https://api.discogs.com/database/search',
         {
