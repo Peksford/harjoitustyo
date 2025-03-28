@@ -49,6 +49,8 @@ const UserMenu = () => {
     }
   };
 
+  console.log(userData.followers.length);
+
   if (userData) {
     return (
       <>
@@ -74,14 +76,18 @@ const UserMenu = () => {
             <Link to={`/${username}/games`}>games</Link>
           </div> */}
           <div>
-            <Link to={`/${username}/followers`}>Followers</Link>
+            <Link to={`/${username}/followers`}>
+              Followers ({userData.followers.length})
+            </Link>
           </div>
           <div>
-            <Link to={`/${username}/following`}>Following</Link>
+            <Link to={`/${username}/following`}>
+              Following ({userData.followed.length})
+            </Link>
           </div>
-          <div>
+          {/* <div>
             <Link to={`/${username}`}>Recommendations</Link>
-          </div>
+          </div> */}
         </div>
       </>
     );

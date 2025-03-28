@@ -100,10 +100,10 @@ const Profile = ({ createObject }) => {
 
   console.log('followers data', followersData);
 
-  const followedUsernames = followersData.followedUsers;
-
-  console.log('followed', followedUsernames);
-  console.log(followedUsernames.find((username) => username.id === 6).username);
+  let followedUsernames = {};
+  if (followersData) {
+    followedUsernames = followersData.followedUsers;
+  }
 
   return (
     <>

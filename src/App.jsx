@@ -129,8 +129,6 @@ const App = () => {
     return () => clearTimeout(timer);
   }, [location.pathname]);
 
-  console.log('stuff', userAlbums);
-
   const albumRatingUpdate = (updatedAlbum) => {
     setAlbums((preAlbums) =>
       preAlbums.map((album) =>
