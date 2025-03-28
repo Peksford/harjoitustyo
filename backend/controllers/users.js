@@ -8,39 +8,57 @@ router.get('/test', (req, res) => {
   res.send('Test route works!');
 });
 
-router.get('/', async (req, res) => {
-  const users = await User.findAll({
-    attributes: ['id', 'username'],
-    include: [
-      {
-        model: Album,
-        attributes: { exclude: ['userId'] },
-      },
-      {
-        model: Book,
-        attributes: { exclude: ['userId'] },
-      },
-      {
-        model: Movie,
-        attributes: { exclude: ['userId'] },
-      },
-      {
-        model: Game,
-        attributes: { exclude: ['userId'] },
-      },
-      {
-        model: Follow,
-        as: 'followers',
-        attributes: { exclude: ['userId'] },
-      },
-      {
-        model: Follow,
-        as: 'followed',
-        attributes: { exclude: ['userId'] },
-      },
-    ],
-  });
-  res.json(users);
+router.get('/', async (req, res, next) => {
+  try {
+    let { page = 1, limit = 2 } = req.query;
+
+    page = parseInt(page);
+    limit = parseInt(limit);
+    const offset = (page - 1) * limit;
+
+    const users = await User.findAndCountAll({
+      attributes: ['id', 'username'],
+      limit,
+      offset,
+      // include: [
+      //   {
+      //     model: Album,
+      //     attributes: { exclude: ['userId'] },
+      //   },
+      //   {
+      //     model: Book,
+      //     attributes: { exclude: ['userId'] },
+      //   },
+      //   {
+      //     model: Movie,
+      //     attributes: { exclude: ['userId'] },
+      //   },
+      //   {
+      //     model: Game,
+      //     attributes: { exclude: ['userId'] },
+      //   },
+      //   {
+      //     model: Follow,
+      //     as: 'followers',
+      //     attributes: { exclude: ['userId'] },
+      //   },
+      //   {
+      //     model: Follow,
+      //     as: 'followed',
+      //     attributes: { exclude: ['userId'] },
+      //   },
+      // ],
+      // order: [['createdAt', 'DESC']],
+    });
+    res.json({
+      totalUsers: users.count,
+      totalPages: Math.ceil(users.count / limit),
+      currentPage: page,
+      users: users.rows,
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.post('/', async (req, res, next) => {
@@ -70,74 +88,140 @@ router.get('/following', tokenExtractor, async (req, res, next) => {
     const oneWeek = new Date();
     oneWeek.setDate(oneWeek.getDate() - 5);
 
-    const followers = await User.findAll({
+    const followedUsers = await User.findAll({
       attributes: ['name', 'username', 'id'],
       include: [
-        {
-          model: Album,
-          attributes: { exclude: ['userId'] },
-          where: {
-            [Op.or]: [
-              { createdAt: { [Op.gte]: oneWeek } },
-              { updatedAt: { [Op.gte]: oneWeek } },
-            ],
-          },
-          required: false,
-        },
-        {
-          model: Book,
-          attributes: { exclude: ['userId'] },
-          where: {
-            [Op.or]: [
-              { createdAt: { [Op.gte]: oneWeek } },
-              { updatedAt: { [Op.gte]: oneWeek } },
-            ],
-          },
-          required: false,
-        },
-        {
-          model: Movie,
-          attributes: { exclude: ['userId'] },
-          where: {
-            [Op.or]: [
-              { createdAt: { [Op.gte]: oneWeek } },
-              { updatedAt: { [Op.gte]: oneWeek } },
-            ],
-          },
-          required: false,
-        },
-        {
-          model: Game,
-          attributes: { exclude: ['userId'] },
-          where: {
-            [Op.or]: [
-              { createdAt: { [Op.gte]: oneWeek } },
-              { updatedAt: { [Op.gte]: oneWeek } },
-            ],
-          },
-          required: false,
-        },
         {
           model: Follow,
           as: 'followers',
           where: { follower_id: user.id },
           attributes: [],
         },
-        // {
-        //   model: Follow,
-        //   as: 'followed',
-        //   where: { follower_id: user.id },
-        //   attributes: { exclude: ['createdAt', 'updatedAt', 'userId'] },
-        // },
-      ],
-      order: [
-        [Album, 'updatedAt', 'DESC'],
-        [Book, 'updatedAt', 'DESC'],
-        [Movie, 'updatedAt', 'DESC'],
-        [Game, 'updatedAt', 'DESC'],
       ],
     });
-    res.json(followers);
+
+    const userIds = followedUsers.map((u) => u.id);
+
+    const albums = await Album.findAll({
+      where: {
+        user_id: { [Op.in]: userIds },
+        [Op.or]: [
+          { createdAt: { [Op.gte]: oneWeek } },
+          // { updatedAt: { [Op.gte]: oneWeek } },
+        ],
+      },
+      order: [['createdAt', 'DESC']],
+    });
+
+    console.log('albums', albums);
+
+    const books = await Book.findAll({
+      where: {
+        user_id: { [Op.in]: userIds },
+        [Op.or]: [
+          { createdAt: { [Op.gte]: oneWeek } },
+          // { updatedAt: { [Op.gte]: oneWeek } },
+        ],
+      },
+      order: [['createdAt', 'DESC']],
+    });
+
+    const movies = await Movie.findAll({
+      where: {
+        user_id: { [Op.in]: userIds },
+        [Op.or]: [
+          { createdAt: { [Op.gte]: oneWeek } },
+          // { updatedAt: { [Op.gte]: oneWeek } },
+        ],
+      },
+      order: [['createdAt', 'DESC']],
+    });
+
+    const games = await Game.findAll({
+      where: {
+        user_id: { [Op.in]: userIds },
+        [Op.or]: [
+          { createdAt: { [Op.gte]: oneWeek } },
+          // { updatedAt: { [Op.gte]: oneWeek } },
+        ],
+      },
+      order: [['createdAt', 'DESC']],
+    });
+
+    // const followers = await User.findAll({
+    //   attributes: ['name', 'username', 'id'],
+    //   include: [
+    //     {
+    //       model: Album,
+    //       attributes: { exclude: ['userId'] },
+    //       where: {
+    //         [Op.or]: [
+    //           { createdAt: { [Op.gte]: oneWeek } },
+    //           { updatedAt: { [Op.gte]: oneWeek } },
+    //         ],
+    //       },
+    //       required: false,
+    //     },
+    //     {
+    //       model: Book,
+    //       attributes: { exclude: ['userId'] },
+    //       where: {
+    //         [Op.or]: [
+    //           { createdAt: { [Op.gte]: oneWeek } },
+    //           { updatedAt: { [Op.gte]: oneWeek } },
+    //         ],
+    //       },
+    //       required: false,
+    //     },
+    //     {
+    //       model: Movie,
+    //       attributes: { exclude: ['userId'] },
+    //       where: {
+    //         [Op.or]: [
+    //           { createdAt: { [Op.gte]: oneWeek } },
+    //           { updatedAt: { [Op.gte]: oneWeek } },
+    //         ],
+    //       },
+    //       required: false,
+    //     },
+    //     {
+    //       model: Game,
+    //       attributes: { exclude: ['userId'] },
+    //       where: {
+    //         [Op.or]: [
+    //           { createdAt: { [Op.gte]: oneWeek } },
+    //           { updatedAt: { [Op.gte]: oneWeek } },
+    //         ],
+    //       },
+    //       required: false,
+    //     },
+    //     {
+    //       model: Follow,
+    //       as: 'followers',
+    //       where: { follower_id: user.id },
+    //       attributes: [],
+    //     },
+    //     // {
+    //     //   model: Follow,
+    //     //   as: 'followed',
+    //     //   where: { follower_id: user.id },
+    //     //   attributes: { exclude: ['createdAt', 'updatedAt', 'userId'] },
+    //     // },
+    //   ],
+    //   order: [
+    //     [Album, 'updatedAt', 'DESC'],
+    //     [Book, 'updatedAt', 'DESC'],
+    //     [Movie, 'updatedAt', 'DESC'],
+    //     [Game, 'updatedAt', 'DESC'],
+    //   ],
+    // });
+    res.json({
+      followedUsers,
+      albums,
+      books,
+      movies,
+      games,
+    });
   } catch (error) {
     next(error);
   }

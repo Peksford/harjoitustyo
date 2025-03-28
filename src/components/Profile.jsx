@@ -98,6 +98,13 @@ const Profile = ({ createObject }) => {
     fetchUser();
   }, []);
 
+  console.log('followers data', followersData);
+
+  const followedUsernames = followersData.followedUsers;
+
+  console.log('followed', followedUsernames);
+  console.log(followedUsernames.find((username) => username.id === 6).username);
+
   return (
     <>
       {user && (
@@ -166,294 +173,395 @@ const Profile = ({ createObject }) => {
                   Books
                 </Dropdown.Item>
               </DropdownButton>
-              {followersData.map((item) => (
-                <div key={item.id}>
-                  {albums &&
-                    item.albums.map((album) => (
-                      <div key={album.id}>
-                        <Link to={`/${item.username}`}>{item.username}</Link>{' '}
-                        {album.rating ? 'rated' : 'added'}
-                        <div style={styles.containerInfo}>
-                          <div
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                            }}
+              {followersData && (
+                <div>
+                  {albums && (
+                    <>
+                      <h3>Albums</h3>
+                      {followersData.albums.map((album) => (
+                        <div key={album.id}>
+                          <Link
+                            to={`/${
+                              followedUsernames.find(
+                                (username) => username.id === album.user_id
+                              ).username
+                            }`}
                           >
-                            <Link to={`${item.username}/albums/${album.id}`}>
-                              <img
-                                src={album.thumbnail}
-                                style={styles.albumThumbnail}
-                              />
-                            </Link>
+                            {
+                              followedUsernames.find(
+                                (username) => username.id === album.user_id
+                              ).username
+                            }
+                          </Link>{' '}
+                          {album.rating ? 'rated' : 'added'}
+                          <div style={styles.containerInfo}>
+                            <div
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                              }}
+                            >
+                              <Link
+                                to={`${
+                                  followedUsernames.find(
+                                    (username) => username.id === album.user_id
+                                  ).username
+                                }/albums/${album.id}`}
+                              >
+                                <img
+                                  src={album.thumbnail}
+                                  style={styles.albumThumbnail}
+                                />
+                              </Link>
 
-                            {album.rating && (
-                              <div style={styles.circle}>
-                                <span style={styles.circleText}>
-                                  {album.rating}
-                                </span>
-                              </div>
-                            )}
+                              {album.rating && (
+                                <div style={styles.circle}>
+                                  <span style={styles.circleText}>
+                                    {album.rating}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                            <div
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                              }}
+                            >
+                              <span>{album.whole_title}</span>
+                              {album.url && (
+                                <p>
+                                  <a
+                                    href={`${album.url}`}
+                                    target="blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    <button
+                                      style={{
+                                        backgroundColor: 'black',
+                                        marginTop: '10px',
+                                        padding: '6px 14px',
+                                      }}
+                                    >
+                                      <img
+                                        src={discogsButton}
+                                        style={{
+                                          width: '100%',
+                                          maxWidth: '100px',
+                                          height: 'auto',
+                                        }}
+                                      />
+                                    </button>
+                                  </a>
+                                </p>
+                              )}
+                            </div>
                           </div>
-                          <div
-                            style={{ display: 'flex', flexDirection: 'column' }}
+                          <hr style={styles.separator} />
+                        </div>
+                      ))}
+                    </>
+                  )}
+                  {movies && (
+                    <>
+                      <h3>Movies</h3>
+                      {followersData.movies.map((movie) => (
+                        <div key={movie.id}>
+                          <Link
+                            to={`/${
+                              followedUsernames.find(
+                                (username) => username.id === movie.user_id
+                              ).username
+                            }`}
                           >
-                            <span>{album.whole_title}</span>
-                            {album.url && (
-                              <p>
-                                <a
-                                  href={`${album.url}`}
-                                  target="blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  <button
-                                    style={{
-                                      backgroundColor: 'black',
-                                      marginTop: '10px',
-                                      padding: '6px 14px',
-                                    }}
+                            {
+                              followedUsernames.find(
+                                (username) => username.id === movie.user_id
+                              ).username
+                            }
+                          </Link>{' '}
+                          {movie.rating ? 'rated' : 'added'}
+                          <div style={styles.containerInfo}>
+                            <div
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                              }}
+                            >
+                              <Link
+                                to={`${
+                                  followedUsernames.find(
+                                    (username) => username.id === movie.user_id
+                                  ).username
+                                }/movies/${movie.id}`}
+                              >
+                                {movie.thumbnail && (
+                                  <img
+                                    src={`https://www.themoviedb.org/t/p/w1280/${movie.thumbnail}`}
+                                    style={styles.movieThumbnail}
+                                  />
+                                )}
+                              </Link>
+                              {movie.rating ? (
+                                <div style={styles.circle}>
+                                  <span style={styles.circleText}>
+                                    {movie.rating}
+                                  </span>
+                                </div>
+                              ) : null}
+                            </div>
+                            <div
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                              }}
+                            >
+                              <span>{movie.whole_title}</span>
+                              {movie.type === 'movie' ? (
+                                <p>
+                                  <a
+                                    href={`https://themoviedb.org/movie/${movie.url}`}
+                                    target="blank"
+                                    rel="noopener noreferrer"
                                   >
                                     <img
-                                      src={discogsButton}
+                                      src={tmdbLogo}
+                                      style={{
+                                        width: '100%',
+                                        maxWidth: '80px',
+                                        height: 'auto',
+                                        backgroundColor: '#0d253f',
+                                        padding: '10px',
+                                        borderRadius: '8px',
+                                      }}
+                                    />
+                                  </a>
+                                </p>
+                              ) : (
+                                <p>
+                                  <a
+                                    href={`https://themoviedb.org/tv/${movie.url}`}
+                                    target="blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    <img
+                                      src={tmdbLogo}
+                                      style={{
+                                        width: '100%',
+                                        maxWidth: '80px',
+                                        height: 'auto',
+                                        backgroundColor: '#0d253f',
+                                        padding: '10px',
+                                        borderRadius: '8px',
+                                      }}
+                                    />
+                                  </a>
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                          <hr style={styles.separator} />
+                        </div>
+                      ))}
+                    </>
+                  )}
+                  {games && (
+                    <>
+                      <h3>Games</h3>
+                      {followersData.games.map((game) => (
+                        <div key={game.id}>
+                          <Link
+                            to={`/${
+                              followedUsernames.find(
+                                (username) => username.id === game.user_id
+                              ).username
+                            }`}
+                          >
+                            {
+                              followedUsernames.find(
+                                (username) => username.id === game.user_id
+                              ).username
+                            }
+                          </Link>{' '}
+                          {game.rating ? 'rated' : 'added'}
+                          <div style={styles.containerInfo}>
+                            <div
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                              }}
+                            >
+                              <Link
+                                to={`${
+                                  followedUsernames.find(
+                                    (username) => username.id === game.user_id
+                                  ).username
+                                }/games/${game.id}`}
+                              >
+                                {game.thumbnail && (
+                                  <img
+                                    src={game.thumbnail.replace(
+                                      /t_thumb/,
+                                      't_cover_big'
+                                    )}
+                                    style={styles.gameThumbnail}
+                                  />
+                                )}
+                              </Link>
+
+                              {game.rating && (
+                                <div style={styles.circle}>
+                                  <span style={styles.circleText}>
+                                    {game.rating}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                            <div
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                              }}
+                            >
+                              <span>{game.whole_title}</span>
+                              {game.url && (
+                                <p>
+                                  <a
+                                    href={game.url}
+                                    target="blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    <img
+                                      src={igdbLogo}
                                       style={{
                                         width: '100%',
                                         maxWidth: '100px',
                                         height: 'auto',
                                       }}
                                     />
-                                  </button>
-                                </a>
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                        <hr style={styles.separator} />
-                      </div>
-                    ))}
-                  {movies &&
-                    item.movies.map((movie) => (
-                      <div key={movie.id}>
-                        <Link to={`/${item.username}`}>{item.username}</Link>{' '}
-                        {movie.rating ? 'rated' : 'added'}
-                        <div style={styles.containerInfo}>
-                          <div
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '10px',
-                            }}
-                          >
-                            <Link to={`${item.username}/movies/${movie.id}`}>
-                              {movie.thumbnail && (
-                                <img
-                                  src={`https://www.themoviedb.org/t/p/w1280/${movie.thumbnail}`}
-                                  style={styles.movieThumbnail}
-                                />
+                                  </a>
+                                </p>
                               )}
-                            </Link>
-                            {movie.rating ? (
-                              <div style={styles.circle}>
-                                <span style={styles.circleText}>
-                                  {movie.rating}
-                                </span>
-                              </div>
-                            ) : null}
+                            </div>
                           </div>
-                          <div
-                            style={{ display: 'flex', flexDirection: 'column' }}
-                          >
-                            <span>{movie.whole_title}</span>
-                            {movie.type === 'movie' ? (
-                              <p>
-                                <a
-                                  href={`https://themoviedb.org/movie/${movie.url}`}
-                                  target="blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  <img
-                                    src={tmdbLogo}
-                                    style={{
-                                      width: '100%',
-                                      maxWidth: '80px',
-                                      height: 'auto',
-                                      backgroundColor: '#0d253f',
-                                      padding: '10px',
-                                      borderRadius: '8px',
-                                    }}
-                                  />
-                                </a>
-                              </p>
-                            ) : (
-                              <p>
-                                <a
-                                  href={`https://themoviedb.org/tv/${movie.url}`}
-                                  target="blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  <img
-                                    src={tmdbLogo}
-                                    style={{
-                                      width: '100%',
-                                      maxWidth: '80px',
-                                      height: 'auto',
-                                      backgroundColor: '#0d253f',
-                                      padding: '10px',
-                                      borderRadius: '8px',
-                                    }}
-                                  />
-                                </a>
-                              </p>
-                            )}
-                          </div>
+                          <hr style={styles.separator} />
                         </div>
-                        <hr style={styles.separator} />
-                      </div>
-                    ))}
-                  {games &&
-                    item.games.map((game) => (
-                      <div key={game.id}>
-                        <Link to={`/${item.username}`}>{item.username}</Link>{' '}
-                        {game.rating ? 'rated' : 'added'}
-                        <div style={styles.containerInfo}>
-                          <div
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                            }}
-                          >
-                            <Link to={`${item.username}/games/${game.id}`}>
-                              {game.thumbnail && (
-                                <img
-                                  src={game.thumbnail.replace(
-                                    /t_thumb/,
-                                    't_cover_big'
-                                  )}
-                                  style={styles.gameThumbnail}
-                                />
-                              )}
-                            </Link>
+                      ))}
+                    </>
+                  )}
 
-                            {game.rating && (
-                              <div style={styles.circle}>
-                                <span style={styles.circleText}>
-                                  {game.rating}
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                          <div
-                            style={{ display: 'flex', flexDirection: 'column' }}
+                  {books && (
+                    <>
+                      <h3>Books</h3>
+                      {followersData.books.map((book) => (
+                        <div key={book.id}>
+                          <Link
+                            to={`/${
+                              followedUsernames.find(
+                                (username) => username.id === book.user_id
+                              ).username
+                            }`}
                           >
-                            <span>{game.whole_title}</span>
-                            {game.url && (
-                              <p>
-                                <a
-                                  href={game.url}
-                                  target="blank"
-                                  rel="noopener noreferrer"
-                                >
+                            {
+                              followedUsernames.find(
+                                (username) => username.id === book.user_id
+                              ).username
+                            }
+                          </Link>{' '}
+                          {book.rating ? 'rated' : 'added'}
+                          <div style={styles.containerInfo}>
+                            <div
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                              }}
+                            >
+                              <Link
+                                to={`${
+                                  followedUsernames.find(
+                                    (username) => username.id === book.user_id
+                                  ).username
+                                }/books/${book.id}`}
+                              >
+                                {book.source === 'openLibrary' ? (
                                   <img
-                                    src={igdbLogo}
-                                    style={{
-                                      width: '100%',
-                                      maxWidth: '100px',
-                                      height: 'auto',
-                                    }}
+                                    src={`https://covers.openlibrary.org/b/id/${book.thumbnail}-L.jpg`}
+                                    style={styles.bookThumbnail}
                                   />
-                                </a>
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                        <hr style={styles.separator} />
-                      </div>
-                    ))}
-                  {books &&
-                    item.books.map((book) => (
-                      <div key={book.id}>
-                        <Link to={`/${item.username}`}>{item.username}</Link>{' '}
-                        {book.rating ? 'rated' : 'added'}
-                        <div style={styles.containerInfo}>
-                          <div
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                            }}
-                          >
-                            <Link to={`${item.username}/books/${book.id}`}>
+                                ) : (
+                                  <img
+                                    src={book.thumbnail}
+                                    style={styles.bookThumbnail}
+                                  />
+                                )}
+                              </Link>
+
+                              {book.rating && (
+                                <div style={styles.circle}>
+                                  <span style={styles.circleText}>
+                                    {book.rating}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                            <div
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                              }}
+                            >
+                              <span>{book.whole_title}</span>
                               {book.source === 'openLibrary' ? (
-                                <img
-                                  src={`https://covers.openlibrary.org/b/id/${book.thumbnail}-L.jpg`}
-                                  style={styles.bookThumbnail}
-                                />
+                                <p>
+                                  <a
+                                    href={`https://openlibrary.org${book.key}`}
+                                    target="blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    <img
+                                      src={openLibraryLogo}
+                                      style={{
+                                        width: '100%',
+                                        maxWidth: '120px',
+                                        height: 'auto',
+                                        backgroundColor: 'white',
+                                        padding: '8px',
+                                        borderRadius: '8px',
+                                      }}
+                                    />
+                                  </a>
+                                </p>
                               ) : (
-                                <img
-                                  src={book.thumbnail}
-                                  style={styles.bookThumbnail}
-                                />
+                                <p>
+                                  <a
+                                    href={`https://isbndb.com/book/${book.isbn13}`}
+                                    target="blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    <img
+                                      src={isbndbLogo}
+                                      style={{
+                                        width: '100%',
+                                        maxWidth: '110px',
+                                        height: 'auto',
+                                        backgroundColor: 'black',
+                                        padding: '8px',
+                                        borderRadius: '8px',
+                                      }}
+                                    />
+                                  </a>
+                                </p>
                               )}
-                            </Link>
-
-                            {book.rating && (
-                              <div style={styles.circle}>
-                                <span style={styles.circleText}>
-                                  {book.rating}
-                                </span>
-                              </div>
-                            )}
+                            </div>
                           </div>
-                          <div
-                            style={{ display: 'flex', flexDirection: 'column' }}
-                          >
-                            <span>{book.whole_title}</span>
-                            {book.source === 'openLibrary' ? (
-                              <p>
-                                <a
-                                  href={`https://openlibrary.org${book.key}`}
-                                  target="blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  <img
-                                    src={openLibraryLogo}
-                                    style={{
-                                      width: '100%',
-                                      maxWidth: '120px',
-                                      height: 'auto',
-                                      backgroundColor: 'white',
-                                      padding: '8px',
-                                      borderRadius: '8px',
-                                    }}
-                                  />
-                                </a>
-                              </p>
-                            ) : (
-                              <p>
-                                <a
-                                  href={`https://isbndb.com/book/${book.isbn13}`}
-                                  target="blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  <img
-                                    src={isbndbLogo}
-                                    style={{
-                                      width: '100%',
-                                      maxWidth: '110px',
-                                      height: 'auto',
-                                      backgroundColor: 'black',
-                                      padding: '8px',
-                                      borderRadius: '8px',
-                                    }}
-                                  />
-                                </a>
-                              </p>
-                            )}
-                          </div>
+                          <hr style={styles.separator} />
                         </div>
-                        <hr style={styles.separator} />
-                      </div>
-                    ))}
+                      ))}
+                    </>
+                  )}
                 </div>
-              ))}
+              )}
             </div>
           )}
         </div>

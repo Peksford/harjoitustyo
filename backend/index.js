@@ -1,5 +1,4 @@
 const Discogs = require('disconnect').Client;
-// const app = express();
 require('dotenv').config();
 const { Sequelize, Model, DataTypes } = require('sequelize');
 const path = require('path');
