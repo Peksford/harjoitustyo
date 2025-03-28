@@ -173,6 +173,11 @@ const App = () => {
     navigate('/login');
   };
 
+  console.log(
+    'user albums',
+    userAlbums.find((album) => album.heart === true)
+  );
+
   const createObject = async (newObject) => {
     try {
       let userObjects = [];

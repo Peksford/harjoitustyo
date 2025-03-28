@@ -11,12 +11,12 @@ const albumSlice = createSlice({
     setAlbums(state, action) {
       return action.payload;
     },
-    // increaseLike(state, action) {
-    //   const id = action.payload
-    //   return state.map((album) =>
-    //     album.id === id ? { ...album, likes: album.likes + 1 } : album
-    //   )
-    // },
+    setHeart(state, action) {
+      const id = action.payload;
+      return state.map((album) =>
+        album.id === id ? { ...album, heart: true } : album
+      );
+    },
     deleteAlbumId(state, action) {
       const albumIdToDelete = action.payload;
       return state.filter((album) => album.id !== albumIdToDelete);
@@ -24,7 +24,7 @@ const albumSlice = createSlice({
   },
 });
 
-export const { appendAlbum, setAlbums, increaseLike, deleteAlbumId } =
+export const { appendAlbum, setAlbums, setHeart, deleteAlbumId } =
   albumSlice.actions;
 
 export const addAlbum = (content) => {
@@ -35,15 +35,15 @@ export const addAlbum = (content) => {
   };
 };
 
-// export const albumLike = (album) => {
-//   return async (dispatch) => {
-//     const likeIncrease = await albumService.put(album.id, {
-//       ...album,
-//       likes: album.likes + 1,
-//     })
-//     dispatch(increaseLike(likeIncrease.id))
-//   }
-// }
+export const albumHeart = (album) => {
+  return async (dispatch) => {
+    const heartChange = await albumService.heartClick(album.id, {
+      ...album,
+      heart: true,
+    });
+    dispatch(setHeart(heartChange.id));
+  };
+};
 
 export const deleteAlbum = (id) => {
   return async (dispatch) => {

@@ -163,11 +163,11 @@ const Home = () => {
         <UserMenu />
         {user?.username === username ? (
           <h1 style={{ textAlign: 'center' }}>
-            Your top picks of the week {getWeekNumber()}
+            Your top picks for the week {getWeekNumber()}
           </h1>
         ) : (
           <h1 style={{ textAlign: 'center' }}>
-            {username}&apos;s top picks of the week {getWeekNumber()}
+            {username}&apos;s top picks for the week {getWeekNumber()}
           </h1>
         )}
 

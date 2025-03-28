@@ -15,6 +15,7 @@ import { setNotification } from '../reducers/notificationReducer';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import discogsButton from '../assets/discogsButton.webp';
+import { albumHeart } from '../reducers/albumReducer';
 
 const Album = ({ onUpdateAlbum, createAlbum }) => {
   const { username, id } = useParams();
@@ -23,10 +24,12 @@ const Album = ({ onUpdateAlbum, createAlbum }) => {
   const [trackListFetched, setTrackListFetched] = useState(false);
   const [active, setActive] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openHeart, setOpenHeart] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  const albums = useSelector((state) => state.albums);
 
   useEffect(() => {
     const fetchAlbum = async () => {
@@ -49,20 +52,29 @@ const Album = ({ onUpdateAlbum, createAlbum }) => {
   }, [id, username]);
 
   const handleHeartClick = async () => {
-    try {
-      const updatedHeart = await albumService.heartClick(albumData.id, {
-        ...albumData,
-        heart: true,
-      });
+    if (!albums.find((album) => album.heart === true)) {
+      try {
+        setOpenHeart(true);
+        const updatedHeart = await albumService.heartClick(albumData.id, {
+          ...albumData,
+          heart: true,
+        });
 
-      setAlbumData(updatedHeart);
-      setActive(updatedHeart.heart);
+        setAlbumData(updatedHeart);
+        setActive(updatedHeart.heart);
+        dispatch(albumHeart(albumData));
 
-      if (onUpdateAlbum) {
-        onUpdateAlbum(updatedHeart);
+        if (onUpdateAlbum) {
+          onUpdateAlbum(updatedHeart);
+        }
+        setOpenHeart(false);
+      } catch (error) {
+        console.error('error pressing heart', error);
       }
-    } catch (error) {
-      console.error('error pressing heart', error);
+    } else {
+      dispatch(
+        setNotification(`You have already selected album of the week`, 5)
+      );
     }
   };
 
@@ -147,7 +159,19 @@ const Album = ({ onUpdateAlbum, createAlbum }) => {
     setOpen(true);
   };
 
+  const handleClickHeartOpen = () => {
+    setOpenHeart(true);
+  };
+  const handleHeartClose = () => {
+    setOpenHeart(false);
+  };
+
   const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleRemoveConfirm = () => {
+    deleteAlbum(albumData.id);
     setOpen(false);
   };
 
@@ -181,13 +205,41 @@ const Album = ({ onUpdateAlbum, createAlbum }) => {
             >
               <Heart
                 isActive={active || false}
-                onClick={handleHeartClick}
+                onClick={() => {
+                  if (!albums.find((album) => album.heart === true)) {
+                    handleClickHeartOpen();
+                  } else {
+                    dispatch(
+                      setNotification(
+                        `You have already selected album of the week`,
+                        5
+                      )
+                    );
+                  }
+                }}
                 style={{
                   fontSize: '3rem',
                   display: 'block',
                   textAlign: 'cenSorrter',
                 }}
               />
+              <Dialog
+                open={openHeart}
+                onClose={handleHeartClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">
+                  {`Do you want to make ${albumData.title} your album of the week?`}
+                </DialogTitle>
+                <DialogActions>
+                  <Button onClick={handleHeartClose}>No</Button>
+                  <Button onClick={handleHeartClick} autoFocus>
+                    {' '}
+                    Yes
+                  </Button>
+                </DialogActions>
+              </Dialog>
               <span
                 style={{
                   position: 'absolute',
@@ -280,10 +332,7 @@ const Album = ({ onUpdateAlbum, createAlbum }) => {
                     </DialogTitle>
                     <DialogActions>
                       <Button onClick={handleClose}>No</Button>
-                      <Button
-                        onClick={() => deleteAlbum(albumData.id)}
-                        autoFocus
-                      >
+                      <Button onClick={handleRemoveConfirm} autoFocus>
                         {' '}
                         Yes
                       </Button>
