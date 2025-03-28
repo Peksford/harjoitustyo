@@ -25,11 +25,13 @@ const Book = ({ onUpdateBook, createBook }) => {
   const [description, setDescription] = useState([]);
   const [active, setActive] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openHeart, setOpenHeart] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user);
+  const books = useSelector((state) => state.books);
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -80,6 +82,7 @@ const Book = ({ onUpdateBook, createBook }) => {
 
   const handleHeartClick = async () => {
     try {
+      setOpenHeart(true);
       const updatedHeart = await bookService.heartClick(bookData.id, {
         ...bookData,
         heart: true,
@@ -91,6 +94,7 @@ const Book = ({ onUpdateBook, createBook }) => {
       if (onUpdateBook) {
         onUpdateBook(updatedHeart);
       }
+      setOpenHeart(false);
     } catch (error) {
       console.error('error pressing heart', error);
     }
@@ -131,7 +135,19 @@ const Book = ({ onUpdateBook, createBook }) => {
     setOpen(true);
   };
 
+  const handleClickHeartOpen = () => {
+    setOpenHeart(true);
+  };
+  const handleHeartClose = () => {
+    setOpenHeart(false);
+  };
+
   const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleRemoveConfirm = () => {
+    deleteBook(bookData.id);
     setOpen(false);
   };
 
@@ -184,6 +200,72 @@ const Book = ({ onUpdateBook, createBook }) => {
       <div>
         <div style={styles.bookInfo}>
           <h2>{bookData?.whole_title}</h2>
+          <div>
+            {username} added this on{' '}
+            {new Date(bookData.createdAt).toLocaleDateString()}
+          </div>
+
+          <p
+            data-testid="heart"
+            style={{
+              width: '7rem',
+              position: 'relative',
+              display: 'inline-block',
+            }}
+          >
+            <Heart
+              isActive={active || false}
+              onClick={() => {
+                if (!books.find((album) => album.heart === true)) {
+                  handleClickHeartOpen();
+                } else {
+                  dispatch(
+                    setNotification(
+                      `You have already selected book of the week`,
+                      5
+                    )
+                  );
+                }
+              }}
+              style={{
+                fontSize: '3rem',
+                display: 'block',
+                textAlign: 'cenSorrter',
+              }}
+            />
+            <Dialog
+              open={openHeart}
+              onClose={handleHeartClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                {`Do you want to make ${bookData.title} your book of the week?`}
+              </DialogTitle>
+              <DialogActions>
+                <Button onClick={handleHeartClose}>No</Button>
+                <Button onClick={handleHeartClick} autoFocus>
+                  {' '}
+                  Yes
+                </Button>
+              </DialogActions>
+            </Dialog>
+            <span
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                color: 'white',
+                fontSize: '0.8rem',
+                textAlign: 'center',
+                fontWeight: 'bold',
+                padding: '0 5px',
+              }}
+            >
+              {active ? 'Pick of the week' : ''}
+            </span>
+          </p>
           {bookData?.source === 'openLibrary' ? (
             <>
               <p>
@@ -235,13 +317,6 @@ const Book = ({ onUpdateBook, createBook }) => {
             </>
           )}
 
-          <div>
-            {username} added this on{' '}
-            {new Date(bookData.createdAt).toLocaleDateString()}
-          </div>
-          <p data-testid="heart" style={{ width: '4rem' }}>
-            <Heart isActive={active || false} onClick={handleHeartClick} />
-          </p>
           <h3>{bookData.year}</h3>
           {description.value || bookData.synopsis ? (
             <p
@@ -312,7 +387,7 @@ const Book = ({ onUpdateBook, createBook }) => {
                   </DialogTitle>
                   <DialogActions>
                     <Button onClick={handleClose}>No</Button>
-                    <Button onClick={() => deleteBook(bookData.id)} autoFocus>
+                    <Button onClick={handleRemoveConfirm} autoFocus>
                       {' '}
                       Yes
                     </Button>

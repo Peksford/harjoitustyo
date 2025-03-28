@@ -11,12 +11,12 @@ const bookSlice = createSlice({
     setBooks(state, action) {
       return action.payload;
     },
-    // increaseLike(state, action) {
-    //   const id = action.payload
-    //   return state.map((book) =>
-    //     book.id === id ? { ...book, likes: book.likes + 1 } : book
-    //   )
-    // },
+    setHeart(state, action) {
+      const id = action.payload;
+      return state.map((book) =>
+        book.id === id ? { ...book, heart: true } : book
+      );
+    },
     deleteBookId(state, action) {
       const bookIdToDelete = action.payload;
       return state.filter((book) => book.id !== bookIdToDelete);
@@ -24,7 +24,7 @@ const bookSlice = createSlice({
   },
 });
 
-export const { appendBook, setBooks, increaseLike, deleteBookId } =
+export const { appendBook, setBooks, setHeart, deleteBookId } =
   bookSlice.actions;
 
 export const addBook = (content) => {
@@ -35,15 +35,15 @@ export const addBook = (content) => {
   };
 };
 
-// export const bookLike = (book) => {
-//   return async (dispatch) => {
-//     const likeIncrease = await bookService.put(book.id, {
-//       ...book,
-//       likes: book.likes + 1,
-//     })
-//     dispatch(increaseLike(likeIncrease.id))
-//   }
-// }
+export const bookHeart = (book) => {
+  return async (dispatch) => {
+    const heartChange = await bookService.heartClick(book.id, {
+      ...book,
+      heart: true,
+    });
+    dispatch(setHeart(heartChange.id));
+  };
+};
 
 export const deleteBook = (id) => {
   return async (dispatch) => {
