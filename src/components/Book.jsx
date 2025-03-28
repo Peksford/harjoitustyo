@@ -16,6 +16,7 @@ import Button from '@mui/material/Button';
 import { useSelector } from 'react-redux';
 import isbndbLogo from '../assets/isbndb.png';
 import openLibraryLogo from '../assets/openLibrarylogo.png';
+import { bookHeart } from '../reducers/bookReducer';
 
 const Book = ({ onUpdateBook, createBook }) => {
   const { username, id } = useParams();
@@ -90,6 +91,7 @@ const Book = ({ onUpdateBook, createBook }) => {
 
       setBookData(updatedHeart);
       setActive(updatedHeart.heart);
+      dispatch(bookHeart(bookData));
 
       if (onUpdateBook) {
         onUpdateBook(updatedHeart);
@@ -370,6 +372,7 @@ const Book = ({ onUpdateBook, createBook }) => {
               </div>
             </div>
           ) : null}
+
           <div style={styles.buttonContainer}></div>
           <div>
             {user && user.id === bookData.user_id ? (

@@ -14,19 +14,22 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { useSelector } from 'react-redux';
 import tmdbLogo from '../assets/tmdbLogo.svg';
+import { movieHeart } from '../reducers/movieReducer';
 
-const Movie = ({ onUpdateMovie }) => {
+const Movie = ({ onUpdateMovie, createMovie }) => {
   const { username, id } = useParams();
   const [movieData, setMovieData] = useState('');
   const [rating, setRating] = useState(0);
   const [active, setActive] = useState(false);
 
   const [open, setOpen] = useState(false);
+  const [openHeart, setOpenHeart] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user);
+  const movies = useSelector((state) => state.movies);
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -50,16 +53,19 @@ const Movie = ({ onUpdateMovie }) => {
 
   const handleHeartClick = async () => {
     try {
+      setOpenHeart(true);
       const updatedHeart = await movieService.heartClick(movieData.id, {
         ...movieData,
         heart: true,
       });
       setMovieData(updatedHeart);
       setActive(updatedHeart.heart);
+      dispatch(movieHeart(movieData));
 
       if (onUpdateMovie) {
         onUpdateMovie(updatedHeart);
       }
+      setOpenHeart(false);
     } catch (error) {
       console.error('error pressing heart', error);
     }
@@ -100,11 +106,44 @@ const Movie = ({ onUpdateMovie }) => {
     }
   };
 
+  const createNew = async ({ movieData }) => {
+    console.log('sda', movieData);
+    try {
+      const newMovie = await createMovie({
+        title: movieData.title,
+        url: movieData.url,
+        release_date: movieData.release_date,
+        thumbnail: movieData.thumbnail,
+        whole_title: movieData.whole_title,
+        tmdb_id: movieData.tmbd_id,
+        type: movieData.type,
+        overview: movieData.overview,
+        heart: false,
+      });
+      return newMovie;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
+
   const handleClickOpen = () => {
     setOpen(true);
   };
 
+  const handleClickHeartOpen = () => {
+    setOpenHeart(true);
+  };
+  const handleHeartClose = () => {
+    setOpenHeart(false);
+  };
+
   const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleRemoveConfirm = () => {
+    deleteMovie(movieData.id);
     setOpen(false);
   };
 
@@ -123,8 +162,66 @@ const Movie = ({ onUpdateMovie }) => {
               {username} added this on{' '}
               {new Date(movieData.createdAt).toLocaleDateString()}
             </div>
-            <p data-testid="heart" style={{ width: '4rem' }}>
-              <Heart isActive={active || false} onClick={handleHeartClick} />
+            <p
+              data-testid="heart"
+              style={{
+                width: '7rem',
+                position: 'relative',
+                display: 'inline-block',
+              }}
+            >
+              <Heart
+                isActive={active || false}
+                onClick={() => {
+                  if (!movies.find((movie) => movie.heart === true)) {
+                    handleClickHeartOpen();
+                  } else {
+                    dispatch(
+                      setNotification(
+                        `You have already selected movie of the week`,
+                        5
+                      )
+                    );
+                  }
+                }}
+                style={{
+                  fontSize: '3rem',
+                  display: 'block',
+                  textAlign: 'cenSorrter',
+                }}
+              />
+              <Dialog
+                open={openHeart}
+                onClose={handleHeartClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">
+                  {`Do you want to make ${movieData.title} your movie of the week?`}
+                </DialogTitle>
+                <DialogActions>
+                  <Button onClick={handleHeartClose}>No</Button>
+                  <Button onClick={handleHeartClick} autoFocus>
+                    {' '}
+                    Yes
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              <span
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  color: 'white',
+                  fontSize: '0.8rem',
+                  textAlign: 'center',
+                  fontWeight: 'bold',
+                  padding: '0 5px',
+                }}
+              >
+                {active ? 'Pick of the week' : ''}
+              </span>
             </p>
             <h3>
               {movieData.release_date && (
@@ -217,24 +314,37 @@ const Movie = ({ onUpdateMovie }) => {
             ) : null}
             <div style={styles.buttonContainer}></div>
             <div>
-              <button onClick={handleClickOpen}>Remove</button>
-              <Dialog
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-              >
-                <DialogTitle id="alert-dialog-title">
-                  {`Do you want to remove ${movieData.title} from your list?`}
-                </DialogTitle>
-                <DialogActions>
-                  <Button onClick={handleClose}>No</Button>
-                  <Button onClick={() => deleteMovie(movieData.id)} autoFocus>
-                    {' '}
-                    Yes
-                  </Button>
-                </DialogActions>
-              </Dialog>
+              {user && user.id === movieData.user_id ? (
+                <>
+                  <button onClick={handleClickOpen}>Remove</button>
+                  <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      {`Do you want to remove ${movieData.title} from your list?`}
+                    </DialogTitle>
+                    <DialogActions>
+                      <Button onClick={handleClose}>No</Button>
+                      <Button onClick={handleRemoveConfirm} autoFocus>
+                        {' '}
+                        Yes
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => createNew({ movieData })}
+                    className="button-text"
+                  >
+                    Add to your list
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -315,6 +425,7 @@ Movie.propTypes = {
     id: PropTypes.number.isRequired,
   }),
   onUpdateMovie: PropTypes.func,
+  createMovie: PropTypes.func.isRequired,
 };
 
 export default Movie;

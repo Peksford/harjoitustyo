@@ -11,12 +11,12 @@ const movieSlice = createSlice({
     setMovies(state, action) {
       return action.payload;
     },
-    // increaseLike(state, action) {
-    //   const id = action.payload
-    //   return state.map((movie) =>
-    //     movie.id === id ? { ...movie, likes: movie.likes + 1 } : movie
-    //   )
-    // },
+    setHeart(state, action) {
+      const id = action.payload;
+      return state.map((movie) =>
+        movie.id === id ? { ...movie, heart: true } : movie
+      );
+    },
     deleteMovieId(state, action) {
       const movieIdToDelete = action.payload;
       return state.filter((movie) => movie.id !== movieIdToDelete);
@@ -24,7 +24,7 @@ const movieSlice = createSlice({
   },
 });
 
-export const { appendMovie, setMovies, increaseLike, deleteMovieId } =
+export const { appendMovie, setMovies, setHeart, deleteMovieId } =
   movieSlice.actions;
 
 export const addMovie = (content) => {
@@ -35,15 +35,15 @@ export const addMovie = (content) => {
   };
 };
 
-// export const movieLike = (movie) => {
-//   return async (dispatch) => {
-//     const likeIncrease = await movieService.put(movie.id, {
-//       ...movie,
-//       likes: movie.likes + 1,
-//     })
-//     dispatch(increaseLike(likeIncrease.id))
-//   }
-// }
+export const movieHeart = (movie) => {
+  return async (dispatch) => {
+    const heartChange = await movieService.heartClick(movie.id, {
+      ...movie,
+      heart: true,
+    });
+    dispatch(setHeart(heartChange.id));
+  };
+};
 
 export const deleteMovie = (id) => {
   return async (dispatch) => {

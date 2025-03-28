@@ -14,19 +14,22 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { useSelector } from 'react-redux';
 import igdbLogo from '../assets/IGDB_logo.svg.png';
+import { gameHeart } from '../reducers/gameReducer';
 
-const Game = ({ onUpdateGame }) => {
+const Game = ({ onUpdateGame, createGame }) => {
   const { username, id } = useParams();
   const [gameData, setGameData] = useState('');
   const [rating, setRating] = useState(0);
   const [active, setActive] = useState(false);
 
   const [open, setOpen] = useState(false);
+  const [openHeart, setOpenHeart] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user);
+  const games = useSelector((state) => state.games);
 
   useEffect(() => {
     const fetchGame = async () => {
@@ -50,16 +53,19 @@ const Game = ({ onUpdateGame }) => {
 
   const handleHeartClick = async () => {
     try {
+      setOpenHeart(true);
       const updatedHeart = await gameService.heartClick(gameData.id, {
         ...gameData,
         heart: true,
       });
       setGameData(updatedHeart);
       setActive(updatedHeart.heart);
+      dispatch(gameHeart(gameData));
 
       if (onUpdateGame) {
         onUpdateGame(updatedHeart);
       }
+      setOpenHeart(false);
     } catch (error) {
       console.error('error pressing heart', error);
     }
@@ -95,12 +101,45 @@ const Game = ({ onUpdateGame }) => {
       console.error(error);
     }
   };
+  const createNew = async ({ gameData }) => {
+    console.log('game data', gameData);
+    try {
+      const newGame = await createGame({
+        type: 'game',
+        title: gameData.title || 'Untitled',
+        url: gameData.url,
+        release_date: gameData.release_date || null,
+        thumbnail: gameData.thumbnail,
+        whole_title: gameData.whole_title,
+        key: gameData.id,
+        heart: false,
+        summary: gameData.summary,
+        genres: gameData.genres,
+      });
+      return newGame;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
+  const handleClickHeartOpen = () => {
+    setOpenHeart(true);
+  };
+  const handleHeartClose = () => {
+    setOpenHeart(false);
+  };
+
   const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleRemoveConfirm = () => {
+    deleteGame(gameData.id);
     setOpen(false);
   };
 
@@ -112,15 +151,74 @@ const Game = ({ onUpdateGame }) => {
             back to <Link to={`/${username}`}>{username}</Link> home page
           </div>
         </div>
-        <div className="">
+        <div>
           <div style={styles.gameInfo}>
             <h2>{gameData.whole_title}</h2>
             <div>
               {username} added this on{' '}
               {new Date(gameData.createdAt).toLocaleDateString()}
             </div>
-            <p data-testid="heart" style={{ width: '4rem' }}>
-              <Heart isActive={active || false} onClick={handleHeartClick} />
+
+            <p
+              data-testid="heart"
+              style={{
+                width: '7rem',
+                position: 'relative',
+                display: 'inline-block',
+              }}
+            >
+              <Heart
+                isActive={active || false}
+                onClick={() => {
+                  if (!games.find((game) => game.heart === true)) {
+                    handleClickHeartOpen();
+                  } else {
+                    dispatch(
+                      setNotification(
+                        `You have already selected game of the week`,
+                        5
+                      )
+                    );
+                  }
+                }}
+                style={{
+                  fontSize: '3rem',
+                  display: 'block',
+                  textAlign: 'cenSorrter',
+                }}
+              />
+              <Dialog
+                open={openHeart}
+                onClose={handleHeartClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">
+                  {`Do you want to make ${gameData.title} your game of the week?`}
+                </DialogTitle>
+                <DialogActions>
+                  <Button onClick={handleHeartClose}>No</Button>
+                  <Button onClick={handleHeartClick} autoFocus>
+                    {' '}
+                    Yes
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              <span
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  color: 'white',
+                  fontSize: '0.8rem',
+                  textAlign: 'center',
+                  fontWeight: 'bold',
+                  padding: '0 5px',
+                }}
+              >
+                {active ? 'Pick of the week' : ''}
+              </span>
             </p>
             <a href={gameData.url} target="blank" rel="noopener noreferrer">
               <img
@@ -179,33 +277,45 @@ const Game = ({ onUpdateGame }) => {
                 </div>
               </div>
             ) : null}
+
             <div style={styles.buttonContainer}></div>
             <div>
-              <button onClick={handleClickOpen}>Remove</button>
-              <Dialog
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-              >
-                <DialogTitle id="alert-dialog-title">
-                  {`Do you want to remove ${gameData.title} from your list?`}
-                </DialogTitle>
-                <DialogActions>
-                  <Button onClick={handleClose}>No</Button>
-                  <Button onClick={() => deleteGame(gameData.id)} autoFocus>
-                    {' '}
-                    Yes
-                  </Button>
-                </DialogActions>
-              </Dialog>
+              {user && user.id === gameData.user_id ? (
+                <>
+                  <button onClick={handleClickOpen}>Remove</button>
+                  <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      {`Do you want to remove ${gameData.title} from your list?`}
+                    </DialogTitle>
+                    <DialogActions>
+                      <Button onClick={handleClose}>No</Button>
+                      <Button onClick={handleRemoveConfirm} autoFocus>
+                        {' '}
+                        Yes
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => createNew({ gameData })}
+                    className="button-text"
+                  >
+                    Add to your list
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
       </>
     );
-  } else {
-    return <div>Not found</div>;
   }
 };
 
@@ -279,6 +389,7 @@ Game.propTypes = {
     id: PropTypes.number.isRequired,
   }),
   onUpdateGame: PropTypes.func,
+  createGame: PropTypes.func.isRequired,
 };
 
 export default Game;

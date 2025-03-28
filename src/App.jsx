@@ -358,11 +358,18 @@ const App = () => {
         />
         <Route
           path="/:username/movies/:id"
-          element={<Movie onUpdateMovie={movieRatingUpdate} />}
+          element={
+            <Movie
+              onUpdateMovie={movieRatingUpdate}
+              createMovie={createObject}
+            />
+          }
         />
         <Route
           path="/:username/games/:id"
-          element={<Game onUpdateGame={gameRatingUpdate} />}
+          element={
+            <Game onUpdateGame={gameRatingUpdate} createGame={createObject} />
+          }
         />
         <Route
           path="/:username"

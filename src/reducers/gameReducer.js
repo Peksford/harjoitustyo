@@ -11,12 +11,12 @@ const gameSlice = createSlice({
     setGames(state, action) {
       return action.payload;
     },
-    // increaseLike(state, action) {
-    //   const id = action.payload
-    //   return state.map((game) =>
-    //     game.id === id ? { ...game, likes: game.likes + 1 } : game
-    //   )
-    // },
+    setHeart(state, action) {
+      const id = action.payload;
+      return state.map((game) =>
+        game.id === id ? { ...game, heart: true } : game
+      );
+    },
     deleteGameId(state, action) {
       const gameIdToDelete = action.payload;
       return state.filter((game) => game.id !== gameIdToDelete);
@@ -24,7 +24,7 @@ const gameSlice = createSlice({
   },
 });
 
-export const { appendGame, setGames, increaseLike, deleteGameId } =
+export const { appendGame, setGames, setHeart, deleteGameId } =
   gameSlice.actions;
 
 export const addGame = (content) => {
@@ -35,15 +35,15 @@ export const addGame = (content) => {
   };
 };
 
-// export const gameLike = (game) => {
-//   return async (dispatch) => {
-//     const likeIncrease = await gameService.put(game.id, {
-//       ...game,
-//       likes: game.likes + 1,
-//     })
-//     dispatch(increaseLike(likeIncrease.id))
-//   }
-// }
+export const gameHeart = (game) => {
+  return async (dispatch) => {
+    const heartChange = await gameService.heartClick(game.id, {
+      ...game,
+      heart: true,
+    });
+    dispatch(setHeart(heartChange.id));
+  };
+};
 
 export const deleteGame = (id) => {
   return async (dispatch) => {
