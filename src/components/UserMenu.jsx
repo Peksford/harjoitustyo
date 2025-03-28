@@ -49,8 +49,6 @@ const UserMenu = () => {
     }
   };
 
-  console.log(userData.followers.length);
-
   if (userData) {
     return (
       <>
