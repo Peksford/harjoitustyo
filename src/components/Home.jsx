@@ -232,10 +232,17 @@ const Home = () => {
                     <div style={{ textAlign: 'center' }}>
                       <p>
                         <Link to={`/${username}/books/${heartBook.id}`}>
-                          <img
-                            src={`https://covers.openlibrary.org/b/id/${heartBook.thumbnail}-L.jpg`}
-                            style={{ width: '110px' }}
-                          />
+                          {heartBook.source === 'openLibrary' ? (
+                            <img
+                              src={`https://covers.openlibrary.org/b/id/${heartBook.thumbnail}-L.jpg`}
+                              style={{ width: '110px' }}
+                            />
+                          ) : (
+                            <img
+                              src={heartBook.thumbnail}
+                              style={{ width: '110px' }}
+                            />
+                          )}
                         </Link>
                       </p>
                       <div>{heartBook.whole_title}</div>
