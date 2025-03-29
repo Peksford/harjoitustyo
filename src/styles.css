@@ -178,19 +178,20 @@ button {
   }
   .home-container {
     display: flex;
-    flex-wrap: row;
+    flex-wrap: wrap;
     justify-content: center;
-    gap: 20px;
-    padding: 16px;
+    gap: 10px;
+    /* padding: 10px; */
     max-width: 100%;
     box-sizing: border-box;
+    overflow: hidden;
   }
-  @media (max-width: 768px) {
+  /* @media (max-width: 768px) {
     .home-container {
       padding-left: '8px';
       margin-left: '8px';
     }
-  }
+  } */
   
   .black-button {
     background-color: black !important;

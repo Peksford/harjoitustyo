@@ -182,7 +182,7 @@ const Home = () => {
                         <Link to={`/${username}/albums/${heartAlbum.id}`}>
                           <img
                             src={heartAlbum.thumbnail}
-                            style={{ width: '170px' }}
+                            style={{ width: '140px' }}
                           />
                         </Link>
                       </p>
@@ -208,7 +208,7 @@ const Home = () => {
                         <Link to={`/${username}/movies/${heartMovie.id}`}>
                           <img
                             src={`https://www.themoviedb.org/t/p/w1280/${heartMovie.thumbnail}`}
-                            style={{ width: '150px' }}
+                            style={{ width: '140px' }}
                           />
                         </Link>
                       </p>
@@ -263,7 +263,7 @@ const Home = () => {
                               /t_thumb/,
                               't_cover_big'
                             )}
-                            style={{ width: '150px' }}
+                            style={{ width: '140px' }}
                           />
                         </Link>
                       </p>

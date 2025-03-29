@@ -247,7 +247,7 @@ const Profile = ({ createObject }) => {
                                         src={discogsButton}
                                         style={{
                                           width: '100%',
-                                          maxWidth: '100px',
+                                          maxWidth: '80px',
                                           height: 'auto',
                                         }}
                                       />
