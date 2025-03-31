@@ -3,6 +3,63 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import UserMenu from './UserMenu';
 import { useSelector } from 'react-redux';
+import discogsButton from '../assets/discogsButton.webp';
+
+const styles = {
+  albumContainer: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  albumInfo: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  thumbnail: {
+    width: '200px',
+    height: '200px',
+    marginRight: '1rem',
+  },
+  buttonContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+  },
+  separator: {
+    border: 'px solid #ccc',
+    margin: '10px 0',
+  },
+  sliderContainer: {
+    marginTop: '10px',
+  },
+  slider: {
+    width: '100%',
+  },
+  silderNumbers: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginTop: '5px',
+    fontSize: '14px',
+  },
+  rating: {
+    margin: 0,
+  },
+  circle: {
+    width: '60px',
+    height: '60px',
+    borderRadius: '50%',
+    border: '4px solid #646cff',
+    backgroundColor: 'transparent',
+    // color: '#fff',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '15px',
+    fontWeight: 'bold',
+  },
+  circleText: {
+    margin: 0,
+  },
+};
 
 const Group = () => {
   const [searchWord, setSearchWord] = useState('');
@@ -112,9 +169,40 @@ const Group = () => {
       </div>
       {displayAlbums &&
         displayAlbums.map((album) => (
-          <div key={album.id}>
-            {album.whole_title}
-            <button onClick={handleClick}> Create</button>
+          <div key={album.id} style={styles.albumContainer}>
+            <img src={album.thumbnail} style={styles.thumbnail} />
+            <div style={styles.albumInfo}>
+              {album.whole_title}
+
+              <button onClick={handleClick}> Create</button>
+
+              {album.url && (
+                <p>
+                  <a
+                    href={`https://www.discogs.com${album.url}`}
+                    target="blank"
+                    rel="noopener noreferrer"
+                  >
+                    <button
+                      style={{
+                        backgroundColor: 'black',
+                        padding: '6px 14px',
+                        marginTop: '10px',
+                      }}
+                    >
+                      <img
+                        src={discogsButton}
+                        style={{
+                          width: '100%',
+                          maxWidth: '60px',
+                          height: 'auto',
+                        }}
+                      />
+                    </button>
+                  </a>
+                </p>
+              )}
+            </div>
           </div>
         ))}
     </>

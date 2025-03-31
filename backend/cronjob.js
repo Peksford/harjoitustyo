@@ -4,7 +4,7 @@ const { Album, Book, Movie, Game } = require('./models');
 if (process.env.NODE_ENV !== 'test') {
   console.log('Setting up cronjob...');
   cron.schedule(
-    '*/1 * * * *',
+    '0 0 * * MON',
     async () => {
       try {
         console.log('Cron job running...');
