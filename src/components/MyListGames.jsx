@@ -242,6 +242,7 @@ const MyListGames = () => {
             />
           </div>
         </div>
+        <h1>{username}&apos;s games</h1>
         <div className="album-container">
           {displayGames.map((game) => (
             <div key={game.id} style={styles.card}>

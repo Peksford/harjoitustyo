@@ -9,6 +9,7 @@ import movieService from '../services/movies';
 import bookService from '../services/books';
 import gameService from '../services/games';
 import followService from '../services/follow';
+import groupService from '../services/groups';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Logo from '../assets/Logo.png';
@@ -46,6 +47,7 @@ const SignUp = () => {
       gameService.setToken(user.token);
       followService.setToken(user.token);
       userService.setToken(user.token);
+      groupService.setToken(user.token);
       dispatch(setUser(user));
 
       dispatch(notificationShow(`Welcome ${user.username}!`));

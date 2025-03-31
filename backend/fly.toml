@@ -10,6 +10,10 @@ app = 'im-only-rating'
 [env]
   PORT = "3001"
 
+[processes]
+app = "node index.js"
+cron = "node cronjob.js
+
 [http_service]
   internal_port = 3001
   force_https = true

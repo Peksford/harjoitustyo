@@ -27,6 +27,7 @@ import Game from './components/Game';
 import Followers from './components/Followers';
 import Following from './components/Following';
 import SignUp from './components/SignUp';
+import Group from './components/Group';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from './reducers/loginReducer';
 import { setNotification } from './reducers/notificationReducer';
@@ -172,11 +173,6 @@ const App = () => {
     dispatch(setNotification(`Logged out user ${user.username}`, 5));
     navigate('/login');
   };
-
-  console.log(
-    'user albums',
-    userAlbums.find((album) => album.heart === true)
-  );
 
   const createObject = async (newObject) => {
     try {
@@ -376,6 +372,7 @@ const App = () => {
           element={<Home createObject={createObject} />}
         />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/groups" element={<Group />} />
       </Routes>
       {/* {((userAlbums.length > 1) ||
         userMovies.length > 1 ||

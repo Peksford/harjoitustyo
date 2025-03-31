@@ -249,9 +249,11 @@ const MyListMovies = () => {
               backgroundColor: '#0d253f',
               padding: '10px',
               borderRadius: '8px',
+              marginTop: '10px',
             }}
           />
         </Link>
+        <h1>{username}&apos;s movies and tv</h1>
         <div className="album-container">
           {displayMovies.map((movie) => (
             <div key={movie.id} style={styles.card}>

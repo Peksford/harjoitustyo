@@ -59,8 +59,8 @@ const styles = {
     // top: '150%',
     // left: '20%',
     // transform: 'translate(-50%, -50%)',
-    width: '75px',
-    height: '75px',
+    width: '65px',
+    height: '65px',
     borderRadius: '50%',
     border: '2px solid rgb(0, 0, 0)',
     backgroundColor: 'transparent',
@@ -97,8 +97,6 @@ const Profile = ({ createObject }) => {
     };
     fetchUser();
   }, []);
-
-  console.log('followers data', followersData);
 
   let followedUsernames = {};
   if (followersData) {
@@ -213,14 +211,6 @@ const Profile = ({ createObject }) => {
                                   style={styles.albumThumbnail}
                                 />
                               </Link>
-
-                              {album.rating && (
-                                <div style={styles.circle}>
-                                  <span style={styles.circleText}>
-                                    {album.rating}
-                                  </span>
-                                </div>
-                              )}
                             </div>
                             <div
                               style={{
@@ -254,6 +244,13 @@ const Profile = ({ createObject }) => {
                                     </button>
                                   </a>
                                 </p>
+                              )}
+                              {album.rating && (
+                                <div style={styles.circle}>
+                                  <span style={styles.circleText}>
+                                    {album.rating}
+                                  </span>
+                                </div>
                               )}
                             </div>
                           </div>

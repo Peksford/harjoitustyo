@@ -1,0 +1,10 @@
+POST http://localhost:3001/api/groups
+Content-Type: application/json
+
+{
+    "name": "Testi Ryhmä",
+    "item_id": 259,
+    "item_type": "album",
+    "created_at": "2024-03-29",
+    "updated_at": "2024-03-29"
+}

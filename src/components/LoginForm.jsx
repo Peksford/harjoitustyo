@@ -10,6 +10,7 @@ import bookService from '../services/books';
 import gameService from '../services/games';
 import userService from '../services/users';
 import followService from '../services/follow';
+import groupService from '../services/groups';
 import { useNavigate } from 'react-router-dom';
 
 import { setNotification } from '../reducers/notificationReducer';
@@ -41,6 +42,7 @@ const LoginForm = () => {
       gameService.setToken(user.token);
       followService.setToken(user.token);
       userService.setToken(user.token);
+      groupService.setToken(user.token);
 
       dispatch(setUser(user));
 

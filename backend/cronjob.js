@@ -2,7 +2,7 @@ const cron = require('node-cron');
 const { Album, Book, Movie, Game } = require('./models');
 
 cron.schedule(
-  '0 0 * * MON',
+  '*/1 * * * *',
   async () => {
     try {
       console.log('Setting up cronjob...');

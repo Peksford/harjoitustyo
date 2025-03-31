@@ -241,7 +241,7 @@ const MyList = () => {
             />
           </div>
         </div>
-
+        <h1>{username}&apos;s albums</h1>
         <div className="album-container">
           {displayAlbums.map((album) => (
             <div key={album.id} style={styles.card}>

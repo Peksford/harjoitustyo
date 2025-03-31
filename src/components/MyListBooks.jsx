@@ -235,6 +235,7 @@ const MyListBooks = () => {
             />
           </div>
         </div>
+        <h1>{username}&apos;s books</h1>
         <div className="album-container">
           {displayBooks.map((book) => (
             <div key={book.id} style={styles.card}>

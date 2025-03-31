@@ -5,6 +5,8 @@ const Movie = require('./movie');
 const Game = require('./game');
 const Session = require('./session');
 const Follow = require('./follow');
+const Group = require('./group');
+const GroupMember = require('./group_member');
 
 User.hasMany(Album, { foreignKey: 'user_id' });
 Album.belongsTo(User, { foreignKey: 'user_id' });
@@ -26,4 +28,20 @@ Follow.belongsTo(User, { foreignKey: 'followedId', as: 'followed' });
 User.hasMany(Follow, { foreignKey: 'followedId', as: 'followers' });
 User.hasMany(Follow, { foreignKey: 'followerId', as: 'followed' });
 
-module.exports = { Album, User, Session, Book, Movie, Game, Follow };
+Group.hasMany(GroupMember, { foreignKey: 'group_id' });
+GroupMember.belongsTo(Group, { foreignKey: 'group_id' });
+
+User.hasMany(GroupMember, { foreignKey: 'user_id' });
+GroupMember.belongsTo(User, { foreignKey: 'user_id' });
+
+module.exports = {
+  Album,
+  User,
+  Session,
+  Book,
+  Movie,
+  Game,
+  Follow,
+  Group,
+  GroupMember,
+};
