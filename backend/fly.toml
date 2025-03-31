@@ -12,7 +12,7 @@ app = 'im-only-rating'
 
 [processes]
 app = "node index.js"
-cron = "node cronjob.js
+cron = "node cronjob.js"
 
 [http_service]
   internal_port = 3001
