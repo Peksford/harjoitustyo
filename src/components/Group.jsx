@@ -1,10 +1,7 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import UserMenu from './UserMenu';
-import userService from '../services/users';
 import { useSelector } from 'react-redux';
 
 const Group = () => {
