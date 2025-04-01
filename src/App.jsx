@@ -110,6 +110,7 @@ const App = () => {
           const books = await userService.getUserBooks(user.username);
           const movies = await userService.getUserMovies(user.username);
           const games = await userService.getUserGames(user.username);
+
           dispatch(setAlbums(albums));
           dispatch(setBooks(books));
           dispatch(setMovies(movies));

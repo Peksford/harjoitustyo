@@ -1,9 +1,13 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import UserMenu from './UserMenu';
 import { useSelector } from 'react-redux';
 import discogsButton from '../assets/discogsButton.webp';
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
+import { Form } from 'react-bootstrap';
+import userService from '../services/users';
 
 const styles = {
   albumContainer: {
@@ -15,8 +19,8 @@ const styles = {
     flexDirection: 'column',
   },
   thumbnail: {
-    width: '200px',
-    height: '200px',
+    width: '150px',
+    height: '150px',
     marginRight: '1rem',
   },
   buttonContainer: {
@@ -64,6 +68,9 @@ const styles = {
 const Group = () => {
   const [searchWord, setSearchWord] = useState('');
   const [type, setType] = useState('albums');
+  const [friend, setFriend] = useState('');
+  const [followed, setFollowed] = useState(null);
+  const [friends, setFriends] = useState([]);
 
   const user = useSelector((state) => state.user);
   const albums = useSelector((state) => state.albums);
@@ -71,8 +78,18 @@ const Group = () => {
   const movies = useSelector((state) => state.movies);
   const games = useSelector((state) => state.games);
 
-  console.log('user', user);
-  console.log('user', albums);
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (!user) return null;
+      try {
+        const response = await userService.getUser(user.username);
+        setFollowed(response.followed);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchUser();
+  }, [user]);
 
   const searchItem = (searchWord) => {
     let searchedItem = {};
@@ -111,10 +128,18 @@ const Group = () => {
 
   const displayAlbums = albums ? searchItem(searchWord) : null;
 
+  const sortedAlbums = displayAlbums.sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
+
+  console.log('setFriend', friend);
+  console.log('interesting', friends);
+  console.log('follwoed', followed);
+
   return (
-    <>
+    <div>
       <UserMenu />
-      <div>Create a new rating group!</div>
+      <div>Create a new rating club!</div>
       <div className="radio-group">
         <label style={{ marginRight: '10px' }}>
           <input
@@ -167,45 +192,163 @@ const Group = () => {
           placeholder="Search"
         />
       </div>
-      {displayAlbums &&
-        displayAlbums.map((album) => (
-          <div key={album.id} style={styles.albumContainer}>
-            <img src={album.thumbnail} style={styles.thumbnail} />
-            <div style={styles.albumInfo}>
-              {album.whole_title}
 
-              <button onClick={handleClick}> Create</button>
+      {sortedAlbums &&
+        sortedAlbums.map((album) => (
+          <React.Fragment key={album.id}>
+            <div style={styles.albumContainer}>
+              <img src={album.thumbnail} style={styles.thumbnail} />
+              <div style={styles.albumInfo}>
+                {album.whole_title}
+                <div>
+                  <Popup
+                    // display="center"
+                    trigger={
+                      <button className="button-text">
+                        Create a Rating club
+                      </button>
+                    }
+                    modal
+                    nested
+                    onClose={() => setFriends([])}
+                    contentStyle={{
+                      background: 'transparent',
+                      border: 'nonce',
 
-              {album.url && (
-                <p>
-                  <a
-                    href={`https://www.discogs.com${album.url}`}
-                    target="blank"
-                    rel="noopener noreferrer"
+                      // color: 'white',
+                    }}
                   >
-                    <button
-                      style={{
-                        backgroundColor: 'black',
-                        padding: '6px 14px',
-                        marginTop: '10px',
-                      }}
-                    >
-                      <img
-                        src={discogsButton}
+                    {(close) => (
+                      <div
+                        className="modal-container"
                         style={{
+                          backgroundImage: `url(${album.thumbnail})`,
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center',
                           width: '100%',
-                          maxWidth: '60px',
-                          height: 'auto',
+                          height: '100%',
+                          padding: '20px',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          borderRadius: '10px',
                         }}
-                      />
-                    </button>
-                  </a>
-                </p>
-              )}
+                      >
+                        <div
+                          className="modal-header"
+                          style={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                            textAlign: 'left',
+                            fontSize: '0.7rem',
+                            padding: '5px 15px',
+                            borderRadius: '10px',
+                            width: '100%',
+                          }}
+                        >
+                          Create a &apos;{album.whole_title}&apos; club{' '}
+                        </div>
+
+                        <div>
+                          <select
+                            value={friend}
+                            onChange={({ target }) => setFriend(target.value)}
+                          >
+                            <option value="">Invite a friend</option>
+                            {followed.map((user) => (
+                              <option key={user.id} value={user.followed_id}>
+                                {user.followed_username}
+                              </option>
+                            ))}
+                          </select>
+                          <div>
+                            <button
+                              onClick={() =>
+                                !friends.find(
+                                  (already) => already === friend
+                                ) &&
+                                setFriends((prevFriends) => [
+                                  ...prevFriends,
+                                  friend,
+                                ])
+                              }
+                              style={{ marginTop: '10px', marginRight: '10px' }}
+                            >
+                              Invite
+                            </button>
+                            {friends.length > 0 && (
+                              <button>Create a club</button>
+                            )}
+                          </div>
+                        </div>
+                        <div>
+                          {friends.length > 0 && (
+                            <div
+                              style={{
+                                backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                                textAlign: 'left',
+                                fontSize: '0.7rem',
+                                padding: '5px 15px',
+                                borderRadius: '10px',
+                                width: '100%',
+                              }}
+                            >
+                              Added:
+                              {friends.map((friendId) => {
+                                const user = followed.find(
+                                  (user) =>
+                                    Number(user.followed_id) ===
+                                    Number(friendId)
+                                );
+                                return user ? (
+                                  <div key={user.followed_id}>
+                                    {user.followed_username}
+                                  </div>
+                                ) : null;
+                              })}
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="modal-actions">
+                          <button onClick={() => close()}>Close</button>
+                        </div>
+                      </div>
+                    )}
+                  </Popup>
+                </div>
+                {album.url && (
+                  <p>
+                    <a
+                      href={`https://www.discogs.com${album.url}`}
+                      target="blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button
+                        style={{
+                          backgroundColor: 'black',
+                          padding: '6px 14px',
+                          marginTop: '10px',
+                        }}
+                      >
+                        <img
+                          src={discogsButton}
+                          style={{
+                            width: '100%',
+                            maxWidth: '60px',
+                            height: 'auto',
+                          }}
+                        />
+                      </button>
+                    </a>
+                  </p>
+                )}
+              </div>
             </div>
-          </div>
+            <hr />
+          </React.Fragment>
         ))}
-    </>
+    </div>
   );
 };
 
