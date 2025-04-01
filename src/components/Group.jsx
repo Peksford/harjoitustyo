@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux';
 import discogsButton from '../assets/discogsButton.webp';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
-import { Form } from 'react-bootstrap';
 import userService from '../services/users';
 
 const styles = {
@@ -122,9 +121,9 @@ const Group = () => {
     setType(event.target.value);
   };
 
-  const handleClick = () => {
-    console.log('nice');
-  };
+  // const handleClick = () => {
+  //   console.log('nice');
+  // };
 
   const displayAlbums = albums ? searchItem(searchWord) : null;
 
