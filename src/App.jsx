@@ -82,7 +82,7 @@ const App = () => {
   const userBooks = useSelector((state) => state.books);
   const userMovies = useSelector((state) => state.movies);
   const userGames = useSelector((state) => state.games);
-  const userGroups = useSelector((state) => state.groups);
+  // const userGroups = useSelector((state) => state.groups);
   const [pageLoaded, setPageLoaded] = useState(false);
 
   const dispatch = useDispatch();
