@@ -10,6 +10,7 @@ import movieService from './services/movies';
 import logoutService from './services/logout';
 import bookService from './services/books';
 import gameService from './services/games';
+import groupService from './services/groups';
 import followService from './services/follow';
 import Notification from './components/Notification';
 import Home from './components/Home';
@@ -28,6 +29,7 @@ import Followers from './components/Followers';
 import Following from './components/Following';
 import SignUp from './components/SignUp';
 import Group from './components/Group';
+import UserGroup from './components/UserGroup';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from './reducers/loginReducer';
 import { setNotification } from './reducers/notificationReducer';
@@ -36,13 +38,14 @@ import { setAlbums, addAlbum } from './reducers/albumReducer';
 import { setBooks, addBook } from './reducers/bookReducer';
 import { setMovies, addMovie } from './reducers/movieReducer';
 import { setGames, addGame } from './reducers/gameReducer';
+import { setGroups } from './reducers/groupReducer';
 import PropTypes from 'prop-types';
 import Logo from './assets/Logo.png';
 
 const styles = {
-  padding: {
-    padding: '0 10px',
-  },
+  // padding: {
+  //   padding: '0 10px',
+  // },
   container: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -79,6 +82,7 @@ const App = () => {
   const userBooks = useSelector((state) => state.books);
   const userMovies = useSelector((state) => state.movies);
   const userGames = useSelector((state) => state.games);
+  const userGroups = useSelector((state) => state.groups);
   const [pageLoaded, setPageLoaded] = useState(false);
 
   const dispatch = useDispatch();
@@ -96,6 +100,7 @@ const App = () => {
         gameService.setToken(user.token);
         followService.setToken(user.token);
         userService.setToken(user.token);
+        groupService.setToken(user.token);
       } catch (error) {
         console.error('Error', error);
       }
@@ -110,11 +115,13 @@ const App = () => {
           const books = await userService.getUserBooks(user.username);
           const movies = await userService.getUserMovies(user.username);
           const games = await userService.getUserGames(user.username);
+          const groups = await userService.getUserGroups(user.username);
 
           dispatch(setAlbums(albums));
           dispatch(setBooks(books));
           dispatch(setMovies(movies));
           dispatch(setGames(games));
+          dispatch(setGroups(groups));
         }
       } catch (error) {
         console.error('error', error);
@@ -132,9 +139,10 @@ const App = () => {
   }, [location.pathname]);
 
   const albumRatingUpdate = (updatedAlbum) => {
+    console.log('aynthing here?', updatedAlbum);
     setAlbums((preAlbums) =>
       preAlbums.map((album) =>
-        album.id === updatedAlbum.id ? updatedAlbum : { ...album, heart: false }
+        album.id === updatedAlbum.id ? updatedAlbum : album
       )
     );
   };
@@ -242,7 +250,7 @@ const App = () => {
           <img
             src={Logo}
             alt="Logo"
-            style={{ width: '100%', maxWidth: '160px', height: 'auto' }}
+            style={{ width: '100%', maxWidth: '120px', height: 'auto' }}
           />
         </Link>
         {!user && (
@@ -253,6 +261,9 @@ const App = () => {
         <div style={styles.rightSection}>
           <Link style={styles.padding} to="/search">
             Search
+          </Link>
+          <Link style={styles.padding} to="/groups">
+            Groups
           </Link>
           {!user && (
             <Link style={styles.padding} to="/login">
@@ -374,6 +385,15 @@ const App = () => {
         />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/groups" element={<Group />} />
+        <Route
+          path="/groups/:id"
+          element={
+            <UserGroup
+              createAlbum={createObject}
+              onUpdateGroup={albumRatingUpdate}
+            />
+          }
+        />
       </Routes>
       {/* {((userAlbums.length > 1) ||
         userMovies.length > 1 ||

@@ -46,6 +46,11 @@ const getUserGames = async (username) => {
   return response.data.games;
 };
 
+const getUserGroups = async (username) => {
+  const response = await axios.get(`${baseUrl}/${username}`);
+  return response.data.groups;
+};
+
 const newUser = async ({ username, name, password }) => {
   const response = await axios.post(`${baseUrl}`, { username, name, password });
   return response.data;
@@ -61,4 +66,5 @@ export default {
   getUserGames,
   getFollowersData,
   setToken,
+  getUserGroups,
 };

@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = '/api/albums';
+const baseUrl = '/api/groups';
 
 let token = null;
 
@@ -12,6 +12,15 @@ const getAll = async () => {
   return response.data;
 };
 
+const getGroup = async (id) => {
+  const response = await axios.get(`${baseUrl}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
 const create = async (newObject) => {
   const config = {
     headers: { Authorization: token },
@@ -21,8 +30,24 @@ const create = async (newObject) => {
   return response.data;
 };
 
+const createMembers = async ({ group_id, user_id }) => {
+  console.log('testing');
+  const config = {
+    headers: { Authorization: token },
+  };
+
+  const response = await axios.post(
+    `${baseUrl}/${group_id}/members`,
+    { userId: user_id },
+    config
+  );
+  return response.data;
+};
+
 export default {
   getAll,
   setToken,
   create,
+  createMembers,
+  getGroup,
 };

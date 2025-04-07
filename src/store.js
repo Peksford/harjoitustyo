@@ -5,6 +5,7 @@ import albumReducer from './reducers/albumReducer';
 import bookReducer from './reducers/bookReducer';
 import movieReducer from './reducers/movieReducer';
 import gameReducer from './reducers/gameReducer';
+import groupReducer from './reducers/groupReducer';
 
 const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ const store = configureStore({
     books: bookReducer,
     movies: movieReducer,
     games: gameReducer,
+    groups: groupReducer,
   },
 });
 

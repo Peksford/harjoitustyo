@@ -18,6 +18,10 @@ Group.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    discogs_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     item_type: {
       type: DataTypes.ENUM('album', 'book', 'movie', 'game'),
     },

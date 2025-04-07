@@ -34,6 +34,18 @@ GroupMember.belongsTo(Group, { foreignKey: 'group_id' });
 User.hasMany(GroupMember, { foreignKey: 'user_id' });
 GroupMember.belongsTo(User, { foreignKey: 'user_id' });
 
+User.belongsToMany(Group, {
+  through: GroupMember,
+  foreignKey: 'user_id',
+  as: 'groups',
+});
+
+Group.belongsToMany(User, {
+  through: GroupMember,
+  foreignKey: 'group_id',
+  as: 'members',
+});
+
 module.exports = {
   Album,
   User,

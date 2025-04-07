@@ -182,6 +182,7 @@ router.get('/:username', async (req, res, next) => {
       });
       const followers = await user.getFollowers();
       const followed = await user.getFollowed();
+      const groups = await user.getGroups();
 
       res.json({
         ...user.toJSON(),
@@ -191,6 +192,7 @@ router.get('/:username', async (req, res, next) => {
         games,
         followers,
         followed,
+        groups,
       });
     } else {
       res.status(404).end();

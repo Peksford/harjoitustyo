@@ -7,6 +7,8 @@ import discogsButton from '../assets/discogsButton.webp';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import userService from '../services/users';
+import groupService from '../services/groups';
+import { Link } from 'react-router-dom';
 
 const styles = {
   albumContainer: {
@@ -70,12 +72,14 @@ const Group = () => {
   const [friend, setFriend] = useState('');
   const [followed, setFollowed] = useState(null);
   const [friends, setFriends] = useState([]);
+  const [added, setAdded] = useState([]);
 
   const user = useSelector((state) => state.user);
   const albums = useSelector((state) => state.albums);
   const books = useSelector((state) => state.books);
   const movies = useSelector((state) => state.movies);
   const games = useSelector((state) => state.games);
+  const groups = useSelector((state) => state.groups);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -121,9 +125,32 @@ const Group = () => {
     setType(event.target.value);
   };
 
-  // const handleClick = () => {
-  //   console.log('nice');
-  // };
+  const createGroup = async (groupObject) => {
+    console.log('group object', groupObject);
+    const group = await groupService.create({
+      created_at: groupObject.created_at,
+      item_id: groupObject.item_id,
+      item_type: groupObject.item_type,
+      name: groupObject.name,
+      updated_at: groupObject.updated_at,
+      discogs_id: groupObject.discogs_id,
+    });
+    console.log('group response', group);
+    for (const friend of friends) {
+      await groupService.createMembers({
+        group_id: group.id,
+        user_id: Number(friend),
+      });
+    }
+    setAdded([
+      ...added,
+      {
+        discogs_id: groupObject.discogs_id,
+        group_id: group.id,
+      },
+    ]);
+    return group;
+  };
 
   const displayAlbums = albums ? searchItem(searchWord) : null;
 
@@ -131,14 +158,26 @@ const Group = () => {
     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
   );
 
-  console.log('setFriend', friend);
-  console.log('interesting', friends);
-  console.log('follwoed', followed);
+  console.log('added ', added);
+  console.log('user groups', groups);
+  console.log('user albums', albums);
+
+  const alreadyGrouped = albums.filter((album) =>
+    groups.some((group) => group.item_id === album.id)
+  );
+  albums.map((album) =>
+    console.log(
+      'whatta',
+      alreadyGrouped.some((group) => group.item_id === album.id)
+    )
+  );
 
   return (
     <div>
       <UserMenu />
-      <div>Create a new rating club!</div>
+      <h3 style={{ textAlign: 'center', marginTop: '20px' }}>
+        Create a new rating club for you and your friends
+      </h3>
       <div className="radio-group">
         <label style={{ marginRight: '10px' }}>
           <input
@@ -200,121 +239,152 @@ const Group = () => {
               <div style={styles.albumInfo}>
                 {album.whole_title}
                 <div>
-                  <Popup
-                    // display="center"
-                    trigger={
-                      <button className="button-text">
-                        Create a Rating club
-                      </button>
-                    }
-                    modal
-                    nested
-                    onClose={() => setFriends([])}
-                    contentStyle={{
-                      background: 'transparent',
-                      border: 'nonce',
-
-                      // color: 'white',
-                    }}
-                  >
-                    {(close) => (
-                      <div
-                        className="modal-container"
-                        style={{
-                          backgroundImage: `url(${album.thumbnail})`,
-                          backgroundSize: 'cover',
-                          backgroundPosition: 'center',
-                          width: '100%',
-                          height: '100%',
-                          padding: '20px',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          borderRadius: '10px',
-                        }}
-                      >
+                  {!groups.some((group) => group.item_id === album.id) ? (
+                    <Popup
+                      trigger={
+                        <button className="button-text">
+                          Create a Rating club
+                        </button>
+                      }
+                      modal
+                      nested
+                      onClose={() => setFriends([])}
+                      contentStyle={{
+                        background: 'transparent',
+                        border: 'none',
+                        width: '80%',
+                        height: '50%',
+                      }}
+                    >
+                      {(close) => (
                         <div
-                          className="modal-header"
+                          className="modal-container"
                           style={{
-                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                            textAlign: 'left',
-                            fontSize: '0.7rem',
-                            padding: '5px 15px',
-                            borderRadius: '10px',
+                            backgroundImage: `url(${album.thumbnail})`,
+                            backgroundSize: '30%',
+                            // backgroundRepeat: 'no-repeat',
+                            backgroundPosition: 'center',
                             width: '100%',
+                            height: '100%',
                           }}
                         >
-                          Create a &apos;{album.whole_title}&apos; club{' '}
-                        </div>
-
-                        <div>
-                          <select
-                            value={friend}
-                            onChange={({ target }) => setFriend(target.value)}
+                          <div
+                            className="modal-header"
+                            style={{
+                              backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                              textAlign: 'center',
+                              fontSize: '0.7rem',
+                              padding: '5px 15px',
+                              borderRadius: '10px',
+                              width: '40%',
+                            }}
                           >
-                            <option value="">Invite a friend</option>
-                            {followed.map((user) => (
-                              <option key={user.id} value={user.followed_id}>
-                                {user.followed_username}
-                              </option>
-                            ))}
-                          </select>
+                            &apos;{album.whole_title}&apos; Rating club{' '}
+                          </div>
+
                           <div>
-                            <button
-                              onClick={() =>
-                                !friends.find(
-                                  (already) => already === friend
-                                ) &&
-                                setFriends((prevFriends) => [
-                                  ...prevFriends,
-                                  friend,
-                                ])
-                              }
-                              style={{ marginTop: '10px', marginRight: '10px' }}
+                            <select
+                              value={friend}
+                              onChange={({ target }) => setFriend(target.value)}
                             >
-                              Invite
-                            </button>
+                              <option value="">Invite a friend</option>
+                              {followed &&
+                                followed.map((user) => (
+                                  <option
+                                    key={user.id}
+                                    value={user.followed_id}
+                                  >
+                                    {user.followed_username}
+                                  </option>
+                                ))}
+                            </select>
+                            <div>
+                              <button
+                                onClick={() =>
+                                  !friends.find(
+                                    (already) => already === friend
+                                  ) &&
+                                  setFriends((prevFriends) => [
+                                    ...prevFriends,
+                                    friend,
+                                  ])
+                                }
+                                style={{
+                                  marginTop: '10px',
+                                  marginRight: '10px',
+                                }}
+                              >
+                                Invite
+                              </button>
+                              {friends.length > 0 && (
+                                <button
+                                  onClick={() =>
+                                    createGroup(
+                                      {
+                                        name: album.whole_title,
+                                        item_id: album.id,
+                                        item_type: 'album',
+                                        created_at: Date.now(),
+                                        updated_at: Date.now(),
+                                        friends: friends,
+                                        discogs_id: album.discogs_id,
+                                      },
+                                      close()
+                                    )
+                                  }
+                                >
+                                  Create a club
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                          <div>
                             {friends.length > 0 && (
-                              <button>Create a club</button>
+                              <div
+                                style={{
+                                  backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                                  textAlign: 'left',
+                                  fontSize: '0.8rem',
+                                  padding: '5px 15px',
+                                  borderRadius: '10px',
+                                  width: '100%',
+                                  marginTop: '10px',
+                                }}
+                              >
+                                Added:
+                                {friends.map((friendId) => {
+                                  const user = followed.find(
+                                    (user) =>
+                                      Number(user.followed_id) ===
+                                      Number(friendId)
+                                  );
+                                  return user ? (
+                                    <div key={user.followed_id}>
+                                      {user.followed_username}
+                                    </div>
+                                  ) : null;
+                                })}
+                              </div>
                             )}
                           </div>
-                        </div>
-                        <div>
-                          {friends.length > 0 && (
-                            <div
-                              style={{
-                                backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                                textAlign: 'left',
-                                fontSize: '0.7rem',
-                                padding: '5px 15px',
-                                borderRadius: '10px',
-                                width: '100%',
-                              }}
-                            >
-                              Added:
-                              {friends.map((friendId) => {
-                                const user = followed.find(
-                                  (user) =>
-                                    Number(user.followed_id) ===
-                                    Number(friendId)
-                                );
-                                return user ? (
-                                  <div key={user.followed_id}>
-                                    {user.followed_username}
-                                  </div>
-                                ) : null;
-                              })}
-                            </div>
-                          )}
-                        </div>
 
-                        <div className="modal-actions">
-                          <button onClick={() => close()}>Close</button>
+                          <div className="modal-actions">
+                            <button onClick={() => close()}>Close</button>
+                          </div>
                         </div>
-                      </div>
-                    )}
-                  </Popup>
+                      )}
+                    </Popup>
+                  ) : (
+                    <Link
+                      to={`/groups/${
+                        groups.find(
+                          (item) => item.discogs_id === album.discogs_id
+                        ).group_member.group_id
+                      }`}
+                    >
+                      <button>Into Da Club</button>
+                    </Link>
+                  )}
                 </div>
                 {album.url && (
                   <p>
