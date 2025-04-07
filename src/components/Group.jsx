@@ -126,7 +126,6 @@ const Group = () => {
   };
 
   const createGroup = async (groupObject) => {
-    console.log('group object', groupObject);
     const group = await groupService.create({
       created_at: groupObject.created_at,
       item_id: groupObject.item_id,
@@ -135,7 +134,7 @@ const Group = () => {
       updated_at: groupObject.updated_at,
       discogs_id: groupObject.discogs_id,
     });
-    console.log('group response', group);
+
     for (const friend of friends) {
       await groupService.createMembers({
         group_id: group.id,
@@ -157,21 +156,6 @@ const Group = () => {
   const sortedAlbums = displayAlbums.sort(
     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
   );
-
-  console.log('added ', added);
-  console.log('user groups', groups);
-  console.log('user albums', albums);
-
-  const alreadyGrouped = albums.filter((album) =>
-    groups.some((group) => group.item_id === album.id)
-  );
-  albums.map((album) =>
-    console.log(
-      'whatta',
-      alreadyGrouped.some((group) => group.item_id === album.id)
-    )
-  );
-
   return (
     <div>
       <UserMenu />

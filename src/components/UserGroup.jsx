@@ -17,6 +17,8 @@ const UserGroup = ({ onUpdateGroup, createAlbum }) => {
   const [userAlbums, setUserAlbums] = useState([]);
   const albums = useSelector((state) => state.albums);
 
+  console.log('albums?', albums);
+
   useEffect(() => {
     const fetchGroup = async () => {
       try {
@@ -30,14 +32,18 @@ const UserGroup = ({ onUpdateGroup, createAlbum }) => {
     fetchGroup();
   }, [id]);
 
+  console.log('group data?', groupData);
+
   useEffect(() => {
-    if (albums) {
+    if (albums && groupData?.item_id) {
       const foundAlbum = albums.find((album) => album.id === groupData.item_id);
       if (foundAlbum) {
         setAlbum(foundAlbum);
       }
     }
-  }, [albums]);
+  }, [albums, groupData?.item_id]);
+
+  console.log('set album?', album);
 
   useEffect(() => {
     const fetchOtherUserAlbums = async () => {
@@ -190,13 +196,25 @@ const UserGroup = ({ onUpdateGroup, createAlbum }) => {
 
               {groupUserAlbums &&
                 groupUserAlbums.map((member) =>
-                  member.rating ? (
+                  member ? (
                     <div key={member.id}>
-                      <div>{member.id} gave this</div>
-                      <div style={styles.circle}>
-                        {member.rating}
-                        <hr />
-                      </div>
+                      {member.rating ? (
+                        <>
+                          <div>
+                            {
+                              groupData.group_members.find(
+                                (group_member) =>
+                                  group_member.user_id === member.user_id
+                              ).user.username
+                            }{' '}
+                            gave this
+                          </div>
+                          <div style={styles.circle}>
+                            {member.rating}
+                            <hr />
+                          </div>
+                        </>
+                      ) : null}
                     </div>
                   ) : null
                 )}
