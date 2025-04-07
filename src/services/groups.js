@@ -31,7 +31,7 @@ const create = async (newObject) => {
 };
 
 const createMembers = async ({ group_id, user_id }) => {
-  console.log('testing');
+  console.log('testing', group_id);
   const config = {
     headers: { Authorization: token },
   };

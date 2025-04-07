@@ -11,6 +11,10 @@ const groupSlice = createSlice({
     setGroups(state, action) {
       return action.payload;
     },
+    updateGroup(state, action) {
+      const updated = action.payload;
+      return state.map((group) => (group.id === updated.id ? updated : group));
+    },
     setHeart(state, action) {
       const id = action.payload;
       return state.map((group) =>
@@ -24,7 +28,7 @@ const groupSlice = createSlice({
   },
 });
 
-export const { appendGroup, setGroups, setHeart, deleteGroupId } =
+export const { appendGroup, setGroups, setHeart, deleteGroupId, updateGroup } =
   groupSlice.actions;
 
 export const addGroup = (content) => {

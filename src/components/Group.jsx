@@ -2,13 +2,14 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import UserMenu from './UserMenu';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import discogsButton from '../assets/discogsButton.webp';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import userService from '../services/users';
 import groupService from '../services/groups';
 import { Link } from 'react-router-dom';
+import { addGroup, updateGroup } from '../reducers/groupReducer';
 
 const styles = {
   albumContainer: {
@@ -81,6 +82,8 @@ const Group = () => {
   const games = useSelector((state) => state.games);
   const groups = useSelector((state) => state.groups);
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const fetchUser = async () => {
       if (!user) return null;
@@ -126,21 +129,33 @@ const Group = () => {
   };
 
   const createGroup = async (groupObject) => {
-    const group = await groupService.create({
+    const group = {
       created_at: groupObject.created_at,
       item_id: groupObject.item_id,
       item_type: groupObject.item_type,
       name: groupObject.name,
       updated_at: groupObject.updated_at,
       discogs_id: groupObject.discogs_id,
+    };
+
+    const groupResponse = await dispatch(addGroup(group));
+    console.log('group response', groupResponse);
+
+    await groupService.createMembers({
+      group_id: groupResponse.id,
+      user_id: Number(user.id),
     });
 
     for (const friend of friends) {
       await groupService.createMembers({
-        group_id: group.id,
+        group_id: groupResponse.id,
         user_id: Number(friend),
       });
     }
+    const updatedGroup = await groupService.getGroup(groupResponse.id);
+    console.log('updated group', updatedGroup);
+    dispatch(updateGroup(updatedGroup));
+
     setAdded([
       ...added,
       {
@@ -148,6 +163,7 @@ const Group = () => {
         group_id: group.id,
       },
     ]);
+
     return group;
   };
 
@@ -156,6 +172,9 @@ const Group = () => {
   const sortedAlbums = displayAlbums.sort(
     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
   );
+
+  console.log('groups', groups);
+  console.log('added', added);
   return (
     <div>
       <UserMenu />
@@ -223,7 +242,11 @@ const Group = () => {
               <div style={styles.albumInfo}>
                 {album.whole_title}
                 <div>
-                  {!groups.some((group) => group.item_id === album.id) ? (
+                  {!groups.some((group) => group.item_id === album.id) &&
+                  !added.find(
+                    (alreadyAdded) =>
+                      alreadyAdded.discogs_id === album.discogs_id
+                  ) ? (
                     <Popup
                       trigger={
                         <button className="button-text">
@@ -359,15 +382,23 @@ const Group = () => {
                       )}
                     </Popup>
                   ) : (
-                    <Link
-                      to={`/groups/${
-                        groups.find(
-                          (item) => item.discogs_id === album.discogs_id
-                        ).group_member.group_id
-                      }`}
-                    >
-                      <button>Into Da Club</button>
-                    </Link>
+                    <div>
+                      {groups.find(
+                        (item) => item.discogs_id === album.discogs_id
+                      ) && (
+                        <Link
+                          to={`/groups/${
+                            groups.find(
+                              (item) => item.discogs_id === album.discogs_id
+                            )?.group_member?.group_id
+                          }`}
+                        >
+                          <button style={{ padding: '10px' }}>
+                            Into Da Club
+                          </button>
+                        </Link>
+                      )}
+                    </div>
                   )}
                 </div>
                 {album.url && (
