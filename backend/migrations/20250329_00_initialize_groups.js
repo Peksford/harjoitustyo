@@ -18,7 +18,11 @@ module.exports = {
       },
       discogs_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
+      },
+      tmdb_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
       },
       item_type: {
         type: DataTypes.ENUM('album', 'book', 'movie', 'game'),

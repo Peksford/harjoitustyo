@@ -41,6 +41,9 @@ import { setGames, addGame } from './reducers/gameReducer';
 import { setGroups } from './reducers/groupReducer';
 import PropTypes from 'prop-types';
 import Logo from './assets/Logo.png';
+import { BsSearch, BsList } from 'react-icons/bs';
+import { IoPersonCircleOutline } from 'react-icons/io5';
+import { MdOutlineLogin } from 'react-icons/md';
 
 const styles = {
   // padding: {
@@ -260,10 +263,10 @@ const App = () => {
         )}
         <div style={styles.rightSection}>
           <Link style={styles.padding} to="/search">
-            Search
+            <BsSearch />
           </Link>
-          <Link style={styles.padding} to="/groups">
-            Groups
+          <Link style={styles.padding} to="/clubs">
+            Clubs
           </Link>
           {!user && (
             <Link style={styles.padding} to="/login">
@@ -275,10 +278,10 @@ const App = () => {
               <DropdownButton
                 id="dropdown-secondary-button"
                 // data-testid="dropdown-list"
-                title={user.username}
+                title={<BsList />}
               >
                 <Dropdown.Item as={Link} to={`/${user.username}`}>
-                  My profile
+                  <IoPersonCircleOutline /> {user.username}
                 </Dropdown.Item>
                 <Dropdown.Item as={Link} to={`/${user.username}/albums`}>
                   My albums
@@ -292,7 +295,9 @@ const App = () => {
                 <Dropdown.Item as={Link} to={`/${user.username}/games`}>
                   My games
                 </Dropdown.Item>
-                <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                <Dropdown.Item onClick={handleLogout}>
+                  <MdOutlineLogin /> Logout
+                </Dropdown.Item>
               </DropdownButton>
             </div>
           )}
@@ -384,9 +389,9 @@ const App = () => {
           element={<Home createObject={createObject} />}
         />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/groups" element={<Group />} />
+        <Route path="/clubs" element={<Group />} />
         <Route
-          path="/groups/:id"
+          path="/clubs/:id"
           element={
             <UserGroup
               createAlbum={createObject}

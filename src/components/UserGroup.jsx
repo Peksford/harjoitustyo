@@ -36,7 +36,9 @@ const UserGroup = ({ onUpdateGroup, createAlbum }) => {
 
   useEffect(() => {
     if (albums && groupData?.item_id) {
-      const foundAlbum = albums.find((album) => album.id === groupData.item_id);
+      const foundAlbum = albums.find(
+        (album) => album.id === groupData?.item_id
+      );
       if (foundAlbum) {
         setAlbum(foundAlbum);
       }
