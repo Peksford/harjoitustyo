@@ -148,7 +148,7 @@ describe('when logged in', () => {
   });
 
   test('album can be deleted', async ({ page }) => {
-    await page.getByRole('button', { name: 'kayttaja' }).click();
+    await page.getByTestId('dropdown-list').click();
     await page.locator('text=My albums').click();
 
     await page.waitForSelector('text=The Beatles - Abbey Road', {
@@ -171,7 +171,7 @@ describe('when logged in', () => {
   });
 
   test('movie can be deleted', async ({ page }) => {
-    await page.getByRole('button', { name: 'kayttaja' }).click();
+    await page.getByTestId('dropdown-list').click();
     await page.locator('text=My movies').click();
 
     await page.waitForSelector('text=Return of the Jedi', {
@@ -222,7 +222,7 @@ describe('when logged in', () => {
   // });
 
   test('game can be deleted', async ({ page }) => {
-    await page.getByRole('button', { name: 'kayttaja' }).click();
+    await page.getByTestId('dropdown-list').click();
     await page.locator('text=My games').click();
 
     await page.waitForSelector('text=Rocket League', {

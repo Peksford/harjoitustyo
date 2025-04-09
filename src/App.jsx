@@ -263,7 +263,7 @@ const App = () => {
         )}
         <div style={styles.rightSection}>
           <Link style={styles.padding} to="/search">
-            <BsSearch />
+            <BsSearch data-testid="search-button" />
           </Link>
           <Link style={styles.padding} to="/clubs">
             Clubs
@@ -277,7 +277,7 @@ const App = () => {
             <div>
               <DropdownButton
                 id="dropdown-secondary-button"
-                // data-testid="dropdown-list"
+                data-testid="dropdown-list"
                 title={<BsList />}
               >
                 <Dropdown.Item as={Link} to={`/${user.username}`}>

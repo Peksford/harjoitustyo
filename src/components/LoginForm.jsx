@@ -70,11 +70,11 @@ const LoginForm = () => {
 
   return (
     <div className="login-container">
-      <h2>Log in </h2>
+      <h2>Login </h2>
       <ErrorMessage message={errorMessage} />
       <Form onSubmit={handleLogin}>
         <Form.Group>
-          <Form.Label>username: </Form.Label>
+          <Form.Label>Username: </Form.Label>
           <Form.Control
             id="username"
             data-testid="username"
@@ -84,7 +84,7 @@ const LoginForm = () => {
             onChange={({ target }) => setUsername(target.value)}
           />
           <div></div>
-          <Form.Label>password: </Form.Label>
+          <Form.Label>Password: </Form.Label>
           <Form.Control
             id="password"
             data-testid="password"
@@ -100,7 +100,7 @@ const LoginForm = () => {
             id="login-button"
             type="submit"
           >
-            login
+            Log in
           </Button>
         </Form.Group>
       </Form>

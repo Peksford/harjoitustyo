@@ -6,7 +6,7 @@ const loginWith = async (page, username, password) => {
 };
 
 const searchObject = async (page, type, searchedObject) => {
-  await page.getByRole('link', { name: 'Search' }).click();
+  await page.getByTestId('search-button').click();
   await page.getByTestId(type).click();
   await page.getByTestId(`Search ${type}`).fill(searchedObject);
 };

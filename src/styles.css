@@ -194,9 +194,9 @@ button {
   } */
   
   .black-button {
-    background-color: black !important;
-    border-color: black !important;
-    color: white !important;
+    background-color: rgb(209, 129, 11) !important;
+    border-color: rgb(209, 129, 11) !important;
+    color: rgb(0, 0, 0) !important;
     margin-top: 10px
   }
 
