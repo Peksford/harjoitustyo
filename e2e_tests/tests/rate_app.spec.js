@@ -34,6 +34,7 @@ describe('Rate app', () => {
 
       await expect(page.getByText('Welcome kayttaja')).toBeVisible();
     });
+    console.log('Logged in succesfully');
   });
 
   test('login fails with wrong password', async ({ page }) => {
@@ -45,6 +46,7 @@ describe('Rate app', () => {
 
     await expect(page.getByText('welcome kayttaja')).not.toBeVisible();
   });
+  console.log('login failed succesfully');
 });
 
 describe('when logged in', () => {

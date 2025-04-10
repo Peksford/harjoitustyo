@@ -2,7 +2,7 @@ const loginWith = async (page, username, password) => {
   await page.goto('http://127.0.0.1:5173/login');
   await page.getByTestId('username').fill(username);
   await page.getByTestId('password').fill(password);
-  await page.getByRole('button', { name: 'login' }).click();
+  await page.getByRole('button', { name: 'Log in' }).click();
 };
 
 const searchObject = async (page, type, searchedObject) => {
