@@ -44,6 +44,7 @@ import Logo from './assets/Logo.png';
 import { BsSearch, BsList } from 'react-icons/bs';
 import { IoPersonCircleOutline } from 'react-icons/io5';
 import { MdOutlineLogin } from 'react-icons/md';
+import { GrGroup } from 'react-icons/gr';
 
 const styles = {
   // padding: {
@@ -266,11 +267,11 @@ const App = () => {
             <BsSearch data-testid="search-button" />
           </Link>
           <Link style={styles.padding} to="/clubs">
-            Clubs
+            <GrGroup />
           </Link>
           {!user && (
             <Link style={styles.padding} to="/login">
-              login
+              Login
             </Link>
           )}
           {user && (
