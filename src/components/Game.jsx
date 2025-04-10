@@ -102,7 +102,6 @@ const Game = ({ onUpdateGame, createGame }) => {
     }
   };
   const createNew = async ({ gameData }) => {
-    console.log('game data', gameData);
     try {
       const newGame = await createGame({
         type: 'game',

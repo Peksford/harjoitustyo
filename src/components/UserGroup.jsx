@@ -8,6 +8,7 @@ import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import albumService from '../services/albums';
 import userService from '../services/users';
+import GroupComments from './GroupComments';
 
 const UserGroup = ({ onUpdateGroup, createAlbum }) => {
   const { id } = useParams();
@@ -16,8 +17,6 @@ const UserGroup = ({ onUpdateGroup, createAlbum }) => {
   const [album, setAlbum] = useState(null);
   const [userAlbums, setUserAlbums] = useState([]);
   const albums = useSelector((state) => state.albums);
-
-  console.log('albums?', albums);
 
   useEffect(() => {
     const fetchGroup = async () => {
@@ -32,8 +31,6 @@ const UserGroup = ({ onUpdateGroup, createAlbum }) => {
     fetchGroup();
   }, [id]);
 
-  console.log('group data?', groupData);
-
   useEffect(() => {
     if (albums && groupData?.item_id) {
       const foundAlbum = albums.find(
@@ -44,8 +41,6 @@ const UserGroup = ({ onUpdateGroup, createAlbum }) => {
       }
     }
   }, [albums, groupData?.item_id]);
-
-  console.log('set album?', album);
 
   useEffect(() => {
     const fetchOtherUserAlbums = async () => {
@@ -223,6 +218,7 @@ const UserGroup = ({ onUpdateGroup, createAlbum }) => {
             </div>
           )}
         </div>
+        <GroupComments />
       </div>
     );
   }

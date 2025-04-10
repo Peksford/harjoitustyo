@@ -20,6 +20,7 @@ const gamesRouter = require('./controllers/games');
 const followRouter = require('./controllers/follow');
 const healthRouter = require('./controllers/health');
 const groupRouter = require('./controllers/groups');
+const commentRouter = require('./controllers/comments');
 require('./cronjob');
 
 app.use(cors());
@@ -37,6 +38,7 @@ app.use('/api/movies', moviesRouter);
 app.use('/api/games', gamesRouter);
 app.use('/api/follow', followRouter);
 app.use('/api/groups', groupRouter);
+app.use('/api/comments', commentRouter);
 
 if (process.env.NODE_ENV === 'test') {
   const testingRouter = require('./controllers/testing');

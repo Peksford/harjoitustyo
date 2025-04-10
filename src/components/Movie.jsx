@@ -107,7 +107,6 @@ const Movie = ({ onUpdateMovie, createMovie }) => {
   };
 
   const createNew = async ({ movieData }) => {
-    console.log('sda', movieData);
     try {
       const newMovie = await createMovie({
         title: movieData.title,

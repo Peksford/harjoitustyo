@@ -7,6 +7,7 @@ const Session = require('./session');
 const Follow = require('./follow');
 const Group = require('./group');
 const GroupMember = require('./group_member');
+const Comment = require('./comment');
 
 User.hasMany(Album, { foreignKey: 'user_id' });
 Album.belongsTo(User, { foreignKey: 'user_id' });
@@ -19,6 +20,12 @@ Movie.belongsTo(User, { foreignKey: 'user_id' });
 
 User.hasMany(Game, { foreignKey: 'user_id' });
 Game.belongsTo(User, { foreignKey: 'user_id' });
+
+User.hasMany(Comment, { foreignKey: 'user_id' });
+Comment.belongsTo(User, { foreignKey: 'user_id' });
+
+Group.hasMany(Comment, { foreignKey: 'group_id' });
+Comment.belongsTo(Group, { foreignKey: 'group_id' });
 
 Session.belongsTo(User);
 
@@ -56,4 +63,5 @@ module.exports = {
   Follow,
   Group,
   GroupMember,
+  Comment,
 };

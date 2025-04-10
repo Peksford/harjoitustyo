@@ -12,6 +12,7 @@ import bookService from './services/books';
 import gameService from './services/games';
 import groupService from './services/groups';
 import followService from './services/follow';
+import commentService from './services/comments';
 import Notification from './components/Notification';
 import Home from './components/Home';
 import Profile from './components/Profile';
@@ -105,6 +106,7 @@ const App = () => {
         followService.setToken(user.token);
         userService.setToken(user.token);
         groupService.setToken(user.token);
+        commentService.setToken(user.token);
       } catch (error) {
         console.error('Error', error);
       }

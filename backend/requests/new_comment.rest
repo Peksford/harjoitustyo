@@ -1,0 +1,9 @@
+POST http://localhost:3001/api/comments
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIiwiaWQiOjUsImlhdCI6MTc0NDMwODI2NH0.ntAuVLy8JU1T63HfU6wmLEDf52xuaGsAMhY6JJZt8jw
+
+{
+    "comment": "Testi Kommentti",
+    "user_id": 5,
+    "group_id": 37
+}

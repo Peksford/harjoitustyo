@@ -11,6 +11,7 @@ import gameService from '../services/games';
 import userService from '../services/users';
 import followService from '../services/follow';
 import groupService from '../services/groups';
+import commentService from '../services/comments';
 import { useNavigate } from 'react-router-dom';
 
 import { setNotification } from '../reducers/notificationReducer';
@@ -43,6 +44,7 @@ const LoginForm = () => {
       followService.setToken(user.token);
       userService.setToken(user.token);
       groupService.setToken(user.token);
+      commentService.setToken(user.token);
 
       dispatch(setUser(user));
 

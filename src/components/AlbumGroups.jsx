@@ -90,7 +90,6 @@ const AlbumGroups = ({ sortedAlbums }) => {
 
   const createGroup = async (groupObject) => {
     const groupResponse = await dispatch(addGroup(groupObject));
-    console.log('group response', groupResponse);
 
     await groupService.createMembers({
       group_id: groupResponse.id,

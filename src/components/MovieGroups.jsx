@@ -90,7 +90,6 @@ const MovieGroups = ({ sortedMovies }) => {
 
   const createGroup = async (groupObject) => {
     const groupResponse = await dispatch(addGroup(groupObject));
-    console.log('group response', groupResponse);
 
     await groupService.createMembers({
       group_id: groupResponse.id,
@@ -104,7 +103,7 @@ const MovieGroups = ({ sortedMovies }) => {
       });
     }
     const updatedGroup = await groupService.getGroup(groupResponse.id);
-    console.log('updated group', updatedGroup);
+
     updatedGroup.group_member = {
       group_id: updatedGroup.id,
       user_id: user.id,

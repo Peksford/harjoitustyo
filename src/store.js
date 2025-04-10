@@ -6,6 +6,7 @@ import bookReducer from './reducers/bookReducer';
 import movieReducer from './reducers/movieReducer';
 import gameReducer from './reducers/gameReducer';
 import groupReducer from './reducers/groupReducer';
+import commentReducer from './reducers/commentReducer';
 
 const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
     movies: movieReducer,
     games: gameReducer,
     groups: groupReducer,
+    comments: commentReducer,
   },
 });
 
