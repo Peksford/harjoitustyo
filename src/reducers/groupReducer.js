@@ -39,15 +39,15 @@ export const addGroup = (content) => {
   };
 };
 
-export const groupHeart = (group) => {
-  return async (dispatch) => {
-    const heartChange = await groupService.heartClick(group.id, {
-      ...group,
-      heart: true,
-    });
-    dispatch(setHeart(heartChange.id));
-  };
-};
+// export const groupHeart = (group) => {
+//   return async (dispatch) => {
+//     const heartChange = await groupService.heartClick(group.id, {
+//       ...group,
+//       heart: true,
+//     });
+//     dispatch(setHeart(heartChange.id));
+//   };
+// };
 
 export const deleteGroup = (id) => {
   return async (dispatch) => {

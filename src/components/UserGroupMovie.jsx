@@ -16,7 +16,12 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
   const [rating, setRating] = useState(0);
   const [movie, setMovie] = useState(null);
   const [userMovies, setUserMovies] = useState([]);
+  const [followed, setFollowed] = useState(null);
+  //   const [friends, setFriends] = useState([]);
+  const [friend, setFriend] = useState('');
+
   const movies = useSelector((state) => state.movies);
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchGroup = async () => {
@@ -30,6 +35,19 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
     };
     fetchGroup();
   }, [id]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (!user) return null;
+      try {
+        const response = await userService.getUser(user.username);
+        setFollowed(response.followed);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchUser();
+  }, [user]);
 
   useEffect(() => {
     if (movies && groupData?.item_id) {
@@ -107,6 +125,13 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
     }
   };
 
+  const inviteFriend = async ({ friend }) => {
+    await groupService.createMembers({
+      group_id: groupData.id,
+      user_id: Number(friend),
+    });
+  };
+
   let groupUserMovies = [];
 
   for (const user of userMovies) {
@@ -115,6 +140,8 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
     );
     groupUserMovies.push(groupUserMovie);
   }
+
+  console.log('Group data', groupData);
 
   if (groupData) {
     return (
@@ -125,104 +152,153 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
             created: {new Date(groupData.createdAt).toLocaleDateString()}
           </div>
           {movies.length > 0 && (
-            <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
               {movie && (
                 <img
                   src={`https://www.themoviedb.org/t/p/w1280/${movie.thumbnail}`}
                   style={styles.thumbnail}
                 />
               )}
-              {movie ? (
-                <Popup
-                  trigger={
-                    <button
-                      style={{ marginLeft: '10px' }}
-                      className="button-text"
-                    >
-                      Rate
-                    </button>
-                  }
-                  modal
-                  nested
-                  contentStyle={{
-                    maxWidth: '95vw',
-                    width: '600px',
+
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  minWidth: '200px',
+                }}
+              >
+                <div
+                  style={{
+                    backgroundColor: '#fff8dc',
+                    padding: '10px',
+                    borderRadius: '10px',
+                    // boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                    marginTop: '10px',
+                    marginBottom: '10px',
+                    width: '80%',
                   }}
                 >
-                  {(close) => (
-                    <div className="modal-container">
-                      <div className="modal-header">{movie.title}</div>
-                      {movie && (
-                        <div style={styles.circle}>
-                          <span style={styles.circleText}>{movie.rating}</span>
-                        </div>
-                      )}
-                      <div className="modal-content">
-                        <div style={styles.sliderContainer}>
-                          <label htmlFor="rating-slider">Your Rating</label>
-                          <div>
-                            <input
-                              type="range"
-                              min="0"
-                              max="10"
-                              step="0.1"
-                              value={rating || 0}
-                              onChange={(e) =>
-                                changeRating(parseFloat(e.target.value))
-                              }
-                              style={styles.slider}
-                            />
-                            <div style={styles.silderNumbers}>
-                              {[...Array(11).keys()].map((num) => (
-                                <span key={num}>{num}</span>
-                              ))}
+                  Club members:
+                  {groupData.group_members.map((member) => (
+                    <div key={member.id}>{member.user.username}</div>
+                  ))}
+                </div>
+                {movie ? (
+                  <Popup
+                    trigger={
+                      <button
+                        style={{ padding: '5px', width: '50%' }}
+                        className="button-text"
+                      >
+                        Rate
+                      </button>
+                    }
+                    modal
+                    nested
+                    contentStyle={{
+                      maxWidth: '95vw',
+                      width: '600px',
+                    }}
+                  >
+                    {(close) => (
+                      <div className="modal-container">
+                        <div className="modal-header">{movie.title}</div>
+                        {movie && (
+                          <div style={styles.circle}>
+                            <span style={styles.circleText}>
+                              {movie.rating}
+                            </span>
+                          </div>
+                        )}
+
+                        <div className="modal-content">
+                          <div style={styles.sliderContainer}>
+                            <label htmlFor="rating-slider">Your Rating</label>
+                            <div>
+                              <input
+                                type="range"
+                                min="0"
+                                max="10"
+                                step="0.1"
+                                value={rating || 0}
+                                onChange={(e) =>
+                                  changeRating(parseFloat(e.target.value))
+                                }
+                                style={styles.slider}
+                              />
+                              <div style={styles.silderNumbers}>
+                                {[...Array(11).keys()].map((num) => (
+                                  <span key={num}>{num}</span>
+                                ))}
+                              </div>
                             </div>
                           </div>
                         </div>
+                        <div className="modal-actions">
+                          <button className="close-btn" onClick={() => close()}>
+                            Close
+                          </button>
+                        </div>
                       </div>
-                      <div className="modal-actions">
-                        <button className="close-btn" onClick={() => close()}>
-                          Close
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </Popup>
-              ) : (
-                <button
-                  onClick={() => createNew({ movie })}
-                  className="button-text"
-                >
-                  Add
-                </button>
-              )}
-
-              {groupUserMovies &&
-                groupUserMovies.map((member) =>
-                  member ? (
-                    <div key={member.id}>
-                      {member.rating ? (
-                        <>
-                          <div>
-                            {
-                              groupData.group_members.find(
-                                (group_member) =>
-                                  group_member.user_id === member.user_id
-                              ).user.username
-                            }{' '}
-                            gave this
-                          </div>
-                          <div style={styles.circle}>
-                            {member.rating}
-                            <hr />
-                          </div>
-                        </>
-                      ) : null}
-                    </div>
-                  ) : null
+                    )}
+                  </Popup>
+                ) : (
+                  <button
+                    onClick={() => createNew({ movie })}
+                    className="button-text"
+                  >
+                    Add
+                  </button>
                 )}
+                <select
+                  style={{ marginTop: '10px', width: '70%' }}
+                  value={friend}
+                  onChange={({ target }) => setFriend(target.value)}
+                >
+                  <option value="">Invite a friend</option>
+                  {followed &&
+                    followed.map((user) => (
+                      <option key={user.id} value={user.followed_id}>
+                        {user.followed_username}
+                      </option>
+                    ))}
+                </select>
+                <button
+                  onClick={() => inviteFriend({ friend })}
+                  style={{
+                    width: '50%',
+                    marginTop: '10px',
+                  }}
+                >
+                  Invite
+                </button>
+              </div>
             </div>
           )}
+          {groupUserMovies &&
+            groupUserMovies.map((member) =>
+              member ? (
+                <div key={member.id}>
+                  {member.rating ? (
+                    <>
+                      <div>
+                        {
+                          groupData.group_members.find(
+                            (group_member) =>
+                              group_member.user_id === member.user_id
+                          ).user.username
+                        }{' '}
+                        gave this
+                      </div>
+                      <div style={styles.circle}>
+                        {member.rating}
+                        <hr />
+                      </div>
+                    </>
+                  ) : null}
+                </div>
+              ) : null
+            )}
         </div>
         <GroupComments />
       </div>
@@ -248,8 +324,8 @@ const styles = {
     alignItems: 'center',
   },
   thumbnail: {
-    width: '40%',
-    height: '40%',
+    width: '50%',
+    height: '50%',
     objectFit: 'cover',
     marginBottom: '8px',
   },
@@ -281,8 +357,8 @@ const styles = {
     margin: '10px 0',
   },
   circle: {
-    width: '50px',
-    height: '50px',
+    width: '40px',
+    height: '40px',
     borderRadius: '50%',
     border: '4px solid #646cff',
     backgroundColor: 'transparent',
@@ -290,7 +366,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: '18px',
+    fontSize: '14px',
     fontWeight: 'bold',
   },
   circleText: {
