@@ -31,9 +31,8 @@ router.post('/', tokenExtractor, async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
   try {
-    // const user = await User.findByPk(req.decodedToken.id);
+    console.log('hello?');
     const movie = await Movie.findByPk(req.params.id);
-
     res.json(movie);
   } catch (error) {
     console.log(error);

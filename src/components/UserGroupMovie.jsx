@@ -19,9 +19,8 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
   const [followed, setFollowed] = useState(null);
   //   const [friends, setFriends] = useState([]);
   const [friend, setFriend] = useState('');
-
-  const movies = useSelector((state) => state.movies);
   const user = useSelector((state) => state.user);
+  const movies = useSelector((state) => state.movies);
 
   useEffect(() => {
     const fetchGroup = async () => {
@@ -49,16 +48,21 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
     fetchUser();
   }, [user]);
 
+  console.log('grouppi data', groupData.item_id);
+
   useEffect(() => {
-    if (movies && groupData?.item_id) {
-      const foundMovie = movies.find(
-        (movie) => movie.id === groupData?.item_id
-      );
-      if (foundMovie) {
-        setMovie(foundMovie);
+    if (groupData) {
+      try {
+        const fetchMovie = async () => {
+          const response = await movieService.getMovie(groupData?.item_id);
+          setMovie(response);
+        };
+        fetchMovie();
+      } catch (error) {
+        console.error(error);
       }
     }
-  }, [movies, groupData?.item_id]);
+  }, [groupData?.item_id]);
 
   useEffect(() => {
     const fetchOtherUserMovies = async () => {
@@ -141,8 +145,6 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
     groupUserMovies.push(groupUserMovie);
   }
 
-  console.log('Group data', groupData);
-
   if (groupData) {
     return (
       <div>
@@ -151,7 +153,7 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
           <div>
             created: {new Date(groupData.createdAt).toLocaleDateString()}
           </div>
-          {movies.length > 0 && (
+          {
             <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
               {movie && (
                 <img
@@ -183,7 +185,7 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
                     <div key={member.id}>{member.user.username}</div>
                   ))}
                 </div>
-                {movie ? (
+                {movies.find((item) => item.tmdb_id === movie.tmdb_id) ? (
                   <Popup
                     trigger={
                       <button
@@ -274,7 +276,7 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
                 </button>
               </div>
             </div>
-          )}
+          }
           {groupUserMovies &&
             groupUserMovies.map((member) =>
               member ? (

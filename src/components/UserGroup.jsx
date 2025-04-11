@@ -10,7 +10,6 @@ const UserGroup = ({ createObject }) => {
   const groups = useSelector((state) => state.groups);
 
   const group = groups.find((item) => item.id === Number(id));
-  console.log('group', group);
 
   if (group) {
     return (

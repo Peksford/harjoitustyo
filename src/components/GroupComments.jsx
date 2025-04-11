@@ -28,13 +28,35 @@ const GroupComments = () => {
   }, [id]);
 
   return (
-    <div>
+    <div
+      style={{
+        marginTop: '30px',
+        padding: '20px',
+        backgroundColor: '#29bdc1',
+        borderRadius: '10px',
+        boxShadow: '0 2px 6px rgba(0,0,0,0.05)',
+      }}
+    >
       <NewComment groupId={Number(id)} />
       {comments &&
         comments.map((comment) => (
-          <div key={comment.id}>
-            {comment.user && comment.user.username}: {comment.comment}
-            <hr />
+          <div
+            key={comment.id}
+            style={{
+              padding: '10px 15px',
+              marginTop: '10px',
+              borderLeft: '4px solid #b8860b',
+              backgroundColor: '#fff',
+              borderRadius: '6px',
+            }}
+          >
+            {comment.user && (
+              <strong style={{ color: '#333' }}>{comment.user.username}</strong>
+            )}
+            :{' '}
+            <p style={{ margin: '5px 0 0 0', color: '#555' }}>
+              {comment.comment}
+            </p>
           </div>
         ))}
     </div>

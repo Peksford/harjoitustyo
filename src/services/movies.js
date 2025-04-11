@@ -13,11 +13,7 @@ const getAll = async () => {
 };
 
 const getMovie = async (id) => {
-  const response = await axios.get(`${baseUrl}/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await axios.get(`${baseUrl}/${id}`);
   return response.data;
 };
 
