@@ -397,7 +397,7 @@ const App = () => {
           path="/clubs/:id"
           element={
             <UserGroup
-              createAlbum={createObject}
+              createObject={createObject}
               onUpdateGroup={albumRatingUpdate}
             />
           }

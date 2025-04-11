@@ -121,6 +121,8 @@ const MovieGroups = ({ sortedMovies }) => {
     return groupObject;
   };
 
+  console.log('groups', groups);
+
   return (
     <div>
       {sortedMovies &&
@@ -292,7 +294,7 @@ const MovieGroups = ({ sortedMovies }) => {
                     </div>
                   )}
                 </div>
-                {console.log('movie', movie)}
+
                 {movie.url && (
                   <p>
                     <a

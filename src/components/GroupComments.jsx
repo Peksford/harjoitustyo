@@ -27,17 +27,13 @@ const GroupComments = () => {
     fetchComments();
   }, [id]);
 
-  console.log('what happens to comment', comments);
-
-  // console.log(comments);
-
   return (
     <div>
       <NewComment groupId={Number(id)} />
       {comments &&
         comments.map((comment) => (
           <div key={comment.id}>
-            {comment.user && comment.user.username} says: {comment.comment}
+            {comment.user && comment.user.username}: {comment.comment}
             <hr />
           </div>
         ))}

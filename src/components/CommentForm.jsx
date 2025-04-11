@@ -52,7 +52,10 @@ const NewComment = ({ groupId }) => {
   };
 
   return (
-    <form style={{ marginTop: '10px' }} onSubmit={createComment}>
+    <form
+      style={{ marginTop: '10px', marginBottom: '10px' }}
+      onSubmit={createComment}
+    >
       <div>
         <select
           name="comment"
@@ -61,7 +64,7 @@ const NewComment = ({ groupId }) => {
           style={{ width: '50%', marginTop: '10px' }}
         >
           <option value="" disabled>
-            What do you think?
+            Any thoughts?
           </option>
           {definedComments.map((comment) => (
             <option key={comment} value={comment}>
