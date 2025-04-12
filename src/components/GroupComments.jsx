@@ -29,14 +29,16 @@ const GroupComments = () => {
 
   return (
     <div
-      style={{
-        marginTop: '30px',
-        padding: '20px',
-        backgroundColor: '#29bdc1',
-        borderRadius: '10px',
-        boxShadow: '0 2px 6px rgba(0,0,0,0.05)',
-      }}
+
+    // style={{
+    //   marginTop: '30px',
+    //   padding: '20px',
+    //   // backgroundColor: '#A9A9A9',
+    //   borderRadius: '10px',
+    //   boxShadow: '0 2px 6px rgba(0,0,0,0.05)',
+    // }}
     >
+      <h2>Comments</h2>
       <NewComment groupId={Number(id)} />
       {comments &&
         comments.map((comment) => (

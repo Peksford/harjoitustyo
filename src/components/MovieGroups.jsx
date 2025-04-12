@@ -136,7 +136,7 @@ const MovieGroups = ({ sortedMovies }) => {
               <div style={styles.movieInfo}>
                 {movie.whole_title}
                 <div>
-                  {!groups.some((group) => group.item_id === movie.id) &&
+                  {!groups.some((group) => group.tmdb_id === movie.tmdb_id) &&
                   !added.find(
                     (alreadyAdded) => alreadyAdded.tmdb_id === movie.tmdb_id
                   ) ? (

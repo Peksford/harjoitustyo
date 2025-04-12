@@ -185,7 +185,8 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
                     <div key={member.id}>{member.user.username}</div>
                   ))}
                 </div>
-                {movies.find((item) => item.tmdb_id === movie.tmdb_id) ? (
+                {movies &&
+                movies.find((item) => item?.tmdb_id === movie?.tmdb_id) ? (
                   <Popup
                     trigger={
                       <button

@@ -16,6 +16,10 @@ const UserGroupAlbum = ({ onUpdateGroup, createAlbum }) => {
   const [rating, setRating] = useState(0);
   const [album, setAlbum] = useState(null);
   const [userAlbums, setUserAlbums] = useState([]);
+  const [followed, setFollowed] = useState(null);
+  //   const [friends, setFriends] = useState([]);
+  const [friend, setFriend] = useState('');
+  const user = useSelector((state) => state.user);
   const albums = useSelector((state) => state.albums);
 
   useEffect(() => {
@@ -30,6 +34,35 @@ const UserGroupAlbum = ({ onUpdateGroup, createAlbum }) => {
     };
     fetchGroup();
   }, [id]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (!user) return null;
+      try {
+        const response = await userService.getUser(user.username);
+        setFollowed(response.followed);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchUser();
+  }, [user]);
+
+  console.log('grouppi data', groupData.item_id);
+
+  useEffect(() => {
+    if (groupData) {
+      try {
+        const fetchAlbum = async () => {
+          const response = await albumService.getAlbum(groupData?.item_id);
+          setAlbum(response);
+        };
+        fetchAlbum();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }, [groupData?.item_id]);
 
   useEffect(() => {
     if (albums && groupData?.item_id) {
@@ -106,6 +139,13 @@ const UserGroupAlbum = ({ onUpdateGroup, createAlbum }) => {
     }
   };
 
+  const inviteFriend = async ({ friend }) => {
+    await groupService.createMembers({
+      group_id: groupData.id,
+      user_id: Number(friend),
+    });
+  };
+
   let groupUserAlbums = [];
 
   for (const user of userAlbums) {
@@ -115,6 +155,8 @@ const UserGroupAlbum = ({ onUpdateGroup, createAlbum }) => {
     groupUserAlbums.push(groupUserAlbum);
   }
 
+  console.log('album info', album);
+
   if (groupData) {
     return (
       <div>
@@ -123,100 +165,152 @@ const UserGroupAlbum = ({ onUpdateGroup, createAlbum }) => {
           <div>
             created: {new Date(groupData.createdAt).toLocaleDateString()}
           </div>
-          {albums.length > 0 && (
-            <div>
+          {
+            <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
               {album && <img src={album.thumbnail} style={styles.thumbnail} />}
-              {album ? (
-                <Popup
-                  trigger={
-                    <button
-                      style={{ marginLeft: '10px' }}
-                      className="button-text"
-                    >
-                      Rate
-                    </button>
-                  }
-                  modal
-                  nested
-                  contentStyle={{
-                    maxWidth: '95vw',
-                    width: '600px',
+
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  minWidth: '200px',
+                }}
+              >
+                <div
+                  style={{
+                    backgroundColor: '#fff8dc',
+                    padding: '10px',
+                    borderRadius: '10px',
+                    // boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                    marginTop: '10px',
+                    marginBottom: '10px',
+                    width: '80%',
                   }}
                 >
-                  {(close) => (
-                    <div className="modal-container">
-                      <div className="modal-header">{album.title}</div>
-                      {album && (
-                        <div style={styles.circle}>
-                          <span style={styles.circleText}>{album.rating}</span>
-                        </div>
-                      )}
-                      <div className="modal-content">
-                        <div style={styles.sliderContainer}>
-                          <label htmlFor="rating-slider">Your Rating</label>
-                          <div>
-                            <input
-                              type="range"
-                              min="0"
-                              max="10"
-                              step="0.1"
-                              value={rating || 0}
-                              onChange={(e) =>
-                                changeRating(parseFloat(e.target.value))
-                              }
-                              style={styles.slider}
-                            />
-                            <div style={styles.silderNumbers}>
-                              {[...Array(11).keys()].map((num) => (
-                                <span key={num}>{num}</span>
-                              ))}
+                  Club members:
+                  {groupData.group_members.map((member) => (
+                    <div key={member.id}>{member.user.username}</div>
+                  ))}
+                </div>
+                {albums &&
+                albums.find(
+                  (item) => item?.discogs_id === album?.discogs_id
+                ) ? (
+                  <Popup
+                    trigger={
+                      <button
+                        style={{ padding: '5px', width: '50%' }}
+                        className="button-text"
+                      >
+                        Rate
+                      </button>
+                    }
+                    modal
+                    nested
+                    contentStyle={{
+                      maxWidth: '95vw',
+                      width: '600px',
+                    }}
+                  >
+                    {(close) => (
+                      <div className="modal-container">
+                        <div className="modal-header">{album.whole_title}</div>
+                        {album && (
+                          <div style={styles.circle}>
+                            <span style={styles.circleText}>
+                              {album.rating}
+                            </span>
+                          </div>
+                        )}
+
+                        <div className="modal-content">
+                          <div style={styles.sliderContainer}>
+                            <label htmlFor="rating-slider">Your Rating</label>
+                            <div>
+                              <input
+                                type="range"
+                                min="0"
+                                max="10"
+                                step="0.1"
+                                value={rating || 0}
+                                onChange={(e) =>
+                                  changeRating(parseFloat(e.target.value))
+                                }
+                                style={styles.slider}
+                              />
+                              <div style={styles.silderNumbers}>
+                                {[...Array(11).keys()].map((num) => (
+                                  <span key={num}>{num}</span>
+                                ))}
+                              </div>
                             </div>
                           </div>
                         </div>
+                        <div className="modal-actions">
+                          <button className="close-btn" onClick={() => close()}>
+                            Close
+                          </button>
+                        </div>
                       </div>
-                      <div className="modal-actions">
-                        <button className="close-btn" onClick={() => close()}>
-                          Close
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </Popup>
-              ) : (
-                <button
-                  onClick={() => createNew({ album })}
-                  className="button-text"
-                >
-                  Add
-                </button>
-              )}
-
-              {groupUserAlbums &&
-                groupUserAlbums.map((member) =>
-                  member ? (
-                    <div key={member.id}>
-                      {member.rating ? (
-                        <>
-                          <div>
-                            {
-                              groupData.group_members.find(
-                                (group_member) =>
-                                  group_member.user_id === member.user_id
-                              ).user.username
-                            }{' '}
-                            gave this
-                          </div>
-                          <div style={styles.circle}>
-                            {member.rating}
-                            <hr />
-                          </div>
-                        </>
-                      ) : null}
-                    </div>
-                  ) : null
+                    )}
+                  </Popup>
+                ) : (
+                  <button
+                    onClick={() => createNew({ album })}
+                    className="button-text"
+                  >
+                    Add
+                  </button>
                 )}
+                <select
+                  style={{ marginTop: '10px', width: '70%' }}
+                  value={friend}
+                  onChange={({ target }) => setFriend(target.value)}
+                >
+                  <option value="">Invite a friend</option>
+                  {followed &&
+                    followed.map((user) => (
+                      <option key={user.id} value={user.followed_id}>
+                        {user.followed_username}
+                      </option>
+                    ))}
+                </select>
+                <button
+                  onClick={() => inviteFriend({ friend })}
+                  style={{
+                    width: '50%',
+                    marginTop: '10px',
+                  }}
+                >
+                  Invite
+                </button>
+              </div>
             </div>
-          )}
+          }
+          {groupUserAlbums &&
+            groupUserAlbums.map((member) =>
+              member ? (
+                <div key={member.id}>
+                  {member.rating ? (
+                    <>
+                      <div>
+                        {
+                          groupData.group_members.find(
+                            (group_member) =>
+                              group_member.user_id === member.user_id
+                          ).user.username
+                        }{' '}
+                        gave this
+                      </div>
+                      <div style={styles.circle}>
+                        {member.rating}
+                        <hr />
+                      </div>
+                    </>
+                  ) : null}
+                </div>
+              ) : null
+            )}
         </div>
         <GroupComments />
       </div>

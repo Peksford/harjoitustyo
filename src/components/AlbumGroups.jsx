@@ -131,7 +131,9 @@ const AlbumGroups = ({ sortedAlbums }) => {
               <div style={styles.albumInfo}>
                 {album.whole_title}
                 <div>
-                  {!groups.some((group) => group.item_id === album.id) &&
+                  {!groups.some(
+                    (group) => group.discogs_id === album.discogs_id
+                  ) &&
                   !added.find(
                     (alreadyAdded) =>
                       alreadyAdded.discogs_id === album.discogs_id
