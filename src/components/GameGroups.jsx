@@ -7,21 +7,21 @@ import groupService from '../services/groups';
 import { addGroup, updateGroup } from '../reducers/groupReducer';
 import userService from '../services/users';
 import { Link } from 'react-router-dom';
-import discogsButton from '../assets/discogsButton.webp';
+import igdbLogo from '../assets/IGDB_logo.svg.png';
 import { setNotification } from '../reducers/notificationReducer';
 
 const styles = {
-  albumContainer: {
+  gameContainer: {
     display: 'flex',
     alignItems: 'center',
   },
-  albumInfo: {
+  gameInfo: {
     display: 'flex',
     flexDirection: 'column',
   },
   thumbnail: {
     width: '150px',
-    height: '150px',
+    height: '180px',
     marginRight: '1rem',
   },
   buttonContainer: {
@@ -66,7 +66,7 @@ const styles = {
   },
 };
 
-const AlbumGroups = ({ sortedAlbums }) => {
+const GameGroups = ({ sortedGames }) => {
   const [friend, setFriend] = useState('');
   const [followed, setFollowed] = useState(null);
   const [friends, setFriends] = useState([]);
@@ -113,11 +113,10 @@ const AlbumGroups = ({ sortedAlbums }) => {
     dispatch(
       setNotification(`New rating club '${groupObject.name}' created`, 5)
     );
-
     setAdded([
       ...added,
       {
-        discogs_id: groupObject.discogs_id,
+        igdb_id: groupObject.igdb_id,
         group_id: groupResponse.id,
       },
     ]);
@@ -127,20 +126,21 @@ const AlbumGroups = ({ sortedAlbums }) => {
 
   return (
     <div>
-      {sortedAlbums &&
-        sortedAlbums.map((album) => (
-          <React.Fragment key={album.id}>
-            <div style={styles.albumContainer}>
-              <img src={album.thumbnail} style={styles.thumbnail} />
-              <div style={styles.albumInfo}>
-                {album.whole_title}
+      {sortedGames &&
+        sortedGames.map((game) => (
+          <React.Fragment key={game.id}>
+            <div style={styles.gameContainer}>
+              <img
+                src={game.thumbnail.replace(/t_thumb/, 't_cover_big')}
+                style={styles.thumbnail}
+              />
+              <div style={styles.gameInfo}>
+                {game.whole_title}
+
                 <div>
-                  {!groups.some(
-                    (group) => group.discogs_id === album.discogs_id
-                  ) &&
+                  {!groups.some((group) => group.igdb_id === game.igdb_id) &&
                   !added.find(
-                    (alreadyAdded) =>
-                      alreadyAdded.discogs_id === album.discogs_id
+                    (alreadyAdded) => alreadyAdded.igdb_id === game.igdb_id
                   ) ? (
                     <Popup
                       trigger={
@@ -162,7 +162,11 @@ const AlbumGroups = ({ sortedAlbums }) => {
                         <div
                           className="modal-container"
                           style={{
-                            backgroundImage: `url(${album.thumbnail})`,
+                            position: 'relative',
+                            backgroundImage: `url(${game.thumbnail.replace(
+                              /t_thumb/,
+                              't_cover_big'
+                            )})`,
                             backgroundSize: '30%',
                             // backgroundRepeat: 'no-repeat',
                             backgroundPosition: 'center',
@@ -199,7 +203,7 @@ const AlbumGroups = ({ sortedAlbums }) => {
                               width: '40%',
                             }}
                           >
-                            &apos;{album.whole_title}&apos; Rating club{' '}
+                            &apos;{game.whole_title}&apos; Rating club{' '}
                           </div>
 
                           <div>
@@ -236,27 +240,6 @@ const AlbumGroups = ({ sortedAlbums }) => {
                               >
                                 Invite
                               </button>
-                              {friends.length > 0 && (
-                                <button
-                                  onClick={() =>
-                                    createGroup(
-                                      {
-                                        name: album.whole_title,
-                                        item_id: album.id,
-                                        item_type: 'album',
-                                        created_at: Date.now(),
-                                        updated_at: Date.now(),
-                                        friends: friends,
-                                        discogs_id: album.discogs_id,
-                                        thumbnail: album.thumbnail,
-                                      },
-                                      close()
-                                    )
-                                  }
-                                >
-                                  Create a club
-                                </button>
-                              )}
                             </div>
                           </div>
                           <div>
@@ -287,20 +270,39 @@ const AlbumGroups = ({ sortedAlbums }) => {
                                 })}
                               </div>
                             )}
+                            {friends.length > 0 && (
+                              <button
+                                style={{ marginTop: '10px' }}
+                                onClick={() =>
+                                  createGroup(
+                                    {
+                                      name: game.whole_title,
+                                      item_id: game.id,
+                                      item_type: 'game',
+                                      created_at: Date.now(),
+                                      updated_at: Date.now(),
+                                      friends: friends,
+                                      igdb_id: game.igdb_id,
+                                      thumbnail: game.thumbnail,
+                                    },
+                                    close()
+                                  )
+                                }
+                              >
+                                Create a club
+                              </button>
+                            )}
                           </div>
                         </div>
                       )}
                     </Popup>
                   ) : (
                     <div>
-                      {groups.find(
-                        (item) => item.discogs_id === album.discogs_id
-                      ) && (
+                      {groups.find((item) => item.igdb_id === game.igdb_id) && (
                         <Link
                           to={`/clubs/${
-                            groups.find(
-                              (item) => item.discogs_id === album.discogs_id
-                            )?.id
+                            groups.find((item) => item.igdb_id === game.igdb_id)
+                              ?.id
                           }`}
                         >
                           <button style={{ padding: '10px' }}>
@@ -311,30 +313,23 @@ const AlbumGroups = ({ sortedAlbums }) => {
                     </div>
                   )}
                 </div>
-                {album.url && (
+
+                {game.url && (
                   <p>
-                    <a
-                      href={`https://www.discogs.com${album.url}`}
-                      target="blank"
-                      rel="noopener noreferrer"
-                    >
-                      <button
+                    <Link to={game.url}>
+                      <img
+                        src={igdbLogo}
                         style={{
-                          backgroundColor: 'black',
-                          padding: '6px 14px',
+                          width: '100%',
+                          maxWidth: '80px',
+                          height: 'auto',
                           marginTop: '10px',
+                          // backgroundColor: '#0d253f',
+                          //   padding: '10px',
+                          //   borderRadius: '8px',
                         }}
-                      >
-                        <img
-                          src={discogsButton}
-                          style={{
-                            width: '100%',
-                            maxWidth: '60px',
-                            height: 'auto',
-                          }}
-                        />
-                      </button>
-                    </a>
+                      />
+                    </Link>
                   </p>
                 )}
               </div>
@@ -346,9 +341,9 @@ const AlbumGroups = ({ sortedAlbums }) => {
   );
 };
 
-AlbumGroups.propTypes = {
-  sortedAlbums: PropTypes.array,
+GameGroups.propTypes = {
+  sortedGames: PropTypes.array,
   added: PropTypes.object,
 };
 
-export default AlbumGroups;
+export default GameGroups;

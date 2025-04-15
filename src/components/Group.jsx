@@ -6,6 +6,9 @@ import { useSelector } from 'react-redux';
 import 'reactjs-popup/dist/index.css';
 import AlbumGroups from './AlbumGroups';
 import MovieGroups from './MovieGroups';
+import BookGroups from './BookGroups';
+import GameGroups from './GameGroups';
+import GroupGroups from './GroupGroups';
 
 // const styles = {
 //   albumContainer: {
@@ -71,6 +74,7 @@ const Group = () => {
   const books = useSelector((state) => state.books);
   const movies = useSelector((state) => state.movies);
   const games = useSelector((state) => state.games);
+  const groups = useSelector((state) => state.groups);
 
   const searchItem = (searchWord) => {
     let searchedItem = {};
@@ -91,6 +95,10 @@ const Group = () => {
       searchedItem = games.filter((game) =>
         game.whole_title.toLowerCase().includes(searchWord.toLowerCase())
       );
+    } else if (type === 'groups') {
+      searchedItem = groups.filter((group) =>
+        group.name.toLowerCase().includes(searchWord.toLowerCase())
+      );
     }
 
     return searchedItem;
@@ -105,6 +113,9 @@ const Group = () => {
 
   const displayAlbums = type === 'albums' ? searchItem(searchWord) : null;
   const displayMovies = type === 'movies' ? searchItem(searchWord) : null;
+  const displayBooks = type === 'books' ? searchItem(searchWord) : null;
+  const displayGames = type === 'games' ? searchItem(searchWord) : null;
+  const displayGroups = type === 'groups' ? searchItem(searchWord) : null;
 
   const sortedAlbums =
     displayAlbums &&
@@ -113,6 +124,18 @@ const Group = () => {
   const sortedMovies =
     displayMovies &&
     displayMovies.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  const sortedBooks =
+    displayBooks &&
+    displayBooks.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  const sortedGames =
+    displayGames &&
+    displayGames.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  const sortedGroups =
+    displayGroups &&
+    displayGroups.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   return (
     <div>
@@ -161,6 +184,16 @@ const Group = () => {
           />{' '}
           Games{' '}
         </label>
+        <label style={{ marginRight: '10px' }}>
+          <input
+            type="radio"
+            value="groups"
+            data-testid="group"
+            checked={type === 'groups'}
+            onChange={handleTypeChange}
+          />{' '}
+          Your groups{' '}
+        </label>
       </div>
 
       <div style={{ width: '50%', marginBottom: '10px' }}>
@@ -174,6 +207,9 @@ const Group = () => {
       </div>
       <AlbumGroups sortedAlbums={sortedAlbums} />
       <MovieGroups sortedMovies={sortedMovies} />
+      <BookGroups sortedBooks={sortedBooks} />
+      <GameGroups sortedGames={sortedGames} />
+      <GroupGroups sortedGroups={sortedGroups} />
       {/* {sortedAlbums &&
         sortedAlbums.map((album) => (
           <React.Fragment key={album.id}>

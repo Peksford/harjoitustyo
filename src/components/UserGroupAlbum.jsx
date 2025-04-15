@@ -48,8 +48,6 @@ const UserGroupAlbum = ({ onUpdateGroup, createAlbum }) => {
     fetchUser();
   }, [user]);
 
-  console.log('grouppi data', groupData.item_id);
-
   useEffect(() => {
     if (groupData) {
       try {
@@ -144,6 +142,8 @@ const UserGroupAlbum = ({ onUpdateGroup, createAlbum }) => {
       group_id: groupData.id,
       user_id: Number(friend),
     });
+    const updatedGroup = await groupService.getGroup(groupData.id);
+    setGroupData(updatedGroup);
   };
 
   let groupUserAlbums = [];
@@ -154,8 +154,6 @@ const UserGroupAlbum = ({ onUpdateGroup, createAlbum }) => {
     );
     groupUserAlbums.push(groupUserAlbum);
   }
-
-  console.log('album info', album);
 
   if (groupData) {
     return (
@@ -336,8 +334,8 @@ const styles = {
     alignItems: 'center',
   },
   thumbnail: {
-    width: '40%',
-    height: '40%',
+    width: '60%',
+    height: '60%',
     objectFit: 'cover',
     marginBottom: '8px',
   },

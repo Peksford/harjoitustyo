@@ -6,21 +6,20 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
-import movieService from '../services/movies';
+import gameService from '../services/games';
 import userService from '../services/users';
 import GroupComments from './GroupComments';
 
-const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
+const UserGroupGame = ({ onUpdateGroup, createGame }) => {
   const { id } = useParams();
   const [groupData, setGroupData] = useState('');
   const [rating, setRating] = useState(0);
-  const [movie, setMovie] = useState(null);
-  const [userMovies, setUserMovies] = useState([]);
+  const [game, setGame] = useState(null);
+  const [userGames, setUserGames] = useState([]);
   const [followed, setFollowed] = useState(null);
-  //   const [friends, setFriends] = useState([]);
   const [friend, setFriend] = useState('');
   const user = useSelector((state) => state.user);
-  const movies = useSelector((state) => state.movies);
+  const games = useSelector((state) => state.games);
 
   useEffect(() => {
     const fetchGroup = async () => {
@@ -51,11 +50,11 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
   useEffect(() => {
     if (groupData) {
       try {
-        const fetchMovie = async () => {
-          const response = await movieService.getMovie(groupData?.item_id);
-          setMovie(response);
+        const fetchGame = async () => {
+          const response = await gameService.getGame(groupData?.item_id);
+          setGame(response);
         };
-        fetchMovie();
+        fetchGame();
       } catch (error) {
         console.error(error);
       }
@@ -63,37 +62,37 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
   }, [groupData?.item_id]);
 
   useEffect(() => {
-    const fetchOtherUserMovies = async () => {
+    const fetchOtherUserGames = async () => {
       try {
         if (groupData) {
-          const fetchedMovies = [];
+          const fetchedGames = [];
 
           for (const member of groupData.group_members) {
-            const userMovie = await userService.getUserMovies(
+            const userGame = await userService.getUserGames(
               member.user.username
             );
-            fetchedMovies.push(userMovie);
+            fetchedGames.push(userGame);
           }
 
-          setUserMovies(fetchedMovies);
+          setUserGames(fetchedGames);
         }
       } catch (error) {
         console.error('Error', error);
       }
     };
-    fetchOtherUserMovies();
-  }, [groupData, movie]);
+    fetchOtherUserGames();
+  }, [groupData, game]);
 
   const changeRating = async (newRating) => {
     setRating(newRating);
 
     try {
-      const updatedRating = await movieService.updatedMovie(movie.id, {
+      const updatedRating = await gameService.updatedGame(game.id, {
         ...groupData,
         rating: newRating,
       });
 
-      setMovie(updatedRating);
+      setGame(updatedRating);
 
       if (onUpdateGroup) {
         onUpdateGroup(updatedRating);
@@ -103,24 +102,24 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
     }
   };
 
-  const createNew = async ({ movie }) => {
+  const createNew = async ({ game }) => {
     try {
-      const newMovie = await createMovie({
-        type: 'movie',
-        title: movie.title,
-        url: movie.url,
-        release_date: movie.release_date,
-        thumbnail: movie.thumbnail,
-        whole_title: movie.whole_title,
-        discogs_id: movie.discogs_id,
+      const newGame = await createGame({
+        type: 'game',
+        title: game.title,
+        url: game.url,
+        release_date: game.release_date,
+        thumbnail: game.thumbnail,
+        whole_title: game.whole_title,
+        discogs_id: game.discogs_id,
         heart: false,
         rating: null,
-        tmdb_id: movie.tmdb_id,
-        overview: movie.overview,
+        igdb_id: game.igdb_id,
+        overview: game.overview,
         pick_of_the_week: null,
       });
-      setMovie(newMovie);
-      return newMovie;
+      setGame(newGame);
+      return newGame;
     } catch (error) {
       console.error(error);
       return null;
@@ -132,17 +131,18 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
       group_id: groupData.id,
       user_id: Number(friend),
     });
+
     const updatedGroup = await groupService.getGroup(groupData.id);
     setGroupData(updatedGroup);
   };
 
-  let groupUserMovies = [];
+  let groupUserGames = [];
 
-  for (const user of userMovies) {
-    const groupUserMovie = user.find(
-      (movie) => movie.tmdb_id === groupData.tmdb_id
+  for (const user of userGames) {
+    const groupUserGame = user.find(
+      (game) => game.igdb_id === groupData.igdb_id
     );
-    groupUserMovies.push(groupUserMovie);
+    groupUserGames.push(groupUserGame);
   }
 
   if (groupData) {
@@ -155,9 +155,9 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
           </div>
           {
             <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-              {movie && (
+              {game && (
                 <img
-                  src={`https://www.themoviedb.org/t/p/w1280/${movie.thumbnail}`}
+                  src={game.thumbnail.replace(/t_thumb/, 't_cover_big')}
                   style={styles.thumbnail}
                 />
               )}
@@ -185,8 +185,8 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
                     <div key={member.id}>{member.user.username}</div>
                   ))}
                 </div>
-                {movies &&
-                movies.find((item) => item?.tmdb_id === movie?.tmdb_id) ? (
+                {games &&
+                games.find((item) => item?.igdb_id === game?.igdb_id) ? (
                   <Popup
                     trigger={
                       <button
@@ -205,12 +205,10 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
                   >
                     {(close) => (
                       <div className="modal-container">
-                        <div className="modal-header">{movie.title}</div>
-                        {movie && (
+                        <div className="modal-header">{game?.name}</div>
+                        {game && (
                           <div style={styles.circle}>
-                            <span style={styles.circleText}>
-                              {movie.rating}
-                            </span>
+                            <span style={styles.circleText}>{game.rating}</span>
                           </div>
                         )}
 
@@ -247,7 +245,7 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
                   </Popup>
                 ) : (
                   <button
-                    onClick={() => createNew({ movie })}
+                    onClick={() => createNew({ game })}
                     className="button-text"
                   >
                     Add
@@ -278,8 +276,8 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
               </div>
             </div>
           }
-          {groupUserMovies &&
-            groupUserMovies.map((member) =>
+          {groupUserGames &&
+            groupUserGames.map((member) =>
               member ? (
                 <div key={member.id}>
                   {member.rating ? (
@@ -377,12 +375,12 @@ const styles = {
   },
 };
 
-UserGroupMovie.propTypes = {
+UserGroupGame.propTypes = {
   user: PropTypes.shape({
     id: PropTypes.number.isRequired,
   }),
   onUpdateGroup: PropTypes.func,
-  createMovie: PropTypes.func.isRequired,
+  createGame: PropTypes.func.isRequired,
 };
 
-export default UserGroupMovie;
+export default UserGroupGame;

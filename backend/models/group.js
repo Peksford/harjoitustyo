@@ -26,6 +26,18 @@ Group.init(
       type: DataTypes.INTEGER,
       allowNull: true,
     },
+    book_id: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    igdb_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    thumbnail: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
     item_type: {
       type: DataTypes.ENUM('album', 'book', 'movie', 'game'),
     },

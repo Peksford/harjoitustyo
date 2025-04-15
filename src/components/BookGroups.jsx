@@ -7,21 +7,22 @@ import groupService from '../services/groups';
 import { addGroup, updateGroup } from '../reducers/groupReducer';
 import userService from '../services/users';
 import { Link } from 'react-router-dom';
-import discogsButton from '../assets/discogsButton.webp';
+import isbndbLogo from '../assets/isbndb.png';
+import openLibraryLogo from '../assets/openLibrarylogo.png';
 import { setNotification } from '../reducers/notificationReducer';
 
 const styles = {
-  albumContainer: {
+  bookContainer: {
     display: 'flex',
     alignItems: 'center',
   },
-  albumInfo: {
+  bookInfo: {
     display: 'flex',
     flexDirection: 'column',
   },
   thumbnail: {
-    width: '150px',
-    height: '150px',
+    width: '140px',
+    height: '170px',
     marginRight: '1rem',
   },
   buttonContainer: {
@@ -66,7 +67,7 @@ const styles = {
   },
 };
 
-const AlbumGroups = ({ sortedAlbums }) => {
+const BookGroups = ({ sortedBooks }) => {
   const [friend, setFriend] = useState('');
   const [followed, setFollowed] = useState(null);
   const [friends, setFriends] = useState([]);
@@ -117,7 +118,7 @@ const AlbumGroups = ({ sortedAlbums }) => {
     setAdded([
       ...added,
       {
-        discogs_id: groupObject.discogs_id,
+        book_id: groupObject.book_id,
         group_id: groupResponse.id,
       },
     ]);
@@ -127,20 +128,31 @@ const AlbumGroups = ({ sortedAlbums }) => {
 
   return (
     <div>
-      {sortedAlbums &&
-        sortedAlbums.map((album) => (
-          <React.Fragment key={album.id}>
-            <div style={styles.albumContainer}>
-              <img src={album.thumbnail} style={styles.thumbnail} />
-              <div style={styles.albumInfo}>
-                {album.whole_title}
+      {sortedBooks &&
+        sortedBooks.map((book) => (
+          <React.Fragment key={book.id}>
+            <div style={styles.bookContainer}>
+              {book.source === 'ISBNDB' ? (
+                <img src={book.thumbnail} style={styles.thumbnail} />
+              ) : (
+                <img
+                  src={`https://covers.openlibrary.org/b/id/${book.thumbnail}-L.jpg`}
+                  style={styles.thumbnail}
+                />
+              )}
+              {/* <img
+                src={`https://www.thebookdb.org/t/p/w1280/${book.thumbnail}`}
+                style={styles.thumbnail}
+              /> */}
+              <div style={styles.bookInfo}>
+                {book.whole_title}
                 <div>
                   {!groups.some(
-                    (group) => group.discogs_id === album.discogs_id
+                    (group) =>
+                      group.item_type === 'book' && group.item_id === book.id
                   ) &&
                   !added.find(
-                    (alreadyAdded) =>
-                      alreadyAdded.discogs_id === album.discogs_id
+                    (alreadyAdded) => alreadyAdded.book_id === book.key
                   ) ? (
                     <Popup
                       trigger={
@@ -162,7 +174,11 @@ const AlbumGroups = ({ sortedAlbums }) => {
                         <div
                           className="modal-container"
                           style={{
-                            backgroundImage: `url(${album.thumbnail})`,
+                            backgroundImage: `url(${
+                              book.source === 'ISBNDB'
+                                ? book.thumbnail
+                                : `https://covers.openlibrary.org/b/id/${book.thumbnail}-L.jpg`
+                            })`,
                             backgroundSize: '30%',
                             // backgroundRepeat: 'no-repeat',
                             backgroundPosition: 'center',
@@ -199,7 +215,7 @@ const AlbumGroups = ({ sortedAlbums }) => {
                               width: '40%',
                             }}
                           >
-                            &apos;{album.whole_title}&apos; Rating club{' '}
+                            &apos;{book.whole_title}&apos; Rating club{' '}
                           </div>
 
                           <div>
@@ -241,14 +257,14 @@ const AlbumGroups = ({ sortedAlbums }) => {
                                   onClick={() =>
                                     createGroup(
                                       {
-                                        name: album.whole_title,
-                                        item_id: album.id,
-                                        item_type: 'album',
+                                        name: book.whole_title,
+                                        item_id: book.id,
+                                        item_type: 'book',
                                         created_at: Date.now(),
                                         updated_at: Date.now(),
                                         friends: friends,
-                                        discogs_id: album.discogs_id,
-                                        thumbnail: album.thumbnail,
+                                        book_id: book.key,
+                                        thumbnail: book.thumbnail,
                                       },
                                       close()
                                     )
@@ -294,13 +310,12 @@ const AlbumGroups = ({ sortedAlbums }) => {
                   ) : (
                     <div>
                       {groups.find(
-                        (item) => item.discogs_id === album.discogs_id
+                        (item) =>
+                          item.item_type === 'book' && item.item_id === book.id
                       ) && (
                         <Link
                           to={`/clubs/${
-                            groups.find(
-                              (item) => item.discogs_id === album.discogs_id
-                            )?.id
+                            groups.find((item) => item.item_id === book.id)?.id
                           }`}
                         >
                           <button style={{ padding: '10px' }}>
@@ -311,29 +326,58 @@ const AlbumGroups = ({ sortedAlbums }) => {
                     </div>
                   )}
                 </div>
-                {album.url && (
+
+                {book.source === 'ISBNDB' ? (
                   <p>
                     <a
-                      href={`https://www.discogs.com${album.url}`}
+                      href={`https://isbndb.com/book/${book.url}`}
                       target="blank"
                       rel="noopener noreferrer"
                     >
                       <button
                         style={{
                           backgroundColor: 'black',
-                          padding: '6px 14px',
+                          //   padding: '6px 14px',
                           marginTop: '10px',
                         }}
                       >
                         <img
-                          src={discogsButton}
+                          src={
+                            book.source === 'ISBNDB'
+                              ? isbndbLogo
+                              : openLibraryLogo
+                          }
                           style={{
                             width: '100%',
-                            maxWidth: '60px',
+                            maxWidth: '90px',
                             height: 'auto',
+                            backgroundColor: 'black',
+                            padding: '10px',
+                            borderRadius: '8px',
                           }}
                         />
                       </button>
+                    </a>
+                  </p>
+                ) : (
+                  <p>
+                    <a
+                      href={`https://openlibrary.org${book.key}`}
+                      target="blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        src={openLibraryLogo}
+                        style={{
+                          width: '100%',
+                          maxWidth: '120px',
+                          height: 'auto',
+                          backgroundColor: 'white',
+                          padding: '8px',
+                          borderRadius: '8px',
+                          marginTop: '10px',
+                        }}
+                      />
                     </a>
                   </p>
                 )}
@@ -346,9 +390,9 @@ const AlbumGroups = ({ sortedAlbums }) => {
   );
 };
 
-AlbumGroups.propTypes = {
-  sortedAlbums: PropTypes.array,
+BookGroups.propTypes = {
+  sortedBooks: PropTypes.array,
   added: PropTypes.object,
 };
 
-export default AlbumGroups;
+export default BookGroups;

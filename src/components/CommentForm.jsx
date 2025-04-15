@@ -58,12 +58,13 @@ const NewComment = ({ groupId }) => {
     >
       <div>
         <select
+          id="comment"
           name="comment"
           value={newComment}
           onChange={handleChange}
           style={{ width: '50%', marginTop: '10px' }}
         >
-          <option value="" disabled>
+          <option id="defaultOption" value="" disabled>
             Any thoughts?
           </option>
           {definedComments.map((comment) => (

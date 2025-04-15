@@ -56,6 +56,10 @@ module.exports = {
         type: DataTypes.TEXT,
         allowNull: true,
       },
+      igdb_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
     });
 
     await queryInterface.addColumn('games', 'user_id', {

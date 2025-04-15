@@ -182,7 +182,15 @@ router.get('/:username', async (req, res, next) => {
       });
       const followers = await user.getFollowers();
       const followed = await user.getFollowed();
-      const groups = await user.getGroups();
+      const groups = await user.getGroups({
+        include: [
+          {
+            model: User,
+            as: 'members',
+            attributes: ['id', 'username'],
+          },
+        ],
+      });
 
       res.json({
         ...user.toJSON(),

@@ -161,6 +161,7 @@ const Game = ({ gameSearched, createGame }) => {
       heart: false,
       summary: game.summary,
       genres: game.genres.map((genre) => genre.name).join(', '),
+      igdb_id: game.id,
     });
     newGame && setAddedGames((prevGames) => [...prevGames, newGame]);
     return addedGames;
@@ -242,7 +243,14 @@ const Game = ({ gameSearched, createGame }) => {
                           target="blank"
                           rel="noopener noreferrer"
                         >
-                          IGDB
+                          <img
+                            style={{
+                              width: '100%',
+                              maxWidth: '70px',
+                              height: 'auto',
+                            }}
+                            src={igdbLogo}
+                          />
                         </a>
                       </p>
                     )}
@@ -401,7 +409,7 @@ const GameSearch = ({ createGame }) => {
       </div>
       <button
         onClick={hideSearch}
-        style={{ marginTop: '10px', marginBottom: '10px' }}
+        style={{ marginTop: '10px', marginBottom: '10px', marginRight: '10px' }}
       >
         {showAdvancedSearch ? 'Hide advanced search' : 'Advanced search'}
       </button>

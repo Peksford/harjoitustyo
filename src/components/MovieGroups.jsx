@@ -8,6 +8,7 @@ import { addGroup, updateGroup } from '../reducers/groupReducer';
 import userService from '../services/users';
 import { Link } from 'react-router-dom';
 import tmdbLogo from '../assets/tmdbLogo.svg';
+import { setNotification } from '../reducers/notificationReducer';
 
 const styles = {
   movieContainer: {
@@ -109,6 +110,9 @@ const MovieGroups = ({ sortedMovies }) => {
       user_id: user.id,
     };
     dispatch(updateGroup(updatedGroup));
+    dispatch(
+      setNotification(`New rating club '${groupObject.name}' created`, 5)
+    );
 
     setAdded([
       ...added,
@@ -120,8 +124,6 @@ const MovieGroups = ({ sortedMovies }) => {
 
     return groupObject;
   };
-
-  console.log('groups', groups);
 
   return (
     <div>
@@ -168,6 +170,24 @@ const MovieGroups = ({ sortedMovies }) => {
                             height: '100%',
                           }}
                         >
+                          <div className="modal-actions">
+                            <button
+                              onClick={() => close()}
+                              style={{
+                                position: 'absolute',
+                                top: '10px',
+                                right: '10px',
+                                // background: 'transparent',
+                                // border: 'none',
+                                fontSize: '18px',
+                                fontWeight: 'bold',
+                                color: 'black',
+                                cursor: 'pointer',
+                              }}
+                            >
+                              x
+                            </button>
+                          </div>
                           <div
                             className="modal-header"
                             style={{
@@ -228,6 +248,7 @@ const MovieGroups = ({ sortedMovies }) => {
                                         updated_at: Date.now(),
                                         friends: friends,
                                         tmdb_id: movie.tmdb_id,
+                                        thumbnail: movie.thumbnail,
                                       },
                                       close()
                                     )
@@ -267,10 +288,6 @@ const MovieGroups = ({ sortedMovies }) => {
                               </div>
                             )}
                           </div>
-
-                          <div className="modal-actions">
-                            <button onClick={() => close()}>Close</button>
-                          </div>
                         </div>
                       )}
                     </Popup>
@@ -283,7 +300,7 @@ const MovieGroups = ({ sortedMovies }) => {
                           to={`/clubs/${
                             groups.find(
                               (item) => item.tmdb_id === movie.tmdb_id
-                            )?.group_member?.group_id
+                            )?.id
                           }`}
                         >
                           <button style={{ padding: '10px' }}>

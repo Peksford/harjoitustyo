@@ -62,6 +62,10 @@ Game.init(
       type: DataTypes.ARRAY(DataTypes.INTEGER),
       allowNull: true,
     },
+    igdb_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   },
   {
     sequelize,

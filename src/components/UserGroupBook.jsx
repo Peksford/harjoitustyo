@@ -6,21 +6,21 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
-import movieService from '../services/movies';
+import bookService from '../services/books';
 import userService from '../services/users';
 import GroupComments from './GroupComments';
 
-const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
+const UserGroupBook = ({ onUpdateGroup, createBook }) => {
   const { id } = useParams();
   const [groupData, setGroupData] = useState('');
   const [rating, setRating] = useState(0);
-  const [movie, setMovie] = useState(null);
-  const [userMovies, setUserMovies] = useState([]);
+  const [book, setBook] = useState(null);
+  const [userBooks, setUserBooks] = useState([]);
   const [followed, setFollowed] = useState(null);
   //   const [friends, setFriends] = useState([]);
   const [friend, setFriend] = useState('');
   const user = useSelector((state) => state.user);
-  const movies = useSelector((state) => state.movies);
+  const books = useSelector((state) => state.books);
 
   useEffect(() => {
     const fetchGroup = async () => {
@@ -51,11 +51,11 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
   useEffect(() => {
     if (groupData) {
       try {
-        const fetchMovie = async () => {
-          const response = await movieService.getMovie(groupData?.item_id);
-          setMovie(response);
+        const fetchBook = async () => {
+          const response = await bookService.getBook(groupData?.item_id);
+          setBook(response);
         };
-        fetchMovie();
+        fetchBook();
       } catch (error) {
         console.error(error);
       }
@@ -63,37 +63,37 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
   }, [groupData?.item_id]);
 
   useEffect(() => {
-    const fetchOtherUserMovies = async () => {
+    const fetchOtherUserBooks = async () => {
       try {
         if (groupData) {
-          const fetchedMovies = [];
+          const fetchedBooks = [];
 
           for (const member of groupData.group_members) {
-            const userMovie = await userService.getUserMovies(
+            const userBook = await userService.getUserBooks(
               member.user.username
             );
-            fetchedMovies.push(userMovie);
+            fetchedBooks.push(userBook);
           }
 
-          setUserMovies(fetchedMovies);
+          setUserBooks(fetchedBooks);
         }
       } catch (error) {
         console.error('Error', error);
       }
     };
-    fetchOtherUserMovies();
-  }, [groupData, movie]);
+    fetchOtherUserBooks();
+  }, [groupData, book]);
 
   const changeRating = async (newRating) => {
     setRating(newRating);
 
     try {
-      const updatedRating = await movieService.updatedMovie(movie.id, {
+      const updatedRating = await bookService.updatedBook(book.id, {
         ...groupData,
         rating: newRating,
       });
 
-      setMovie(updatedRating);
+      setBook(updatedRating);
 
       if (onUpdateGroup) {
         onUpdateGroup(updatedRating);
@@ -103,24 +103,24 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
     }
   };
 
-  const createNew = async ({ movie }) => {
+  const createNew = async ({ book }) => {
     try {
-      const newMovie = await createMovie({
-        type: 'movie',
-        title: movie.title,
-        url: movie.url,
-        release_date: movie.release_date,
-        thumbnail: movie.thumbnail,
-        whole_title: movie.whole_title,
-        discogs_id: movie.discogs_id,
+      const newBook = await createBook({
+        type: 'book',
+        title: book.title,
+        url: book.url,
+        release_date: book.release_date,
+        thumbnail: book.thumbnail,
+        whole_title: book.whole_title,
+        discogs_id: book.discogs_id,
         heart: false,
         rating: null,
-        tmdb_id: movie.tmdb_id,
-        overview: movie.overview,
+        tmdb_id: book.tmdb_id,
+        overview: book.overview,
         pick_of_the_week: null,
       });
-      setMovie(newMovie);
-      return newMovie;
+      setBook(newBook);
+      return newBook;
     } catch (error) {
       console.error(error);
       return null;
@@ -136,13 +136,11 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
     setGroupData(updatedGroup);
   };
 
-  let groupUserMovies = [];
+  let groupUserBooks = [];
 
-  for (const user of userMovies) {
-    const groupUserMovie = user.find(
-      (movie) => movie.tmdb_id === groupData.tmdb_id
-    );
-    groupUserMovies.push(groupUserMovie);
+  for (const user of userBooks) {
+    const groupUserBook = user.find((book) => book.key === groupData.book_id);
+    groupUserBooks.push(groupUserBook);
   }
 
   if (groupData) {
@@ -155,9 +153,11 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
           </div>
           {
             <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-              {movie && (
+              {book?.source === 'ISBNDB' ? (
+                <img src={book.thumbnail} style={styles.thumbnail} />
+              ) : (
                 <img
-                  src={`https://www.themoviedb.org/t/p/w1280/${movie.thumbnail}`}
+                  src={`https://covers.openlibrary.org/b/id/${book?.thumbnail}-L.jpg`}
                   style={styles.thumbnail}
                 />
               )}
@@ -185,8 +185,8 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
                     <div key={member.id}>{member.user.username}</div>
                   ))}
                 </div>
-                {movies &&
-                movies.find((item) => item?.tmdb_id === movie?.tmdb_id) ? (
+                {books &&
+                books.find((item) => item?.tmdb_id === book?.tmdb_id) ? (
                   <Popup
                     trigger={
                       <button
@@ -205,12 +205,10 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
                   >
                     {(close) => (
                       <div className="modal-container">
-                        <div className="modal-header">{movie.title}</div>
-                        {movie && (
+                        <div className="modal-header">{book?.title}</div>
+                        {book && (
                           <div style={styles.circle}>
-                            <span style={styles.circleText}>
-                              {movie.rating}
-                            </span>
+                            <span style={styles.circleText}>{book.rating}</span>
                           </div>
                         )}
 
@@ -247,7 +245,7 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
                   </Popup>
                 ) : (
                   <button
-                    onClick={() => createNew({ movie })}
+                    onClick={() => createNew({ book })}
                     className="button-text"
                   >
                     Add
@@ -278,8 +276,8 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
               </div>
             </div>
           }
-          {groupUserMovies &&
-            groupUserMovies.map((member) =>
+          {groupUserBooks &&
+            groupUserBooks.map((member) =>
               member ? (
                 <div key={member.id}>
                   {member.rating ? (
@@ -377,12 +375,12 @@ const styles = {
   },
 };
 
-UserGroupMovie.propTypes = {
+UserGroupBook.propTypes = {
   user: PropTypes.shape({
     id: PropTypes.number.isRequired,
   }),
   onUpdateGroup: PropTypes.func,
-  createMovie: PropTypes.func.isRequired,
+  createBook: PropTypes.func.isRequired,
 };
 
-export default UserGroupMovie;
+export default UserGroupBook;
