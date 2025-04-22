@@ -6,6 +6,10 @@ import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import movieService from '../services/movies';
 import tmdbLogo from '../assets/tmdbLogo.svg';
+import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { setMovies } from '../reducers/movieReducer';
 
 const styles = {
   movieContainer: {
@@ -116,29 +120,6 @@ const useMovie = (name) => {
             },
           }
         );
-
-        // const tvResponse = await axios.get(
-        //   'https://api.themoviedb.org/3/search/tv',
-        //   {
-        //     params: {
-        //       api_key: apiKey,
-        //       query: name,
-        //       page: 1,
-        //     },
-        //   }
-        // );
-
-        // const movieAndTvCombined = [
-        //   ...movieResponse.data.results.map((item) => ({
-        //     ...item,
-        //     type: 'movie',
-        //   })),
-        //   ...tvResponse.data.results.map((item) => ({
-        //     ...item,
-        //     type: 'tv',
-        //   })),
-        // ];
-
         setMovieSearched(movieResponse.data.results);
       } catch (error) {
         console.error(error);
@@ -155,9 +136,11 @@ const Movie = ({ movieSearched, createMovie }) => {
   if (movieSearched === null || movieSearched === undefined) {
     return <div>not found</div>;
   }
+  const [rating, setRating] = useState(0);
+  const user = useSelector((state) => state.user);
+  const movies = useSelector((state) => state.movies);
 
-  const [addedMovies, setAddedMovies] = useState([]);
-  const [ratings, setRatings] = useState({});
+  const dispatch = useDispatch();
 
   const createNew = async (movie) => {
     try {
@@ -175,20 +158,17 @@ const Movie = ({ movieSearched, createMovie }) => {
         overview: movie.overview,
         heart: false,
       });
-      if (newMovie) {
-        setAddedMovies((prevMovies) => [...prevMovies, newMovie]);
-      }
-      return addedMovies;
+
+      return newMovie;
     } catch (error) {
       console.error('Error adding movie or tv show', error);
     }
   };
 
   const changeRating = async (newRating, addedMovie) => {
-    setRatings((prevRatings) => ({
-      ...prevRatings,
-      [addedMovie.id]: newRating,
-    }));
+    setRating(newRating);
+    console.log('rating', rating);
+
     if (!addedMovie) return;
 
     try {
@@ -196,11 +176,11 @@ const Movie = ({ movieSearched, createMovie }) => {
         ...addedMovie,
         rating: newRating,
       });
-      setAddedMovies((prevMovies) =>
-        prevMovies.map((movie) =>
-          movie.id === updatedMovie.id ? updatedMovie : movie
-        )
+      const updatedMovies = movies.map((movie) =>
+        movie.id === updatedMovie.id ? updatedMovie : movie
       );
+
+      dispatch(setMovies(updatedMovies));
     } catch (error) {
       console.error(error);
     }
@@ -211,31 +191,36 @@ const Movie = ({ movieSearched, createMovie }) => {
     if (inputDate) return new Intl.DateTimeFormat('fi-FI').format(date);
   };
 
+  console.log('movies', movies);
+
   return (
     <div>
       <h4>
         {movieSearched.map((movie) => {
-          const alreadyAdded =
-            addedMovies.length > 0 &&
-            addedMovies.some(
-              (added) =>
-                (added.title === movie.title &&
-                  added.release_date === movie.release_date) ||
-                added.release_date === movie.first_air_date
-            );
-
-          const movie_rating = addedMovies.find(
-            (added) => added.title === movie.title
+          const alreadyAdded = movies.some(
+            (added) => added.tmdb_id === movie.id
           );
+
+          const movieFounded = movies.find((item) => item.tmdb_id === movie.id);
+
+          console.log('movie added', alreadyAdded);
+
           return (
             <div key={movie.id}>
               <div style={styles.movieContainer}>
-                {movie.poster_path && (
-                  <img
-                    src={`https://www.themoviedb.org/t/p/w1280/${movie.poster_path}`}
-                    style={styles.thumbnail}
-                  />
-                )}
+                <Link
+                  to={
+                    movieFounded &&
+                    `/${user.username}/movies/${movieFounded.id}`
+                  }
+                >
+                  {movie.poster_path && (
+                    <img
+                      src={`https://www.themoviedb.org/t/p/w1280/${movie.poster_path}`}
+                      style={styles.thumbnail}
+                    />
+                  )}
+                </Link>
                 <div style={styles.movieInfo}>
                   {movie.media_type === 'movie'
                     ? movie.title
@@ -248,7 +233,7 @@ const Movie = ({ movieSearched, createMovie }) => {
                   {movie.media_type === 'movie' && (
                     <>
                       <p>Release date: {formatDate(movie.release_date)}</p>
-                      <p>
+                      <div style={{ display: 'flex' }}>
                         <a
                           href={`https://themoviedb.org/movie/${movie.id}`}
                           target="blank"
@@ -263,18 +248,25 @@ const Movie = ({ movieSearched, createMovie }) => {
                               backgroundColor: '#0d253f',
                               padding: '10px',
                               borderRadius: '8px',
+                              marginBottom: '5px',
+                              marginRight: '10px',
                             }}
                           />
                         </a>
-                      </p>
+                        {movieFounded && (
+                          <div style={styles.circle}>
+                            {movieFounded?.rating}
+                          </div>
+                        )}
+                      </div>
                     </>
                   )}
                   {movie.media_type === 'tv' && (
                     <>
-                      <p>
+                      <div>
                         First aired date: {formatDate(movie.first_air_date)}
-                      </p>
-                      <p>
+                      </div>
+                      <div style={{ display: 'flex' }}>
                         <a
                           href={`https://themoviedb.org/tv/${movie.id}`}
                           target="blank"
@@ -289,15 +281,22 @@ const Movie = ({ movieSearched, createMovie }) => {
                               backgroundColor: '#0d253f',
                               padding: '10px',
                               borderRadius: '8px',
+                              marginRight: '10px',
+                              marginBottom: '10px',
                             }}
                           />
                         </a>
-                      </p>
+                        {movieFounded && (
+                          <div style={styles.circle}>
+                            {movieFounded?.rating}
+                          </div>
+                        )}
+                      </div>
                     </>
                   )}
                   {movie.media_type === 'person' && (
                     <>
-                      <p>
+                      <div>
                         Known for {movie.known_for_department}:{' '}
                         <ul>
                           {movie.known_for.map(
@@ -305,7 +304,7 @@ const Movie = ({ movieSearched, createMovie }) => {
                               (known.media_type === 'movie' ||
                                 known.media_type === 'tv') && (
                                 <li key={known.id}>
-                                  <p>{known.title}</p>
+                                  <span>{known.title}</span>
                                   {known.poster_path && (
                                     <img
                                       src={`https://www.themoviedb.org/t/p/w1280/${known.poster_path}`}
@@ -332,7 +331,7 @@ const Movie = ({ movieSearched, createMovie }) => {
                               )
                           )}
                         </ul>
-                      </p>
+                      </div>
                     </>
                   )}
                   {alreadyAdded ? (
@@ -345,13 +344,14 @@ const Movie = ({ movieSearched, createMovie }) => {
                       {(close) => (
                         <div className="modal-container">
                           <div className="modal-header">{movie.title}</div>
-                          {movie_rating && ratings[movie_rating.id] ? (
+                          {movieFounded ? (
                             <div style={styles.circle}>
                               <span style={styles.circleText}>
-                                {ratings[movie_rating.id]}
+                                {movieFounded?.rating}
                               </span>
                             </div>
                           ) : null}
+
                           <div className="modal-content">
                             <div style={styles.sliderContainer}>
                               <label htmlFor="rating-slider">Your Rating</label>
@@ -361,14 +361,13 @@ const Movie = ({ movieSearched, createMovie }) => {
                                 max="10"
                                 step="0.1"
                                 value={
-                                  (movie_rating && ratings[movie_rating.id]) ||
-                                  0
+                                  (movieFounded && movieFounded?.rating) || 0
                                 }
                                 onChange={(e) =>
                                   changeRating(
                                     parseFloat(e.target.value),
-                                    addedMovies.find(
-                                      (added) => added.title === movie.title
+                                    movies.find(
+                                      (added) => added.tmdb_id === movie.id
                                     )
                                   )
                                 }
@@ -390,12 +389,7 @@ const Movie = ({ movieSearched, createMovie }) => {
                             </div>
                           </div>
                           <div className="modal-actions">
-                            <button
-                              className="close-btn"
-                              onClick={() => close()}
-                            >
-                              Close
-                            </button>
+                            <button onClick={() => close()}>Ok</button>
                           </div>
                         </div>
                       )}
@@ -410,17 +404,6 @@ const Movie = ({ movieSearched, createMovie }) => {
                       </button>
                     )
                   )}
-                  {/* {movie.id && (
-                  <p>
-                    <a
-                      href={`https://themoviedb.org/movie/${movie.id}`}
-                      target="blank"
-                      rel="noopener noreferrer"
-                    >
-                      The Movie Database
-                    </a>
-                  </p>
-                )} */}
                 </div>
               </div>
               <hr style={styles.separator} />

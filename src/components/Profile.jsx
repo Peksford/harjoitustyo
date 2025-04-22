@@ -105,11 +105,8 @@ const Profile = ({ createObject }) => {
 
   return (
     <>
-      {user && (
-        <>
-          <Search createObject={createObject} />
-        </>
-      )}
+      {user && <Search createObject={createObject} />}
+      <hr />
       {followersData ? (
         <div>
           <h2>Activity</h2>
@@ -175,7 +172,6 @@ const Profile = ({ createObject }) => {
                 <div>
                   {albums && (
                     <>
-                      <h3>Albums</h3>
                       {followersData.albums.map((album) => (
                         <div key={album.id}>
                           <Link
@@ -261,7 +257,6 @@ const Profile = ({ createObject }) => {
                   )}
                   {movies && (
                     <>
-                      <h3>Movies</h3>
                       {followersData.movies.map((movie) => (
                         <div key={movie.id}>
                           <Link
@@ -365,7 +360,6 @@ const Profile = ({ createObject }) => {
                   )}
                   {games && (
                     <>
-                      <h3>Games</h3>
                       {followersData.games.map((game) => (
                         <div key={game.id}>
                           <Link
@@ -450,7 +444,6 @@ const Profile = ({ createObject }) => {
 
                   {books && (
                     <>
-                      <h3>Books</h3>
                       {followersData.books.map((book) => (
                         <div key={book.id}>
                           <Link

@@ -8,6 +8,9 @@ import albumService from '../services/albums';
 import AlbumAdvancedSearch from './AlbumAdvancedSearch';
 import discogsLogo from '../assets/discogsLogo.png';
 import discogsButton from '../assets/discogsButton.webp';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAlbums } from '../reducers/albumReducer';
 
 const styles = {
   albumContainer: {
@@ -155,8 +158,11 @@ const Album = ({ albumSearched, createAlbum }) => {
   if (albumSearched === null || albumSearched === undefined) {
     return <div>not found</div>;
   }
-  const [addedAlbums, setAddedAlbums] = useState([]);
-  const [ratings, setRatings] = useState({});
+  const [rating, setRating] = useState(0);
+  const user = useSelector((state) => state.user);
+  const albums = useSelector((state) => state.albums);
+
+  const dispatch = useDispatch();
 
   const createNew = async ({ album }) => {
     try {
@@ -172,7 +178,6 @@ const Album = ({ albumSearched, createAlbum }) => {
         heart: false,
       });
 
-      newAlbum && setAddedAlbums((prevAlbums) => [...prevAlbums, newAlbum]);
       return newAlbum;
     } catch (error) {
       console.error(error);
@@ -181,10 +186,8 @@ const Album = ({ albumSearched, createAlbum }) => {
   };
 
   const changeRating = async (newRating, addedAlbum) => {
-    setRatings((prevRatings) => ({
-      ...prevRatings,
-      [addedAlbum.id]: newRating,
-    }));
+    setRating(newRating);
+
     if (!addedAlbum) return;
 
     try {
@@ -192,11 +195,11 @@ const Album = ({ albumSearched, createAlbum }) => {
         ...addedAlbum,
         rating: newRating,
       });
-      setAddedAlbums((prevAlbums) =>
-        prevAlbums.map((album) =>
-          album.id === updatedAlbum.id ? updatedAlbum : album
-        )
+      const updatedAlbums = albums.map((album) =>
+        album.id === updatedAlbum.id ? updatedAlbum : album
       );
+
+      dispatch(setAlbums(updatedAlbums));
     } catch (error) {
       console.error(error);
     }
@@ -206,20 +209,25 @@ const Album = ({ albumSearched, createAlbum }) => {
     <div>
       <h4>
         {albumSearched.map((album) => {
-          const alreadyAdded =
-            addedAlbums.length > 0 &&
-            addedAlbums.some(
-              (added) =>
-                added.whole_title === album.title &&
-                Number(added.year) === Number(album.year)
-            );
-          const album_rating = addedAlbums.find(
-            (added) => added.whole_title === album.title
+          const alreadyAdded = albums.some(
+            (added) => added.discogs_id === album.id
           );
+
+          const albumFounded = albums.find(
+            (item) => item.discogs_id === album.id
+          );
+
           return (
             <div key={album.id}>
               <div style={styles.albumContainer}>
-                <img src={album.cover_image} style={styles.thumbnail} />
+                <Link
+                  to={
+                    albumFounded &&
+                    `/${user.username}/albums/${albumFounded.id}`
+                  }
+                >
+                  <img src={album.cover_image} style={styles.thumbnail} />
+                </Link>
                 <div style={styles.albumInfo}>
                   <div>
                     <p>{album.title}</p>
@@ -236,10 +244,10 @@ const Album = ({ albumSearched, createAlbum }) => {
                         {(close) => (
                           <div className="modal-container">
                             <div className="modal-header">{album.title}</div>
-                            {album_rating && ratings[album_rating.id] ? (
+                            {albumFounded ? (
                               <div style={styles.circle}>
                                 <span style={styles.circleText}>
-                                  {ratings[album_rating.id]}
+                                  {albumFounded?.rating}
                                 </span>
                               </div>
                             ) : null}
@@ -254,14 +262,12 @@ const Album = ({ albumSearched, createAlbum }) => {
                                   max="10"
                                   step="0.1"
                                   value={
-                                    (album_rating &&
-                                      ratings[album_rating.id]) ||
-                                    0
+                                    (albumFounded && albumFounded?.rating) || 0
                                   }
                                   onChange={(e) =>
                                     changeRating(
                                       parseFloat(e.target.value),
-                                      addedAlbums.find(
+                                      albums.find(
                                         (added) =>
                                           added.whole_title === album.title
                                       )
@@ -285,12 +291,7 @@ const Album = ({ albumSearched, createAlbum }) => {
                               </div>
                             </div>
                             <div className="modal-actions">
-                              <button
-                                className="close-btn"
-                                onClick={() => close()}
-                              >
-                                Close
-                              </button>
+                              <button onClick={() => close()}>Ok</button>
                             </div>
                           </div>
                         )}
@@ -304,7 +305,7 @@ const Album = ({ albumSearched, createAlbum }) => {
                       </button>
                     )}
                     {album.uri && (
-                      <p>
+                      <div style={{ display: 'flex' }}>
                         <a
                           href={`https://www.discogs.com${album.uri}`}
                           target="blank"
@@ -315,6 +316,7 @@ const Album = ({ albumSearched, createAlbum }) => {
                               backgroundColor: 'black',
                               padding: '6px 14px',
                               marginTop: '10px',
+                              marginRight: '10px',
                             }}
                           >
                             <img
@@ -327,7 +329,12 @@ const Album = ({ albumSearched, createAlbum }) => {
                             />
                           </button>
                         </a>
-                      </p>
+                        {albumFounded && (
+                          <div style={styles.circle}>
+                            {albumFounded?.rating}
+                          </div>
+                        )}
+                      </div>
                     )}
                   </div>
                 </div>
