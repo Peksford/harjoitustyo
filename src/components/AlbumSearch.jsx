@@ -158,7 +158,7 @@ const Album = ({ albumSearched, createAlbum }) => {
   if (albumSearched === null || albumSearched === undefined) {
     return <div>not found</div>;
   }
-  const [rating, setRating] = useState(0);
+
   const user = useSelector((state) => state.user);
   const albums = useSelector((state) => state.albums);
 
@@ -186,8 +186,6 @@ const Album = ({ albumSearched, createAlbum }) => {
   };
 
   const changeRating = async (newRating, addedAlbum) => {
-    setRating(newRating);
-
     if (!addedAlbum) return;
 
     try {
