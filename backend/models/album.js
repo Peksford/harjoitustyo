@@ -67,7 +67,7 @@ Album.init(
     indexes: [
       {
         unique: true,
-        fields: ['whole_title', 'user_id', 'year'],
+        fields: ['discogs_id', 'user_id'],
       },
     ],
   }

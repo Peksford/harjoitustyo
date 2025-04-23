@@ -68,7 +68,7 @@ module.exports = {
       references: { model: 'users', key: 'id' },
     });
 
-    await queryInterface.addIndex('games', ['whole_title', 'user_id', 'year'], {
+    await queryInterface.addIndex('games', ['igdb_id', 'user_id'], {
       unique: true,
     });
   },

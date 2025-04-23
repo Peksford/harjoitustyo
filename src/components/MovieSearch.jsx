@@ -136,7 +136,7 @@ const Movie = ({ movieSearched, createMovie }) => {
   if (movieSearched === null || movieSearched === undefined) {
     return <div>not found</div>;
   }
-  const [rating, setRating] = useState(0);
+
   const user = useSelector((state) => state.user);
   const movies = useSelector((state) => state.movies);
 
@@ -166,9 +166,6 @@ const Movie = ({ movieSearched, createMovie }) => {
   };
 
   const changeRating = async (newRating, addedMovie) => {
-    setRating(newRating);
-    console.log('rating', rating);
-
     if (!addedMovie) return;
 
     try {
@@ -191,19 +188,69 @@ const Movie = ({ movieSearched, createMovie }) => {
     if (inputDate) return new Intl.DateTimeFormat('fi-FI').format(date);
   };
 
-  console.log('movies', movies);
+  const popUpWindow = ({ movie, movieFounded }) => {
+    return (
+      <Popup
+        trigger={<button className="button-text">Rate</button>}
+        modal
+        nested
+        contentStyle={{ maxWidth: '95vw', width: '600px' }}
+      >
+        {(close) => (
+          <div className="modal-container">
+            <div className="modal-header">{movie && movie.title}</div>
+            {movieFounded ? (
+              <div style={styles.circle}>
+                <span style={styles.circleText}>{movieFounded?.rating}</span>
+              </div>
+            ) : null}
+
+            <div className="modal-content">
+              <div style={styles.sliderContainer}>
+                <label htmlFor="rating-slider">Your Rating</label>
+                <input
+                  type="range"
+                  min="0"
+                  max="10"
+                  step="0.1"
+                  value={(movieFounded && movieFounded?.rating) || 0}
+                  onChange={(e) =>
+                    changeRating(
+                      parseFloat(e.target.value),
+                      movies.find((added) => added.tmdb_id === movie.id)
+                    )
+                  }
+                  style={styles.slider}
+                />
+                <div style={styles.silderNumbers}>
+                  <span>0</span>
+                  <span>1</span>
+                  <span>2</span>
+                  <span>3</span>
+                  <span>4</span>
+                  <span>5</span>
+                  <span>6</span>
+                  <span>7</span>
+                  <span>8</span>
+                  <span>9</span>
+                  <span>10</span>
+                </div>
+              </div>
+            </div>
+            <div className="modal-actions">
+              <button onClick={() => close()}>Ok</button>
+            </div>
+          </div>
+        )}
+      </Popup>
+    );
+  };
 
   return (
     <div>
       <h4>
         {movieSearched.map((movie) => {
-          const alreadyAdded = movies.some(
-            (added) => added.tmdb_id === movie.id
-          );
-
           const movieFounded = movies.find((item) => item.tmdb_id === movie.id);
-
-          console.log('movie added', alreadyAdded);
 
           return (
             <div key={movie.id}>
@@ -222,13 +269,37 @@ const Movie = ({ movieSearched, createMovie }) => {
                   )}
                 </Link>
                 <div style={styles.movieInfo}>
-                  {movie.media_type === 'movie'
-                    ? movie.title
-                    : movie.media_type === 'tv'
-                    ? movie.name
-                    : movie.media_type === 'person'
-                    ? movie.name
-                    : 'unknown'}
+                  {movie.media_type === 'movie' ? (
+                    movieFounded ? (
+                      <Link
+                        to={
+                          movieFounded &&
+                          `/${user.username}/movies/${movieFounded.id}`
+                        }
+                      >
+                        {movie.title}
+                      </Link>
+                    ) : (
+                      movie.title
+                    )
+                  ) : movie.media_type === 'tv' ? (
+                    movieFounded ? (
+                      <Link
+                        to={
+                          movieFounded &&
+                          `/${user.username}/movies/${movieFounded.id}`
+                        }
+                      >
+                        {movie.name}
+                      </Link>
+                    ) : (
+                      movie.name
+                    )
+                  ) : movie.media_type === 'person' ? (
+                    movie.name
+                  ) : (
+                    'unknown'
+                  )}
 
                   {movie.media_type === 'movie' && (
                     <>
@@ -299,111 +370,101 @@ const Movie = ({ movieSearched, createMovie }) => {
                       <div>
                         Known for {movie.known_for_department}:{' '}
                         <ul>
-                          {movie.known_for.map(
-                            (known) =>
-                              (known.media_type === 'movie' ||
-                                known.media_type === 'tv') && (
+                          {movie.known_for.map((known) => {
+                            const movieFounded = movies.find(
+                              (item) => item.tmdb_id === known.id
+                            );
+                            if (
+                              known.media_type === 'movie' ||
+                              known.media_type === 'tv'
+                            ) {
+                              return (
                                 <li key={known.id}>
-                                  <span>{known.title}</span>
-                                  {known.poster_path && (
-                                    <img
-                                      src={`https://www.themoviedb.org/t/p/w1280/${known.poster_path}`}
-                                      style={styles.thumbnail}
-                                    />
-                                  )}
+                                  <ul>
+                                    {movieFounded ? (
+                                      <Link
+                                        to={
+                                          movieFounded &&
+                                          `/${user.username}/movies/${movieFounded.id}`
+                                        }
+                                      >
+                                        {known.title}
+                                      </Link>
+                                    ) : (
+                                      known.title
+                                    )}
+                                  </ul>
+                                  {known.poster_path &&
+                                    (movieFounded ? (
+                                      <Link
+                                        to={
+                                          movieFounded &&
+                                          `/${user.username}/movies/${movieFounded.id}`
+                                        }
+                                      >
+                                        <img
+                                          src={`https://www.themoviedb.org/t/p/w1280/${known.poster_path}`}
+                                          style={styles.thumbnail}
+                                        />
+                                      </Link>
+                                    ) : (
+                                      <img
+                                        src={`https://www.themoviedb.org/t/p/w1280/${known.poster_path}`}
+                                        style={styles.thumbnail}
+                                      />
+                                    ))}
                                   <div>
                                     <a
                                       href={`https://themoviedb.org/${known.media_type}/${known.id}`}
                                       target="blank"
                                       rel="noopener noreferrer"
                                     >
-                                      The Movie Database
+                                      <img
+                                        src={tmdbLogo}
+                                        style={{
+                                          width: '100%',
+                                          maxWidth: '70px',
+                                          height: 'auto',
+                                          backgroundColor: '#0d253f',
+                                          padding: '10px',
+                                          borderRadius: '8px',
+                                          marginRight: '10px',
+                                          marginBottom: '10px',
+                                          marginTop: '10px',
+                                        }}
+                                      />
                                     </a>
                                   </div>
-                                  <button
-                                    onClick={() => createNew(known)}
-                                    className="button-text"
-                                  >
-                                    Add
-                                  </button>
+                                  {movieFounded ? (
+                                    popUpWindow({ movie: known, movieFounded })
+                                  ) : (
+                                    <button
+                                      onClick={() => createNew(known)}
+                                      className="button-text"
+                                    >
+                                      Add
+                                    </button>
+                                  )}
+
                                   <hr />
                                 </li>
-                              )
-                          )}
+                              );
+                            }
+                          })}
                         </ul>
                       </div>
                     </>
                   )}
-                  {alreadyAdded ? (
-                    <Popup
-                      trigger={<button className="button-text">Rate</button>}
-                      modal
-                      nested
-                      contentStyle={{ maxWidth: '95vw', width: '600px' }}
-                    >
-                      {(close) => (
-                        <div className="modal-container">
-                          <div className="modal-header">{movie.title}</div>
-                          {movieFounded ? (
-                            <div style={styles.circle}>
-                              <span style={styles.circleText}>
-                                {movieFounded?.rating}
-                              </span>
-                            </div>
-                          ) : null}
-
-                          <div className="modal-content">
-                            <div style={styles.sliderContainer}>
-                              <label htmlFor="rating-slider">Your Rating</label>
-                              <input
-                                type="range"
-                                min="0"
-                                max="10"
-                                step="0.1"
-                                value={
-                                  (movieFounded && movieFounded?.rating) || 0
-                                }
-                                onChange={(e) =>
-                                  changeRating(
-                                    parseFloat(e.target.value),
-                                    movies.find(
-                                      (added) => added.tmdb_id === movie.id
-                                    )
-                                  )
-                                }
-                                style={styles.slider}
-                              />
-                              <div style={styles.silderNumbers}>
-                                <span>0</span>
-                                <span>1</span>
-                                <span>2</span>
-                                <span>3</span>
-                                <span>4</span>
-                                <span>5</span>
-                                <span>6</span>
-                                <span>7</span>
-                                <span>8</span>
-                                <span>9</span>
-                                <span>10</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="modal-actions">
-                            <button onClick={() => close()}>Ok</button>
-                          </div>
-                        </div>
+                  {movieFounded
+                    ? popUpWindow({ movie, movieFounded })
+                    : movie.media_type !== 'person' && (
+                        <button
+                          onClick={() => createNew(movie)}
+                          className="button-text"
+                        >
+                          Add
+                        </button>
                       )}
-                    </Popup>
-                  ) : (
-                    movie.media_type !== 'person' && (
-                      <button
-                        onClick={() => createNew(movie)}
-                        className="button-text"
-                      >
-                        Add
-                      </button>
-                    )
-                  )}
                 </div>
               </div>
               <hr style={styles.separator} />

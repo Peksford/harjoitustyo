@@ -228,7 +228,18 @@ const Album = ({ albumSearched, createAlbum }) => {
                 </Link>
                 <div style={styles.albumInfo}>
                   <div>
-                    <p>{album.title}</p>
+                    {albumFounded ? (
+                      <Link
+                        to={
+                          albumFounded &&
+                          `/${user.username}/albums/${albumFounded.id}`
+                        }
+                      >
+                        <p>{album.title}</p>
+                      </Link>
+                    ) : (
+                      <p>{album.title}</p>
+                    )}
                     {album.year && <p>Year: {album.year}</p>}
                   </div>
                   <div>

@@ -64,13 +64,9 @@ module.exports = {
       references: { model: 'users', key: 'id' },
     });
 
-    await queryInterface.addIndex(
-      'movies',
-      ['whole_title', 'user_id', 'year'],
-      {
-        unique: true,
-      }
-    );
+    await queryInterface.addIndex('movies', ['tmdb_id', 'user_id'], {
+      unique: true,
+    });
   },
   down: async ({ context: queryInterface }) => {
     await queryInterface.dropTable('movies');

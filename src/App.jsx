@@ -89,6 +89,7 @@ const App = () => {
   const userGames = useSelector((state) => state.games);
   // const userGroups = useSelector((state) => state.groups);
   const [pageLoaded, setPageLoaded] = useState(false);
+  const [loadingUser, setLoadingUser] = useState(true);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -111,6 +112,7 @@ const App = () => {
         console.error('Error', error);
       }
     }
+    setLoadingUser(false);
   }, [dispatch]);
 
   useEffect(() => {
@@ -145,7 +147,6 @@ const App = () => {
   }, [location.pathname]);
 
   const albumRatingUpdate = (updatedAlbum) => {
-    console.log('aynthing here?', updatedAlbum);
     setAlbums((preAlbums) =>
       preAlbums.map((album) =>
         album.id === updatedAlbum.id ? updatedAlbum : album
@@ -199,19 +200,31 @@ const App = () => {
       else if (newObject.type === 'game') userObjects = userGames;
 
       const alreadyExists = userObjects.some((object) => {
-        const sameTitle =
-          object.title.toLowerCase() === newObject.title.toLowerCase();
-        const sameYear =
-          object.year !== undefined &&
-          newObject.year !== undefined &&
-          Number(object.year) === Number(newObject.year);
+        let sameId = '';
+        if (newObject.type === 'album') {
+          sameId = object.discogs_id === newObject.id;
+        } else if (newObject.type === 'movie' || newObject.type === 'tv') {
+          sameId = object.tmbd_id === newObject.tmdb_id;
+        } else if (newObject.type === 'book') {
+          const sameTitle =
+            object.title.toLowerCase() === newObject.title.toLowerCase();
 
-        return (
-          sameTitle &&
-          (object.year === undefined ||
-            newObject.year === undefined ||
-            sameYear)
-        );
+          const sameYear =
+            object.year !== undefined &&
+            newObject.year !== undefined &&
+            Number(object.year) === Number(newObject.year);
+
+          return (
+            sameTitle &&
+            (object.year === undefined ||
+              newObject.year === undefined ||
+              sameYear)
+          );
+        } else if (newObject.type === 'game') {
+          sameId = object.igdb_id = newObject.id;
+        }
+
+        return sameId;
       });
       if (alreadyExists) {
         setErrorMessage(`'${newObject.title}' already added into your list`);
@@ -307,102 +320,103 @@ const App = () => {
         </div>
       </div>
 
-      <Routes>
-        {
-          // user === null ? (
-          //   <Route path="*" element={<p>Loading...</p>} />
-          // ) :
-          user && (
-            <>
-              <Route
-                path="/"
-                element={<Profile createObject={createObject} />}
-              />
-            </>
-          )
-          // ) : (
-          //   <Route path="*" element={<Navigate to="/login" replace />} />
-          // )
-        }
-        <Route
-          path="/search"
-          element={<Search createObject={createObject} />}
-        />
-        <Route path="/login" element={<LoginForm />} />
-        {user ? <Route path="/:username/albums" element={<MyList />} /> : null}
-        {user ? (
-          <Route path="/:username/books" element={<MyListBooks />} />
-        ) : null}
-        {user ? (
+      {!loadingUser ? (
+        <Routes>
+          <Route
+            path="/"
+            element={
+              loadingUser ? (
+                <div>Loading...</div>
+              ) : user ? (
+                <Profile createObject={createObject} />
+              ) : (
+                <Navigate to="signup" />
+              )
+            }
+          />
+          <Route
+            path="/search"
+            element={<Search createObject={createObject} />}
+          />
+          {<Route path="/login" element={<LoginForm />} />}
+
+          {user ? (
+            <Route path="/:username/albums" element={<MyList />} />
+          ) : null}
+          {user ? (
+            <Route path="/:username/books" element={<MyListBooks />} />
+          ) : null}
+
           <Route
             path="/:username/movies"
             element={user ? <MyListMovies /> : <Navigate to="/login" />}
           />
-        ) : null}
-        {user ? (
+
           <Route
             path="/:username/games"
             element={user ? <MyListGames /> : <Navigate to="/login" />}
           />
-        ) : null}
-        {user ? (
+
           <Route
             path="/:username/followers"
             element={user ? <Followers /> : <Navigate to="/login" />}
           />
-        ) : null}
-        {user ? (
+
           <Route
             path="/:username/following"
             element={user ? <Following /> : <Navigate to="/login" />}
           />
-        ) : null}
-        <Route
-          path="/:username/albums/:id"
-          element={
-            <Album
-              onUpdateAlbum={albumRatingUpdate}
-              createAlbum={createObject}
-            />
-          }
-        />
-        <Route
-          path="/:username/books/:id"
-          element={
-            <Book onUpdateBook={bookRatingUpdate} createBook={createObject} />
-          }
-        />
-        <Route
-          path="/:username/movies/:id"
-          element={
-            <Movie
-              onUpdateMovie={movieRatingUpdate}
-              createMovie={createObject}
-            />
-          }
-        />
-        <Route
-          path="/:username/games/:id"
-          element={
-            <Game onUpdateGame={gameRatingUpdate} createGame={createObject} />
-          }
-        />
-        <Route
-          path="/:username"
-          element={<Home createObject={createObject} />}
-        />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/clubs" element={<Group />} />
-        <Route
-          path="/clubs/:id"
-          element={
-            <UserGroup
-              createObject={createObject}
-              onUpdateGroup={albumRatingUpdate}
-            />
-          }
-        />
-      </Routes>
+
+          <Route
+            path="/:username/albums/:id"
+            element={
+              <Album
+                onUpdateAlbum={albumRatingUpdate}
+                createAlbum={createObject}
+              />
+            }
+          />
+          <Route
+            path="/:username/books/:id"
+            element={
+              <Book onUpdateBook={bookRatingUpdate} createBook={createObject} />
+            }
+          />
+          <Route
+            path="/:username/movies/:id"
+            element={
+              <Movie
+                onUpdateMovie={movieRatingUpdate}
+                createMovie={createObject}
+              />
+            }
+          />
+          <Route
+            path="/:username/games/:id"
+            element={
+              <Game onUpdateGame={gameRatingUpdate} createGame={createObject} />
+            }
+          />
+          <Route
+            path="/:username"
+            element={<Home createObject={createObject} />}
+          />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/clubs" element={<Group />} />
+          <Route
+            path="/clubs/:id"
+            element={
+              <UserGroup
+                createObject={createObject}
+                onUpdateGroup={albumRatingUpdate}
+              />
+            }
+          />
+        </Routes>
+      ) : (
+        <div>Loading...</div>
+      )}
+
       {/* {((userAlbums.length > 1) ||
         userMovies.length > 1 ||
         userBooks.length > 1 ||

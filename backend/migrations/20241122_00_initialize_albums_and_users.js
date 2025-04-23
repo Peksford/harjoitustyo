@@ -64,6 +64,10 @@ module.exports = {
         type: DataTypes.BOOLEAN,
         allowNull: false,
       },
+      discogs_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
     });
 
     await queryInterface.addColumn('albums', 'user_id', {
@@ -72,13 +76,9 @@ module.exports = {
       references: { model: 'users', key: 'id' },
     });
 
-    await queryInterface.addIndex(
-      'albums',
-      ['whole_title', 'user_id', 'year'],
-      {
-        unique: true,
-      }
-    );
+    await queryInterface.addIndex('albums', ['discogs_id', 'user_id'], {
+      unique: true,
+    });
   },
   down: async ({ context: queryInterface }) => {
     await queryInterface.dropTable('albums');
