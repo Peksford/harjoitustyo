@@ -191,6 +191,7 @@ const App = () => {
   };
 
   const createObject = async (newObject) => {
+    console.log('new obejct', newObject);
     try {
       let userObjects = [];
       if (newObject.type === 'album') userObjects = userAlbums;
@@ -221,7 +222,7 @@ const App = () => {
               sameYear)
           );
         } else if (newObject.type === 'game') {
-          sameId = object.igdb_id = newObject.id;
+          sameId = object.igdb_id === newObject.id;
         }
 
         return sameId;
@@ -233,6 +234,7 @@ const App = () => {
         }, 5000);
         return null;
       }
+      console.log('still here?');
       if (newObject.type === 'album') {
         const newItem = await dispatch(addAlbum(newObject));
         dispatch(setNotification(`${newObject.title} added on your list`, 5));
@@ -247,6 +249,7 @@ const App = () => {
         dispatch(setNotification(`${newObject.title} added on your list`, 5));
         return newItem;
       } else if (newObject.type === 'game') {
+        console.log('adding game...', newObject);
         const newItem = await dispatch(addGame(newObject));
         dispatch(setNotification(`${newObject.title} added on your list`, 5));
         return newItem;

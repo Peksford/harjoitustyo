@@ -146,6 +146,7 @@ const Game = ({ gameSearched, createGame }) => {
     return <div>not found</div>;
   }
 
+  console.log('game ', gameSearched);
   const [addedGames, setAddedGames] = useState([]);
   const [ratings, setRatings] = useState({});
 
