@@ -45,8 +45,8 @@ describe('Rate app', () => {
     await expect(errorDiv).toHaveCSS('background-color', 'rgb(255, 0, 0)');
 
     await expect(page.getByText('welcome kayttaja')).not.toBeVisible();
+    console.log('login failed succesfully');
   });
-  console.log('login failed succesfully');
 });
 
 describe('when logged in', () => {
