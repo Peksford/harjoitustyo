@@ -207,20 +207,21 @@ const App = () => {
         } else if (newObject.type === 'movie' || newObject.type === 'tv') {
           sameId = object.tmbd_id === newObject.tmdb_id;
         } else if (newObject.type === 'book') {
-          const sameTitle =
-            object.title.toLowerCase() === newObject.title.toLowerCase();
+          sameId = object.key === newObject.key;
+          // const sameTitle =
+          //   object.title.toLowerCase() === newObject.title.toLowerCase();
 
-          const sameYear =
-            object.year !== undefined &&
-            newObject.year !== undefined &&
-            Number(object.year) === Number(newObject.year);
+          // const sameYear =
+          //   object.year !== undefined &&
+          //   newObject.year !== undefined &&
+          //   Number(object.year) === Number(newObject.year);
 
-          return (
-            sameTitle &&
-            (object.year === undefined ||
-              newObject.year === undefined ||
-              sameYear)
-          );
+          // return (
+          //   sameTitle &&
+          //   (object.year === undefined ||
+          //     newObject.year === undefined ||
+          //     sameYear)
+          // );
         } else if (newObject.type === 'game') {
           sameId = object.igdb_id === newObject.id;
         }
@@ -234,7 +235,6 @@ const App = () => {
         }, 5000);
         return null;
       }
-      console.log('still here?');
       if (newObject.type === 'album') {
         const newItem = await dispatch(addAlbum(newObject));
         dispatch(setNotification(`${newObject.title} added on your list`, 5));

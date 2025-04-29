@@ -8,6 +8,9 @@ import 'reactjs-popup/dist/index.css';
 import BookAdvancedSearch from './BookAdvancedSearch';
 import isbndbLogo from '../assets/isbndb.png';
 import openLibraryLogo from '../assets/openLibrarylogo.png';
+import { useDispatch, useSelector } from 'react-redux';
+import { setBooks } from '../reducers/bookReducer';
+import { Link } from 'react-router-dom';
 
 const styles = {
   bookContainer: {
@@ -60,7 +63,6 @@ const styles = {
     borderRadius: '50%',
     border: '4px solid #646cff',
     backgroundColor: 'transparent',
-    // color: '#fff',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -119,7 +121,6 @@ const useBook = (name, type) => {
         if (type === 'ISBNDB') {
           const response = await axios.get(
             `${baseURL}/api/books/search-book-isbndb`,
-            // 'http://localhost:3001/api/books/search-book-isbndb',
             {
               params: {
                 name: name,
@@ -129,15 +130,11 @@ const useBook = (name, type) => {
 
           setBookSearched(response.data.books);
         } else {
-          const response = await axios.get(
-            `${baseURL}/api/books/search-book`,
-            // 'http://localhost:3001/api/books/search-book',
-            {
-              params: {
-                name: name,
-              },
-            }
-          );
+          const response = await axios.get(`${baseURL}/api/books/search-book`, {
+            params: {
+              name: name,
+            },
+          });
 
           setBookSearched(response.data.docs);
         }
@@ -157,8 +154,9 @@ const Book = ({ bookSearched, createBook, type }) => {
     return <div>not found</div>;
   }
 
-  const [addedBooks, setAddedBooks] = useState([]);
-  const [ratings, setRatings] = useState({});
+  const user = useSelector((state) => state.user);
+  const books = useSelector((state) => state.books);
+  const dispatch = useDispatch();
 
   const createNew = async ({ book }) => {
     try {
@@ -175,9 +173,8 @@ const Book = ({ bookSearched, createBook, type }) => {
           key: book.key,
           heart: false,
         });
-        newBook && setAddedBooks((prevBooks) => [...prevBooks, newBook]);
 
-        return addedBooks;
+        return newBook;
       } else {
         const newBook = await createBook({
           type: 'book',
@@ -192,9 +189,8 @@ const Book = ({ bookSearched, createBook, type }) => {
           synopsis: book.synopsis,
           heart: false,
         });
-        newBook && setAddedBooks((prevBooks) => [...prevBooks, newBook]);
 
-        return addedBooks;
+        return newBook;
       }
     } catch (error) {
       console.error(error);
@@ -202,10 +198,6 @@ const Book = ({ bookSearched, createBook, type }) => {
   };
 
   const changeRating = async (newRating, addedBook) => {
-    setRatings((prevRatings) => ({
-      ...prevRatings,
-      [addedBook.id]: newRating,
-    }));
     if (!addedBook) return;
 
     try {
@@ -213,47 +205,122 @@ const Book = ({ bookSearched, createBook, type }) => {
         ...addedBook,
         rating: newRating,
       });
-      setAddedBooks((prevBooks) =>
-        prevBooks.map((book) =>
-          book.id === updatedBook.id ? updatedBook : book
-        )
+      const updatedBooks = books.map((book) =>
+        book.id === updatedBook.id ? updatedBook : book
       );
+
+      dispatch(setBooks(updatedBooks));
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const popUpWindow = ({ book, bookFounded }) => {
+    return (
+      <Popup
+        trigger={
+          <button style={{ width: '40%' }} className="button-text">
+            Rate
+          </button>
+        }
+        modal
+        nested
+        contentStyle={{ maxWidth: '95vw', width: '600px' }}
+      >
+        {(close) => (
+          <div className="modal-container">
+            <div className="modal-header">{book && book.title}</div>
+            {bookFounded ? (
+              <div style={styles.circle}>
+                <span style={styles.circleText}>{bookFounded?.rating}</span>
+              </div>
+            ) : null}
+
+            <div className="modal-content">
+              <div style={styles.sliderContainer}>
+                <label htmlFor="rating-slider">Your Rating</label>
+                <input
+                  type="range"
+                  min="0"
+                  max="10"
+                  step="0.1"
+                  value={(bookFounded && bookFounded?.rating) || 0}
+                  onChange={(e) =>
+                    changeRating(
+                      parseFloat(e.target.value),
+                      type === 'ISBNDB'
+                        ? books.find((added) => added.key === book.isbn)
+                        : books.find((added) => added.key === book.key)
+                    )
+                  }
+                  style={styles.slider}
+                />
+                <div style={styles.silderNumbers}>
+                  <span>0</span>
+                  <span>1</span>
+                  <span>2</span>
+                  <span>3</span>
+                  <span>4</span>
+                  <span>5</span>
+                  <span>6</span>
+                  <span>7</span>
+                  <span>8</span>
+                  <span>9</span>
+                  <span>10</span>
+                </div>
+              </div>
+            </div>
+            <div className="modal-actions">
+              <button onClick={() => close()}>Ok</button>
+            </div>
+          </div>
+        )}
+      </Popup>
+    );
   };
 
   return (
     <div>
       {bookSearched.map((book) => {
         const alreadyAdded =
-          addedBooks.length > 0 &&
-          addedBooks.some(
-            (added) =>
-              added.title === book.title &&
-              (added.year === Number(book.first_publish_year) ||
-                (book.date_published &&
-                  added.year === Number(book.date_published.split('-')[0])))
-            //   Number(book.first_publish_year)) ||
-            // (book.date_published && Number(book.date_published.split('-')[0]))
-          );
-        const book_rating = addedBooks.find(
-          (added) => added.title === book.title
-        );
+          type === 'ISBNDB'
+            ? books.some((added) => added.key === book.isbn)
+            : books.some((added) => added.key === book.key);
+
+        const bookFounded =
+          type === 'ISBNDB'
+            ? books.find((item) => item.key === book.isbn)
+            : books.find((item) => item.key === book.key);
 
         return (
           <div key={book.key || book.isbn}>
             {type === 'openLibrary' ? (
               <div style={styles.bookContainer}>
-                {book.cover_i && (
+                <Link
+                  to={
+                    bookFounded && `/${user.username}/books/${bookFounded.id}`
+                  }
+                >
                   <img
                     src={`https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`}
                     style={styles.thumbnail}
                   />
-                )}
+                </Link>
                 <div style={styles.BookInfoAndButtons}>
                   <div style={styles.bookInfo}>
-                    <h4>{book.title}</h4>
+                    {bookFounded ? (
+                      <Link
+                        to={
+                          bookFounded &&
+                          `/${user.username}/books/${bookFounded.id}`
+                        }
+                      >
+                        <p>{book.title}</p>
+                      </Link>
+                    ) : (
+                      <p>{book.title}</p>
+                    )}
+
                     {book.author_name &&
                       (book.author_name.length < 2 ? (
                         <p>
@@ -341,70 +408,7 @@ const Book = ({ bookSearched, createBook, type }) => {
             )}
             <div style={styles.buttonContainer}>
               {alreadyAdded ? (
-                <Popup
-                  trigger={
-                    <button style={{ width: '50%' }} className="button-text">
-                      Rate
-                    </button>
-                  }
-                  modal
-                  nested
-                  contentStyle={{ maxWidth: '95vw', width: '600px' }}
-                >
-                  {(close) => (
-                    <div className="modal-container">
-                      <div className="modal-header">{book.title}</div>
-                      {book_rating && ratings[book_rating.id] ? (
-                        <div style={styles.circle}>
-                          <span style={styles.circleText}>
-                            {ratings[book_rating.id]}
-                          </span>
-                        </div>
-                      ) : null}
-                      <div className="modal-content">
-                        <div style={styles.sliderContainer}>
-                          <label htmlFor="rating-slider">Your Rating</label>
-                          <input
-                            type="range"
-                            min="0"
-                            max="10"
-                            step="0.1"
-                            value={
-                              (book_rating && ratings[book_rating.id]) || 0
-                            }
-                            onChange={(e) =>
-                              changeRating(
-                                parseFloat(e.target.value),
-                                addedBooks.find(
-                                  (added) => added.title === book.title
-                                )
-                              )
-                            }
-                            style={styles.slider}
-                          />
-                          <div style={styles.silderNumbers}>
-                            <span>0</span>
-                            <span>1</span>
-                            <span>2</span>
-                            <span>3</span>
-                            <span>4</span>
-                            <span>5</span>
-                            <span>6</span>
-                            <span>7</span>
-                            <span>8</span>
-                            <span>9</span>
-                            <span>10</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="modal-actions">
-                        <button className="close-btn" onClick={() => close()}>
-                          Close
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </Popup>
+                popUpWindow({ book, bookFounded })
               ) : (
                 <button
                   onClick={() => createNew({ book })}
@@ -413,6 +417,9 @@ const Book = ({ bookSearched, createBook, type }) => {
                 >
                   Add
                 </button>
+              )}
+              {bookFounded && (
+                <div style={styles.circle}>{bookFounded?.rating}</div>
               )}
             </div>
 
@@ -447,7 +454,7 @@ const BookSearch = ({ createBook }) => {
       if (type === 'openLibrary') {
         const response = await axios.get(
           `${baseURL}/api/books/search-book`,
-          // 'http://localhost:3001/api/books/search-book',
+
           {
             params: {
               title: searchParams.title || '',
@@ -462,7 +469,7 @@ const BookSearch = ({ createBook }) => {
       } else {
         const response = await axios.get(
           `${baseURL}/api/books/search-book-isbndb`,
-          // 'http://localhost:3001/api/books/search-book-isbndb',
+
           {
             params: {
               query: searchParams.query,
@@ -548,14 +555,17 @@ const BookSearch = ({ createBook }) => {
           onChange={(e) => {
             bookInput.onChange(e);
           }}
-          // {...bookInput}
           data-testid="Search book"
           placeholder="Search for a book"
           onFocus={() => setShowResults(true)}
         />
         <button
           onClick={hideSearch}
-          style={{ marginTop: '10px', marginBottom: '10px' }}
+          style={{
+            marginTop: '10px',
+            marginBottom: '10px',
+            marginRight: '10px',
+          }}
         >
           {showAdvancedSearch ? 'Hide advanced search' : 'Advanced search'}
         </button>
@@ -563,7 +573,7 @@ const BookSearch = ({ createBook }) => {
           <BookAdvancedSearch onSearch={handleAdvancedSearch} type={type} />
         )}
         {debouncedBook && (
-          <button onClick={hideResults}>
+          <button onClick={hideResults} style={{ marginBottom: '10px' }}>
             {showResults ? 'Hide results' : 'Show results'}
           </button>
         )}

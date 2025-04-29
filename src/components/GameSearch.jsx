@@ -7,6 +7,9 @@ import 'reactjs-popup/dist/index.css';
 import gameService from '../services/games';
 import GameAdvancedSearch from './GameAdvancedSearch';
 import igdbLogo from '../assets/IGDB_logo.svg.png';
+import { useSelector, useDispatch } from 'react-redux';
+import { setGames } from '../reducers/gameReducer';
+import { Link } from 'react-router-dom';
 
 const styles = {
   gameContainer: {
@@ -121,7 +124,7 @@ const useGame = (name) => {
           // 'https://im-only-rating.fly.dev/api/games/search-game',
           // 'http://localhost:3001/api/games/search-game',
           `${baseURL}/api/games/search-game`,
-          // 'http://localhost:3001/api/books/search-book-isbndb',
+          // 'http://localhost:3001/api/games/search-game-isbndb',
 
           {
             params: {
@@ -146,9 +149,13 @@ const Game = ({ gameSearched, createGame }) => {
     return <div>not found</div>;
   }
 
-  console.log('game ', gameSearched);
-  const [addedGames, setAddedGames] = useState([]);
-  const [ratings, setRatings] = useState({});
+  const user = useSelector((state) => state.user);
+  const games = useSelector((state) => state.games);
+
+  const dispatch = useDispatch();
+
+  // const [addedGames, setAddedGames] = useState([]);
+  // const [ratings, setRatings] = useState({});
 
   const createNew = async ({ game }) => {
     const newGame = await createGame({
@@ -164,15 +171,15 @@ const Game = ({ gameSearched, createGame }) => {
       genres: game.genres.map((genre) => genre.name).join(', '),
       igdb_id: game.id,
     });
-    newGame && setAddedGames((prevGames) => [...prevGames, newGame]);
-    return addedGames;
+    // newGame && setAddedGames((prevGames) => [...prevGames, newGame]);
+    return newGame;
   };
 
   const changeRating = async (newRating, addedGame) => {
-    setRatings((prevRatings) => ({
-      ...prevRatings,
-      [addedGame.id]: newRating,
-    }));
+    // setRatings((prevRatings) => ({
+    //   ...prevRatings,
+    //   [addedGame.id]: newRating,
+    // }));
     if (!addedGame) return;
 
     try {
@@ -180,35 +187,113 @@ const Game = ({ gameSearched, createGame }) => {
         ...addedGame,
         rating: newRating,
       });
-      setAddedGames((prevGames) =>
-        prevGames.map((game) =>
-          game.id === updatedGame.id ? updatedGame : game
-        )
+      const updatedGames = games.map((game) =>
+        game.id === updatedGame.id ? updatedGame : game
       );
+
+      dispatch(setGames(updatedGames));
+      // setAddedGames((prevGames) =>
+      //   prevGames.map((game) =>
+      //     game.id === updatedGame.id ? updatedGame : game
+      //   )
+      // );
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const popUpWindow = ({ game, gameFounded }) => {
+    console.log('game founded', gameFounded);
+
+    return (
+      <Popup
+        trigger={
+          <button style={{ marginBottom: '10px' }} className="button-text">
+            Rate
+          </button>
+        }
+        modal
+        nested
+        contentStyle={{
+          maxWidth: '95vw',
+          width: '600px',
+        }}
+      >
+        {(close) => (
+          <div className="modal-container">
+            <div className="modal-header">{game && game.title}</div>
+            {gameFounded ? (
+              <div style={styles.circle}>
+                <span style={styles.circleText}>{gameFounded?.rating}</span>
+              </div>
+            ) : null}
+
+            <div className="modal-content">
+              <div style={styles.sliderContainer}>
+                <label htmlFor="rating-slider">Your Rating</label>
+                <input
+                  type="range"
+                  min="0"
+                  max="10"
+                  step="0.1"
+                  value={(gameFounded && gameFounded?.rating) || 0}
+                  onChange={(e) =>
+                    changeRating(
+                      parseFloat(e.target.value),
+                      games.find((added) => added.igdb_id === game.id)
+                    )
+                  }
+                  style={styles.slider}
+                />
+                <div style={styles.silderNumbers}>
+                  <span>0</span>
+                  <span>1</span>
+                  <span>2</span>
+                  <span>3</span>
+                  <span>4</span>
+                  <span>5</span>
+                  <span>6</span>
+                  <span>7</span>
+                  <span>8</span>
+                  <span>9</span>
+                  <span>10</span>
+                </div>
+              </div>
+            </div>
+            <div className="modal-actions">
+              <button onClick={() => close()}>Ok</button>
+            </div>
+          </div>
+        )}
+      </Popup>
+    );
   };
 
   return (
     <div>
       <h4>
         {gameSearched.map((game) => {
-          const alreadyAdded =
-            addedGames.length > 0 &&
-            addedGames.some(
-              (added) =>
-                added.title === game.name &&
-                Number(added.release_date) === game.first_release_date
-            );
-          const game_rating = addedGames.find(
-            (added) => added.title === game.name
-          );
+          const gameFounded = games.find((item) => item.igdb_id === game.id);
 
           return (
             <div key={game.id}>
               <div style={styles.gameContainer}>
-                {game.cover && (
+                <Link
+                  to={
+                    gameFounded && `/${user.username}/games/${gameFounded.id}`
+                  }
+                >
+                  {game.cover && (
+                    <img
+                      src={`https:${game.cover.url.replace(
+                        /t_thumb/,
+                        't_cover_big'
+                      )}`}
+                      style={styles.thumbnail}
+                    />
+                  )}
+                </Link>
+                {/* {game.cover && (
                   <img
                     src={`https:${game.cover.url.replace(
                       /t_thumb/,
@@ -216,10 +301,18 @@ const Game = ({ gameSearched, createGame }) => {
                     )}`}
                     style={styles.thumbnail}
                   />
-                )}
+                )} */}
                 <div style={styles.GameInfoAndButtons}>
                   <div style={styles.gameInfo}>
-                    <p>{game.name}</p>
+                    <Link
+                      to={
+                        gameFounded &&
+                        `/${user.username}/games/${gameFounded.id}`
+                      }
+                    >
+                      <p>{game.name}</p>
+                    </Link>
+                    {/* <p>{game.name}</p> */}
                     {game.first_release_date && (
                       <p>
                         Released:{' '}
@@ -255,74 +348,75 @@ const Game = ({ gameSearched, createGame }) => {
                         </a>
                       </p>
                     )}
-                    {alreadyAdded ? (
-                      <Popup
-                        trigger={<button className="button-text">Rate</button>}
-                        modal
-                        nested
-                        contentStyle={{ maxWidth: '95vw', width: '600px' }}
-                      >
-                        {(close) => (
-                          <div className="modal-container">
-                            <div className="modal-header">{game.name}</div>
-                            {game_rating && ratings[game_rating.id] ? (
-                              <div style={styles.circle}>
-                                <span style={styles.circleText}>
-                                  {ratings[game_rating.id]}
-                                </span>
-                              </div>
-                            ) : null}
-                            <div className="modal-content">
-                              <div style={styles.sliderContainer}>
-                                <label htmlFor="rating-slider">
-                                  Your Rating
-                                </label>
-                                <input
-                                  type="range"
-                                  min="0"
-                                  max="10"
-                                  step="0.1"
-                                  value={
-                                    (game_rating && ratings[game_rating.id]) ||
-                                    0
-                                  }
-                                  onChange={(e) =>
-                                    changeRating(
-                                      parseFloat(e.target.value),
-                                      addedGames.find(
-                                        (added) => added.title === game.name
-                                      )
-                                    )
-                                  }
-                                  style={styles.slider}
-                                />
-                                <div style={styles.silderNumbers}>
-                                  <span>0</span>
-                                  <span>1</span>
-                                  <span>2</span>
-                                  <span>3</span>
-                                  <span>4</span>
-                                  <span>5</span>
-                                  <span>6</span>
-                                  <span>7</span>
-                                  <span>8</span>
-                                  <span>9</span>
-                                  <span>10</span>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="modal-actions">
-                              <button
-                                className="close-btn"
-                                onClick={() => close()}
-                              >
-                                Close
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                      </Popup>
+                    {gameFounded ? (
+                      popUpWindow({ game, gameFounded })
                     ) : (
+                      // <Popup
+                      //   trigger={<button className="button-text">Rate</button>}
+                      //   modal
+                      //   nested
+                      //   contentStyle={{ maxWidth: '95vw', width: '600px' }}
+                      // >
+                      //   {(close) => (
+                      //     <div className="modal-container">
+                      //       <div className="modal-header">{game.name}</div>
+                      //       {game_rating && ratings[game_rating.id] ? (
+                      //         <div style={styles.circle}>
+                      //           <span style={styles.circleText}>
+                      //             {ratings[game_rating.id]}
+                      //           </span>
+                      //         </div>
+                      //       ) : null}
+                      //       <div className="modal-content">
+                      //         <div style={styles.sliderContainer}>
+                      //           <label htmlFor="rating-slider">
+                      //             Your Rating
+                      //           </label>
+                      //           <input
+                      //             type="range"
+                      //             min="0"
+                      //             max="10"
+                      //             step="0.1"
+                      //             value={
+                      //               (game_rating && ratings[game_rating.id]) ||
+                      //               0
+                      //             }
+                      //             onChange={(e) =>
+                      //               changeRating(
+                      //                 parseFloat(e.target.value),
+                      //                 addedGames.find(
+                      //                   (added) => added.title === game.name
+                      //                 )
+                      //               )
+                      //             }
+                      //             style={styles.slider}
+                      //           />
+                      //           <div style={styles.silderNumbers}>
+                      //             <span>0</span>
+                      //             <span>1</span>
+                      //             <span>2</span>
+                      //             <span>3</span>
+                      //             <span>4</span>
+                      //             <span>5</span>
+                      //             <span>6</span>
+                      //             <span>7</span>
+                      //             <span>8</span>
+                      //             <span>9</span>
+                      //             <span>10</span>
+                      //           </div>
+                      //         </div>
+                      //       </div>
+                      //       <div className="modal-actions">
+                      //         <button
+                      //           className="close-btn"
+                      //           onClick={() => close()}
+                      //         >
+                      //           Close
+                      //         </button>
+                      //       </div>
+                      //     </div>
+                      //   )}
+                      // </Popup>
                       <button
                         style={{ width: '100px' }}
                         onClick={() => createNew({ game })}
@@ -330,6 +424,9 @@ const Game = ({ gameSearched, createGame }) => {
                       >
                         Add
                       </button>
+                    )}
+                    {gameFounded && (
+                      <div style={styles.circle}>{gameFounded?.rating}</div>
                     )}
                   </div>
                 </div>
