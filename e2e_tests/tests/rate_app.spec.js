@@ -246,14 +246,14 @@ describe('when logged in', () => {
   });
 
   test('user can be searched and followed', async ({ page }) => {
-    await searchObject(page, 'user', 'JohnLennon');
+    await searchObject(page, 'user', 'kayttaja');
 
-    await page.waitForSelector('text=JohnLennon', {
+    await page.waitForSelector('text=kayttaja', {
       timeout: 10000,
     });
-    await page.getByRole('link', { name: 'JohnLennon' }).first().click();
+    await page.getByRole('link', { name: 'kayttaja' }).first().click();
     await expect(
-      page.getByRole('heading', { name: 'JohnLennon', exact: true })
+      page.getByRole('heading', { name: 'kayttaja', exact: true })
     ).toBeVisible();
     await page.getByRole('button', { name: 'Follow' }).click();
     await expect(page.locator('text=Unfollow')).toBeVisible();
