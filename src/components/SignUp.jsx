@@ -78,11 +78,11 @@ const SignUp = () => {
         place. Easily browse your ratings, discover new favorites, and compare
         with friends. Sign up now and start building your collection!
       </div>
-      <h2>Sign Up</h2>
+      <h2>Sign up</h2>
       <ErrorMessage message={errorMessage} />
       <Form onSubmit={handleSignUp}>
         <Form.Group>
-          <Form.Label>username: </Form.Label>
+          <Form.Label>Username: </Form.Label>
           <Form.Control
             id="username"
             type="text"
@@ -91,7 +91,7 @@ const SignUp = () => {
             onChange={({ target }) => setUsername(target.value)}
           />
           <div></div>
-          <Form.Label>password: </Form.Label>
+          <Form.Label>Password: </Form.Label>
           <Form.Control
             id="password"
             type="password"
@@ -106,7 +106,7 @@ const SignUp = () => {
             id="login-button"
             type="submit"
           >
-            login
+            Sign up
           </Button>
         </Form.Group>
       </Form>

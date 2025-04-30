@@ -236,27 +236,26 @@ const AlbumGroups = ({ sortedAlbums }) => {
                               >
                                 Invite
                               </button>
-                              {friends.length > 0 && (
-                                <button
-                                  onClick={() =>
-                                    createGroup(
-                                      {
-                                        name: album.whole_title,
-                                        item_id: album.id,
-                                        item_type: 'album',
-                                        created_at: Date.now(),
-                                        updated_at: Date.now(),
-                                        friends: friends,
-                                        discogs_id: album.discogs_id,
-                                        thumbnail: album.thumbnail,
-                                      },
-                                      close()
-                                    )
-                                  }
-                                >
-                                  Create a club
-                                </button>
-                              )}
+
+                              <button
+                                onClick={() =>
+                                  createGroup(
+                                    {
+                                      name: album.whole_title,
+                                      item_id: album.id,
+                                      item_type: 'album',
+                                      created_at: Date.now(),
+                                      updated_at: Date.now(),
+                                      friends: friends,
+                                      discogs_id: album.discogs_id,
+                                      thumbnail: album.thumbnail,
+                                    },
+                                    close()
+                                  )
+                                }
+                              >
+                                Create a club
+                              </button>
                             </div>
                           </div>
                           <div>
