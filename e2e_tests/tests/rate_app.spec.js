@@ -245,7 +245,13 @@ describe('when logged in', () => {
     console.log('Game deleted!');
   });
 
-  test('user can be searched and followed', async ({ page }) => {
+  test('user can be searched and followed', async ({ page, request }) => {
+    await request.post('http://127.0.0.1:3001/api/users', {
+      data: {
+        username: 'TestiKayttaja',
+        password: 'salasana',
+      },
+    });
     await searchObject(page, 'user', 'TestiKayttaja');
 
     await page.waitForSelector('text=TestiKayttaja', {
