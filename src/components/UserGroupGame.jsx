@@ -145,6 +145,8 @@ const UserGroupGame = ({ onUpdateGroup, createGame }) => {
     groupUserGames.push(groupUserGame);
   }
 
+  console.log('group data', groupData);
+
   if (groupData) {
     return (
       <div>
@@ -276,6 +278,7 @@ const UserGroupGame = ({ onUpdateGroup, createGame }) => {
               </div>
             </div>
           }
+          <div>{games.find((item) => item.igdb_id === game?.igdb)}</div>
           {groupUserGames &&
             groupUserGames.map((member) =>
               member ? (
