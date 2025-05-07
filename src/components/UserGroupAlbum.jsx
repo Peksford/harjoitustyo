@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import groupService from '../services/groups';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
@@ -187,7 +187,13 @@ const UserGroupAlbum = ({ onUpdateGroup, createAlbum }) => {
                 >
                   Club members:
                   {groupData.group_members.map((member) => (
-                    <div key={member.id}>{member.user.username}</div>
+                    <div key={member.id}>
+                      {
+                        <Link to={`/${member.user.username}`}>
+                          {member.user.username}
+                        </Link>
+                      }
+                    </div>
                   ))}
                 </div>
                 {albums &&

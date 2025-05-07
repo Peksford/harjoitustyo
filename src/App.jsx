@@ -285,7 +285,7 @@ const App = () => {
             <BsSearch data-testid="search-button" />
           </Link>
           <Link style={styles.padding} to="/clubs">
-            <GrGroup />
+            {user ? <GrGroup /> : null}
           </Link>
           {!user && (
             <Link style={styles.padding} to="/login">

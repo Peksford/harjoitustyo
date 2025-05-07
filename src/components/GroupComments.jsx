@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setComments } from '../reducers/commentReducer';
@@ -28,16 +28,7 @@ const GroupComments = () => {
   }, [id]);
 
   return (
-    <div
-
-    // style={{
-    //   marginTop: '30px',
-    //   padding: '20px',
-    //   // backgroundColor: '#A9A9A9',
-    //   borderRadius: '10px',
-    //   boxShadow: '0 2px 6px rgba(0,0,0,0.05)',
-    // }}
-    >
+    <div>
       <h2>Comments</h2>
       <NewComment groupId={Number(id)} />
       {comments &&
@@ -53,7 +44,11 @@ const GroupComments = () => {
             }}
           >
             {comment.user && (
-              <strong style={{ color: '#333' }}>{comment.user.username}</strong>
+              <strong style={{ color: '#333' }}>
+                <Link to={`/${comment.user.username}`}>
+                  {comment.user.username}
+                </Link>
+              </strong>
             )}
             :{' '}
             <p style={{ margin: '5px 0 0 0', color: '#555' }}>
