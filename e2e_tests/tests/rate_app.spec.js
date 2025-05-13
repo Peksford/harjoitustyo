@@ -88,9 +88,7 @@ describe('when logged in', () => {
     await page.locator('#dropdown-secondary-button').click();
 
     await page.locator('text=My movies').click();
-    // await expect(
-    //   page.getByRole('heading', { name: 'Movies/tv' })
-    // ).toBeVisible();
+
     await expect(
       page.getByText('Return of the Jedi', { exact: true })
     ).toBeVisible();
@@ -246,12 +244,12 @@ describe('when logged in', () => {
   });
 
   test('user can be searched and followed', async ({ page, request }) => {
-    await request.post('http://127.0.0.1:3001/api/users', {
-      data: {
-        username: 'TestiKayttaja',
-        password: 'salasana',
-      },
-    });
+    // await request.post('http://127.0.0.1:3001/api/users', {
+    //   data: {
+    //     username: 'TestiKayttaja',
+    //     password: 'salasana',
+    //   },
+    // });
     await searchObject(page, 'user', 'TestiKayttaja');
 
     await page.waitForSelector('text=TestiKayttaja', {
