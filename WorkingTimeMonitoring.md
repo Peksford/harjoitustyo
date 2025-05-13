@@ -1,4 +1,4 @@
-# Työaikakirjanpito
+# Working hours monitoring
 
 | Date        | Time (h) | What I did |
 | ----------- | -------- | ---------- |
@@ -41,5 +41,5 @@
 | 7.4.        | 6        |
 | 11.4.       | 3        |
 | 15.4.       | 4        |
-| 15.4 ->     | 10       |
-| Total       | 195      |
+| 16.4 ->     | 15       |
+| Total       | 200      |
