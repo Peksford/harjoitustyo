@@ -2,7 +2,7 @@
 
 | Date        | Time (h) | What I did                                                                                                                                                      |
 | ----------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 21.11.      | 2        | Initialized backend and front-end. Installed libraries and tested fetching data from Discogs API.                                                               |
+| 21.11.      | 2        | Initialized basis of backend and front-end. Installed libraries and tested fetching data from Discogs API.                                                               |
 | 22.11.      | 8        | Initialized SQL-database into Fly.io. Created models for albums and users. Created first migration. Initialized controllers for albums and users (POST and GET) |
 | 23.11.      | 6        |
 | 24.11.      | 4        |
