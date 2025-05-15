@@ -14,7 +14,7 @@
 | 15.12.      | 5        | Improving books: Adding a search and list-page.                                                                                                                 |
 | 8.1.        | 5        | Adding a migration for book's keys. Improvements into Book and Album-pages.                                                                                     |
 | 14.1.       | 6        | Implementing movies into app: Migrations, movie-page, movie-list, search, backend                                                                               |
-| 21.1.       | 4        | Adding a heart for user to pick favorites.                                                                                                                      |
+| 21.1.       | 4        | Adding a heart icon for user to pick favorites. Backend: /heart/:id                                                                                             |
 | 3.2.        | 5        |
 | 4.2.        | 6        |
 | 5.2.        | 5        |
