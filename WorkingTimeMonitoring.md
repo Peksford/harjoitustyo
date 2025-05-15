@@ -2,20 +2,19 @@
 
 | Date        | Time (h) | What I did                                                                                                                                                      |
 | ----------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 21.11.      | 2        | Initialized basis of backend and front-end. Installed libraries and tested fetching data from Discogs API.                                                               |
+| 21.11.      | 2        | Initialized basis of backend and front-end. Installed libraries and tested fetching data from Discogs API.                                                      |
 | 22.11.      | 8        | Initialized SQL-database into Fly.io. Created models for albums and users. Created first migration. Initialized controllers for albums and users (POST and GET) |
-| 23.11.      | 6        |
-| 24.11.      | 4        |
-| 25.11.      | 6        |
-| 26.11.      | 6        |
-| 27.11.      | 4        |
-| 28.11.      | 5        |
-| 6.12.       | 5        |
-| 13.12.      | 3        |
-| 15.12.      | 5        |
-| 8.1.        | 5        |
-| 14.1.       | 6        |
-| 21.1.       | 4        |
+| 23.11.      | 6        | Added login functionality and album search bar                                                                                                                  |
+| 24.11.      | 4        | User can add only unique albums. Started the Album-list component                                                                                               |
+| 26.11.      | 6        | Implemented single album-page and possibility to give a rating.                                                                                                 |
+| 27.11.      | 6        | Initialized sessions-table and log-out                                                                                                                          |
+| 28.11.      | 5        | Added fetching tracklist to album-page and sign-up functionality                                                                                                |
+| 6.12.       | 5        | Continuing sign-up form (password)                                                                                                                              |
+| 13.12.      | 3        | Initializing books into application.                                                                                                                            |
+| 15.12.      | 5        | Improving books: Adding a search and list-page.                                                                                                                 |
+| 8.1.        | 5        | Adding a migration for book's keys. Improvements into Book and Album-pages.                                                                                     |
+| 14.1.       | 6        | Implementing movies into app: Migrations, movie-page, movie-list, search, backend                                                                               |
+| 21.1.       | 4        | Adding a heart for user to pick favorites.                                                                                                                      |
 | 3.2.        | 5        |
 | 4.2.        | 6        |
 | 5.2.        | 5        |
