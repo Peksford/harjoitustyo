@@ -1,44 +1,42 @@
 # Working hours monitoring
 
-| Date        | Time (h) | What I did                                                                                                                                                      |
-| ----------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 21.11.      | 2        | Initialized basis of backend and front-end. Installed libraries and tested fetching data from Discogs API.                                                      |
-| 22.11.      | 8        | Initialized SQL-database into Fly.io. Created models for albums and users. Created first migration. Initialized controllers for albums and users (POST and GET) |
-| 23.11.      | 6        | Added login functionality and album search bar                                                                                                                  |
-| 24.11.      | 4        | User can add only unique albums. Started the Album-list component                                                                                               |
-| 26.11.      | 6        | Implemented single album-page and possibility to give a rating.                                                                                                 |
-| 27.11.      | 6        | Initialized sessions-table and log-out                                                                                                                          |
-| 28.11.      | 5        | Added fetching tracklist to album-page and sign-up functionality                                                                                                |
-| 6.12.       | 5        | Continuing sign-up form (password)                                                                                                                              |
-| 13.12.      | 3        | Initializing books into application.                                                                                                                            |
-| 15.12.      | 5        | Improving books: Adding a search and list-page.                                                                                                                 |
-| 8.1.        | 5        | Adding a migration for book's keys. Improvements into Book and Album-pages.                                                                                     |
-| 14.1.       | 6        | Implementing movies into app: Migrations, movie-page, movie-list, search, backend                                                                               |
-| 21.1.       | 4        | Adding a heart icon for user to pick favorites. Backend: /heart/:id                                                                                             |
-| 3.2.        | 5        |
-| 4.2.        | 6        |
-| 5.2.        | 5        |
-| 6.2.        | 3        |
-| 7.2.        | 4        |
-| 12.2.-13.2. | 6        |
-| 14.2.       | 6        |
-| 17.2.       | 6        |
-| 20.2.       | 6        |
-| 24.2.       | 6        |
-| 25.2.       | 3        |
-| 27.2.       | 2        |
-| 4.3.        | 7        |
-| 7.3.        | 7        |
-| 12.3.       | 5        |
-| 15.3.       | 10       |
-| 17.3.       | 3        |
-| 18.3.       | 3        |
-| 19.3.       | 2        |
-| 20.3.       | 2        |
-| 21.3.       | 2        |
-| 27.3.       | 4        |
-| 7.4.        | 6        |
-| 11.4.       | 3        |
-| 15.4.       | 4        |
-| 16.4 ->     | 15       |
+| Date        | Time (h) | What I did                                                                                                                                                                                                      |
+| ----------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 21.11.      | 2        | Initialized basis of backend and front-end. Installed libraries and tested fetching data from Discogs API.                                                                                                      |
+| 22.11.      | 8        | Initialized SQL-database into Fly.io. Created models for albums and users. Created first migration. Initialized controllers for albums and users (POST and GET)                                                 |
+| 23.11.      | 6        | Added login functionality and album search bar                                                                                                                                                                  |
+| 24.11.      | 4        | User can add only unique albums. Started the Album-list component                                                                                                                                               |
+| 26.11.      | 6        | Implemented single album-page and possibility to give a rating.                                                                                                                                                 |
+| 27.11.      | 6        | Initialized sessions-table and log-out                                                                                                                                                                          |
+| 28.11.      | 5        | Added fetching tracklist to album-page and sign-up functionality                                                                                                                                                |
+| 6.12.       | 5        | Continuing sign-up form (password)                                                                                                                                                                              |
+| 13.12.      | 3        | Initializing books (OpenLibrary API) into application.                                                                                                                                                          |
+| 15.12.      | 5        | Improving books: Adding a search and list-page.                                                                                                                                                                 |
+| 8.1.        | 5        | Adding a migration for book's keys. Improvements into Book and Album-pages.                                                                                                                                     |
+| 14.1.       | 6        | Implementing movies (TMDB API) into app: Migrations, movie-page, movie-list, search, backend                                                                                                                    |
+| 21.1.       | 4        | Adding a heart icon for user to pick favorites. Backend: /heart/:id                                                                                                                                             |
+| 3.2. - 5.2  | 13       | Implemented games (IGDB API) into app. Added possibility to follow other users.                                                                                                                                 |
+| 6.2.        | 3        | Configured eslint.                                                                                                                                                                                              |
+| 7.2.        | 4        | Fixed styling and lint errors. Added notifications.                                                                                                                                                             |
+| 12.2.-13.2. | 6        | Implemented e2e tests using Playwright.                                                                                                                                                                         |
+| 14.2.       | 6        | Added delete button for items and confirmation pop-up window for it.                                                                                                                                            |
+| 17.2.       | 6        | Added more e2e tests and deployed app into fly.io.                                                                                                                                                              |
+| 20.2.       | 6        | Improved home page and styling. Added buttons to show mutual item between users.                                                                                                                                |
+| 24.2.       | 6        | Implemented a ’feed’ page which shows added items from other users within last week.                                                                                                                            |
+| 25.2.       | 3        | Improved feed page styling.                                                                                                                                                                                     |
+| 27.2.       | 2        | When pressed ’Add to my list’-button it changes to ’Rate this ’ and opens a pop up window where rating can me done.                                                                                             |
+| 4.3.        | 7        | Fixed lot of bugs, and improved redux store for albums. Implemented advanced search for albums. Noticed that with data growing, back-end needed enhancing to make multiple queries instead of single big query. |
+| 7.3.        | 7        | Implemented advanced search for games. Also improved search for movies to include directors and actors etc.                                                                                                     |
+| 12.3.       | 5        | Added a possibility to search by creation date into user’s lists. Refactored code and fixed linting.                                                                                                            |
+| 15.3.       | 10       | CI/CD in GitHub actions. Very hard to make e2e playwright tests to pass, concerning proxying to fly Postgres, and starting frontend and backend in the Github Actions while tests running.                      |
+| 17.3.       | 3        | Continuing CI/CD with e2e tests and adding also Fly Deployment.                                                                                                                                                 |
+| 18.3.       | 3        | Improved CI/CD and added Let It Rate-logo to site. Also improved advanced search of albums and modified tests. Unfortunately I need to change the API for the book-searching, because Open Library is so slow.  |
+| 19.3.       | 2        | Implemented ISBNDB to book search. Decided to also keep the option to search with Open Library. Also improved so that users cannot delete others items.                                                         |
+| 20.3.       | 2        | Fixed some styling, added logos of the third party APIs.                                                                                                                                                        |
+| 21.3.       | 2        | Fixed coloring, upper-menu styling. Added more criterias for user to search in its own lists; (A-Ö), sorted by year, filter by searching with words.                                                            |
+| 27.3.       | 4        | implemented a pick for the week, so that users can pick favorites for the week, and then they cannot be changed. Cronjob resets the picks for the next week.                                                    |
+| 7.4.        | 6        | Implemented groups. Users can create ’rating clubs’, where they can add items and friends, to give ratings and see each others ratings.                                                                         |
+| 11.4.       | 3        | Added comment-section for groups.                                                                                                                                                                               |
+| 15.4.       | 4        | Improved state management in groups, so that comments and invitations show immediately. Groups are now also available for every item.                                                                           |
+| 16.4 ->     | 15       | Modified styling, fixed e2e tests. Completed Working Hours Monitoring and wrote README. Also did the final minor changes.                                                                                       |
 | Total       | 200      |
