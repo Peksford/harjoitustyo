@@ -16,15 +16,6 @@ describe('Rate app', () => {
     await page.goto('/login');
   });
 
-  // test('front page can be opened', async ({ page }) => {
-  //   await test.step('front page can be opened', async () => {
-  //     await page.goto('/');
-
-  //     const locator = await page.getByText('Let It Rate');
-  //     await expect(locator).toBeVisible();
-  //   });
-  // });
-
   test('user can log in', async ({ page, request }) => {
     await test.step('user can log in', async () => {
       await loginWith(page, 'kayttaja', 'salasana');
@@ -244,12 +235,6 @@ describe('when logged in', () => {
   });
 
   test('user can be searched and followed', async ({ page, request }) => {
-    // await request.post('http://127.0.0.1:3001/api/users', {
-    //   data: {
-    //     username: 'TestiKayttaja',
-    //     password: 'salasana',
-    //   },
-    // });
     await searchObject(page, 'user', 'TestiKayttaja');
 
     await page.waitForSelector('text=TestiKayttaja', {
