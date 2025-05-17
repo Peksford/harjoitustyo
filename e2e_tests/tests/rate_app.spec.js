@@ -91,11 +91,11 @@ describe('when logged in', () => {
     await searchObject(
       page,
       'book',
-      "Harry Potter and the Philosopher's Stone"
+      'Harry Potter and the Prisoner of Azkaban'
     );
 
     await page.waitForSelector(
-      "text=Harry Potter and the Philosopher's Stone",
+      'text=Harry Potter and the Prisoner of Azkaban',
       {
         timeout: 50000,
       }
@@ -103,7 +103,7 @@ describe('when logged in', () => {
     await page.getByRole('button', { name: 'Add' }).first().click();
     await expect(
       page.getByText(
-        "Harry Potter and the Philosopher's Stone added on your list"
+        'Harry Potter and the Prisoner of Azkaban added on your list'
       )
     ).toBeVisible();
 
@@ -112,7 +112,7 @@ describe('when logged in', () => {
     await page.locator('text=My books').click();
     // await expect(page.getByRole('heading', { name: 'Books' })).toBeVisible();
     await expect(
-      page.getByText("Harry Potter and the Philosopher's Stone")
+      page.getByText('Harry Potter and the Prisoner of Azkaban')
     ).toBeVisible();
     await expect(page.getByTestId('bookTest')).toBeVisible();
     console.log('Book added!');
@@ -206,7 +206,7 @@ describe('when logged in', () => {
 
     await expect(
       page.getByText(
-        "Harry Potter and the Philosopher's Stone was removed from your list"
+        'Harry Potter and the Prisoner of Azkaban was removed from your list'
       )
     ).toBeVisible();
     console.log('Book deleted!');
