@@ -55,7 +55,7 @@ const styles = {
     borderRadius: '50%',
     border: '4px solid #646cff',
     backgroundColor: 'transparent',
-    // color: '#fff',
+
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

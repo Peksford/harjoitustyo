@@ -20,35 +20,6 @@ router.get('/', async (req, res, next) => {
       attributes: ['id', 'username'],
       limit,
       offset,
-      // include: [
-      //   {
-      //     model: Album,
-      //     attributes: { exclude: ['userId'] },
-      //   },
-      //   {
-      //     model: Book,
-      //     attributes: { exclude: ['userId'] },
-      //   },
-      //   {
-      //     model: Movie,
-      //     attributes: { exclude: ['userId'] },
-      //   },
-      //   {
-      //     model: Game,
-      //     attributes: { exclude: ['userId'] },
-      //   },
-      //   {
-      //     model: Follow,
-      //     as: 'followers',
-      //     attributes: { exclude: ['userId'] },
-      //   },
-      //   {
-      //     model: Follow,
-      //     as: 'followed',
-      //     attributes: { exclude: ['userId'] },
-      //   },
-      // ],
-      // order: [['createdAt', 'DESC']],
     });
     res.json({
       totalUsers: users.count,
@@ -105,10 +76,7 @@ router.get('/following', tokenExtractor, async (req, res, next) => {
     const albums = await Album.findAll({
       where: {
         user_id: { [Op.in]: userIds },
-        [Op.or]: [
-          { createdAt: { [Op.gte]: oneWeek } },
-          // { updatedAt: { [Op.gte]: oneWeek } },
-        ],
+        [Op.or]: [{ createdAt: { [Op.gte]: oneWeek } }],
       },
       order: [['createdAt', 'DESC']],
     });
@@ -116,10 +84,7 @@ router.get('/following', tokenExtractor, async (req, res, next) => {
     const books = await Book.findAll({
       where: {
         user_id: { [Op.in]: userIds },
-        [Op.or]: [
-          { createdAt: { [Op.gte]: oneWeek } },
-          // { updatedAt: { [Op.gte]: oneWeek } },
-        ],
+        [Op.or]: [{ createdAt: { [Op.gte]: oneWeek } }],
       },
       order: [['createdAt', 'DESC']],
     });
@@ -127,10 +92,7 @@ router.get('/following', tokenExtractor, async (req, res, next) => {
     const movies = await Movie.findAll({
       where: {
         user_id: { [Op.in]: userIds },
-        [Op.or]: [
-          { createdAt: { [Op.gte]: oneWeek } },
-          // { updatedAt: { [Op.gte]: oneWeek } },
-        ],
+        [Op.or]: [{ createdAt: { [Op.gte]: oneWeek } }],
       },
       order: [['createdAt', 'DESC']],
     });
@@ -138,10 +100,7 @@ router.get('/following', tokenExtractor, async (req, res, next) => {
     const games = await Game.findAll({
       where: {
         user_id: { [Op.in]: userIds },
-        [Op.or]: [
-          { createdAt: { [Op.gte]: oneWeek } },
-          // { updatedAt: { [Op.gte]: oneWeek } },
-        ],
+        [Op.or]: [{ createdAt: { [Op.gte]: oneWeek } }],
       },
       order: [['createdAt', 'DESC']],
     });

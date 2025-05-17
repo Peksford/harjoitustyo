@@ -17,7 +17,6 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
   const [movie, setMovie] = useState(null);
   const [userMovies, setUserMovies] = useState([]);
   const [followed, setFollowed] = useState(null);
-  //   const [friends, setFriends] = useState([]);
   const [friend, setFriend] = useState('');
   const user = useSelector((state) => state.user);
   const movies = useSelector((state) => state.movies);
@@ -174,7 +173,6 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
                     backgroundColor: '#fff8dc',
                     padding: '10px',
                     borderRadius: '10px',
-                    // boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
                     marginTop: '10px',
                     marginBottom: '10px',
                     width: '80%',
@@ -365,7 +363,6 @@ const styles = {
     borderRadius: '50%',
     border: '4px solid #646cff',
     backgroundColor: 'transparent',
-    // color: '#fff',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

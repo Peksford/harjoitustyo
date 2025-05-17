@@ -10,62 +10,6 @@ import BookGroups from './BookGroups';
 import GameGroups from './GameGroups';
 import GroupGroups from './GroupGroups';
 
-// const styles = {
-//   albumContainer: {
-//     display: 'flex',
-//     alignItems: 'center',
-//   },
-//   albumInfo: {
-//     display: 'flex',
-//     flexDirection: 'column',
-//   },
-//   thumbnail: {
-//     width: '150px',
-//     height: '150px',
-//     marginRight: '1rem',
-//   },
-//   buttonContainer: {
-//     display: 'flex',
-//     flexDirection: 'column',
-//     gap: '8px',
-//   },
-//   separator: {
-//     border: 'px solid #ccc',
-//     margin: '10px 0',
-//   },
-//   sliderContainer: {
-//     marginTop: '10px',
-//   },
-//   slider: {
-//     width: '100%',
-//   },
-//   silderNumbers: {
-//     display: 'flex',
-//     justifyContent: 'space-between',
-//     marginTop: '5px',
-//     fontSize: '14px',
-//   },
-//   rating: {
-//     margin: 0,
-//   },
-//   circle: {
-//     width: '60px',
-//     height: '60px',
-//     borderRadius: '50%',
-//     border: '4px solid #646cff',
-//     backgroundColor: 'transparent',
-//     // color: '#fff',
-//     display: 'flex',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     fontSize: '15px',
-//     fontWeight: 'bold',
-//   },
-//   circleText: {
-//     margin: 0,
-//   },
-// };
-
 const Group = () => {
   const [searchWord, setSearchWord] = useState('');
   const [type, setType] = useState('albums');

@@ -54,7 +54,6 @@ const styles = {
     borderRadius: '50%',
     border: '4px solid #646cff',
     backgroundColor: 'transparent',
-    // color: '#fff',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -168,7 +167,6 @@ const GameGroups = ({ sortedGames }) => {
                               't_cover_big'
                             )})`,
                             backgroundSize: '30%',
-                            // backgroundRepeat: 'no-repeat',
                             backgroundPosition: 'center',
                             width: '100%',
                             height: '100%',
@@ -181,8 +179,6 @@ const GameGroups = ({ sortedGames }) => {
                                 position: 'absolute',
                                 top: '10px',
                                 right: '10px',
-                                // background: 'transparent',
-                                // border: 'none',
                                 fontSize: '18px',
                                 fontWeight: 'bold',
                                 color: 'black',
@@ -323,9 +319,6 @@ const GameGroups = ({ sortedGames }) => {
                           maxWidth: '80px',
                           height: 'auto',
                           marginTop: '10px',
-                          // backgroundColor: '#0d253f',
-                          //   padding: '10px',
-                          //   borderRadius: '8px',
                         }}
                       />
                     </Link>

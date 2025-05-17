@@ -24,13 +24,11 @@ router.post('/', tokenExtractor, async (req, res, next) => {
     res.json(album);
   } catch (error) {
     next(error);
-    // return res.status(400).json({ error });
   }
 });
 
 router.get('/:id', async (req, res, next) => {
   try {
-    // const user = await User.findByPk(req.decodedToken.id);
     const album = await Album.findByPk(req.params.id);
 
     res.json(album);

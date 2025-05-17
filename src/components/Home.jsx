@@ -59,7 +59,6 @@ const styles = {
     borderRadius: '50%',
     border: '2px solid rgb(255, 255, 255)',
     backgroundColor: 'transparent',
-    // color: '#fff',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -104,25 +103,6 @@ const Home = () => {
     const numberOfDays = Math.floor((date - oneJan) / (24 * 60 * 60 * 1000));
     return Math.ceil((numberOfDays + oneJan.getDay() + 1) / 7);
   };
-  // const currentMonth = () => {
-  //   const currentDate = new Date();
-  //   console.log('Current date', currentDate);
-  //   const months = [
-  //     'January',
-  //     'February',
-  //     'March',
-  //     'April',
-  //     'May',
-  //     'June',
-  //     'July',
-  //     'August',
-  //     'September',
-  //     'October',
-  //     'November',
-  //     'December',
-  //   ];
-  //   return months[currentDate.getMonth()];
-  // };
 
   const heartAlbum = userData
     ? userData?.albums?.find((album) => album.heart === true)
@@ -295,20 +275,6 @@ const Home = () => {
             <div>{username} has no top picks </div>
           )}
           <hr />
-          {/* {user.username} has reviewed{' '}
-          <ul>
-            <li>
-              {albums.length > 1 ? (
-                <div>{albums.length} albums</div>
-              ) : (
-                <div>{albums.length} album</div>
-              )}
-            </li>
-            <li>
-              with average rating of{' '}
-              {albums.reduce((a, b) => a + b.rating, 0) / albums.length}
-            </li>
-          </ul> */}
         </div>
 
         {user?.username === username ? (
@@ -334,14 +300,13 @@ const Home = () => {
             </div>
           ))}
         </div>
-        {/* <MyList user={user} userAlbums={userAlbums} /> */}
         <Link
           style={{ fontSize: '20px', textAlign: 'center', display: 'block' }}
           to={`/${username}/albums`}
         >
           Show all
         </Link>
-        {/* BOOKS */}
+
         <hr />
         {user?.username === username ? (
           <h1 style={{ textAlign: 'center' }}>Your latest books</h1>
@@ -380,7 +345,7 @@ const Home = () => {
             </div>
           ))}
         </div>
-        {/* <MyListBooks user={user} /> */}
+
         <Link
           style={{ fontSize: '20px', textAlign: 'center', display: 'block' }}
           to={`/${username}/books`}
@@ -388,7 +353,7 @@ const Home = () => {
           Show all
         </Link>
         <hr />
-        {/* MOVIES */}
+
         {user?.username === username ? (
           <h1 style={{ textAlign: 'center' }}>Your movies/tv</h1>
         ) : (
@@ -430,7 +395,7 @@ const Home = () => {
         >
           Show all
         </Link>
-        {/* <MyListMovies user={user} /> */}
+
         <hr />
         {user?.username === username ? (
           <h1 style={{ textAlign: 'center' }}>Your games</h1>
@@ -440,7 +405,6 @@ const Home = () => {
           </h1>
         )}
 
-        {/* GAMES */}
         <div className="album-container">
           {sortedByDateGame.length > 0 ? (
             sortedByDateGame.map((game) => (

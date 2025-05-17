@@ -58,21 +58,6 @@ const UserMenu = () => {
         )}
 
         <div className="links-container">
-          {/* <div>
-            <Link to={`/${username}`}>recommendations</Link>
-          </div>
-          <div>
-            <Link to={`/${username}/albums`}>albums</Link>
-          </div>
-          <div>
-            <Link to={`/${username}/books`}>books</Link>
-          </div>
-          <div>
-            <Link to={`/${username}/movies`}>movies</Link>
-          </div>
-          <div>
-            <Link to={`/${username}/games`}>games</Link>
-          </div> */}
           <div>
             <Link to={`/${username}/followers`}>
               Followers ({userData.followers.length})
@@ -83,9 +68,6 @@ const UserMenu = () => {
               Following ({userData.followed.length})
             </Link>
           </div>
-          {/* <div>
-            <Link to={`/${username}`}>Recommendations</Link>
-          </div> */}
         </div>
       </>
     );

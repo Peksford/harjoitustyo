@@ -113,12 +113,6 @@ const GameAdvancedSearch = ({ onSearch }) => {
             <option value="rating">Best rated</option>
             <option value="newest">Newest</option>
             <option value="oldest">Oldest</option>
-            {/* <option value="">Select a Genre</option> */}
-            {/* {sortedGenres.map((genre) => (
-            <option key={genre.id} value={genre.id}>
-              {genre.name}
-            </option>
-          ))} */}
           </select>
         </div>
         Platform:{' '}

@@ -54,7 +54,6 @@ const styles = {
     borderRadius: '50%',
     border: '4px solid #646cff',
     backgroundColor: 'transparent',
-    // color: '#fff',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -164,7 +163,7 @@ const MovieGroups = ({ sortedMovies }) => {
                           style={{
                             backgroundImage: `url(https://www.themoviedb.org/t/p/w1280/${movie.thumbnail})`,
                             backgroundSize: '30%',
-                            // backgroundRepeat: 'no-repeat',
+
                             backgroundPosition: 'center',
                             width: '100%',
                             height: '100%',
@@ -177,8 +176,6 @@ const MovieGroups = ({ sortedMovies }) => {
                                 position: 'absolute',
                                 top: '10px',
                                 right: '10px',
-                                // background: 'transparent',
-                                // border: 'none',
                                 fontSize: '18px',
                                 fontWeight: 'bold',
                                 color: 'black',
@@ -323,7 +320,7 @@ const MovieGroups = ({ sortedMovies }) => {
                       <button
                         style={{
                           backgroundColor: '#0d253f',
-                          //   padding: '6px 14px',
+
                           marginTop: '10px',
                         }}
                       >

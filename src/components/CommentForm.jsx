@@ -18,8 +18,6 @@ const NewComment = ({ groupId }) => {
     const updatedComments = await commentService.getComments(groupId);
 
     dispatch(setComments(updatedComments));
-
-    // setNewComment('');
   };
 
   const definedComments = [

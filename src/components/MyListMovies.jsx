@@ -40,7 +40,6 @@ const styles = {
     borderRadius: '50%',
     border: '2px solid rgb(255, 255, 255)',
     backgroundColor: 'transparent',
-    // color: '#fff',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -152,11 +151,9 @@ const MyListMovies = () => {
   if (userData) {
     return (
       <>
-        {/* <UserMenu user={user} /> */}
         <div style={{ marginTop: '20px' }}>
           <DropdownButton
             id="dropdown-secondary-button"
-            // data-testid="dropdown-list"
             title={
               mutual
                 ? 'Mutual movies'
@@ -267,7 +264,6 @@ const MyListMovies = () => {
                     style={styles.thumbnail}
                   />
                 )}
-                {/* <img src={movie.thumbnail} style={styles.thumbnail} /> */}
               </Link>
               <div>{movie.title}</div>
               {movie.rating ? (

@@ -25,7 +25,6 @@ router.post('/', tokenExtractor, async (req, res, next) => {
     res.json(movie);
   } catch (error) {
     next(error);
-    // return res.status(400).json({ error });
   }
 });
 

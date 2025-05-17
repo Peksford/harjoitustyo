@@ -80,7 +80,7 @@ router.get('/search-game', async (req, res) => {
       limit 50;`;
     } else {
       let filters = [];
-      // if (advancedName) filters.push(`search "${advancedName}"`);
+
       if (genre) filters.push(`genres = (${genre})`);
       if (platform) filters.push(`platforms = (${platform})`);
       if (startYear && endYear) {
@@ -124,7 +124,6 @@ router.get('/search-game', async (req, res) => {
       query +
       `fields id,name, genres.name, rating, cover.url, first_release_date, summary, involved_companies, url;
     limit 50;`;
-    console.log('Final query: ', query);
 
     const response = await axios.post('https://api.igdb.com/v4/games', query, {
       headers: {
@@ -167,7 +166,6 @@ router.post('/', tokenExtractor, async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
   try {
-    // const user = await User.findByPk(req.decodedToken.id);
     const game = await Game.findByPk(req.params.id);
     res.json(game);
   } catch (error) {

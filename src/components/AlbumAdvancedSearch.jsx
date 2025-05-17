@@ -76,7 +76,6 @@ const AlbumAdvancedSearch = ({ onSearch }) => {
               fontSize: '14px',
               whiteSpace: 'normal',
               wordWrap: 'break-word',
-              // maxWidth: '200px',
               boxShadow: '0px 0px 5px rgba(0,0,0,0.2)',
             }}
           >
@@ -133,14 +132,6 @@ const AlbumAdvancedSearch = ({ onSearch }) => {
             isClearable
           />
         </div>
-        {/* <input
-          className="search-input"
-          type="text"
-          name="year"
-          placeholder="Year (e. g. 1962-1970)"
-          value={searchParams.year}
-          onChange={handleChange}
-        /> */}
         <input
           className="search-input"
           type="text"

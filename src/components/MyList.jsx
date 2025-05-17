@@ -151,11 +151,9 @@ const MyList = () => {
   if (userData) {
     return (
       <>
-        {/* <UserMenu user={user} /> */}
         <div style={{ marginTop: '20px' }}>
           <DropdownButton
             id="dropdown-secondary-button"
-            // data-testid="dropdown-list"
             title={
               mutual
                 ? 'Mutual albums'

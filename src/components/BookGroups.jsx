@@ -140,10 +140,7 @@ const BookGroups = ({ sortedBooks }) => {
                   style={styles.thumbnail}
                 />
               )}
-              {/* <img
-                src={`https://www.thebookdb.org/t/p/w1280/${book.thumbnail}`}
-                style={styles.thumbnail}
-              /> */}
+
               <div style={styles.bookInfo}>
                 {book.whole_title}
                 <div>
@@ -180,7 +177,6 @@ const BookGroups = ({ sortedBooks }) => {
                                 : `https://covers.openlibrary.org/b/id/${book.thumbnail}-L.jpg`
                             })`,
                             backgroundSize: '30%',
-                            // backgroundRepeat: 'no-repeat',
                             backgroundPosition: 'center',
                             width: '100%',
                             height: '100%',
@@ -193,8 +189,6 @@ const BookGroups = ({ sortedBooks }) => {
                                 position: 'absolute',
                                 top: '10px',
                                 right: '10px',
-                                // background: 'transparent',
-                                // border: 'none',
                                 fontSize: '18px',
                                 fontWeight: 'bold',
                                 color: 'black',
@@ -335,7 +329,6 @@ const BookGroups = ({ sortedBooks }) => {
                       <button
                         style={{
                           backgroundColor: 'black',
-                          //   padding: '6px 14px',
                           marginTop: '10px',
                         }}
                       >

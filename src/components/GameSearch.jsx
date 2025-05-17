@@ -62,7 +62,6 @@ const styles = {
     borderRadius: '50%',
     border: '4px solid #646cff',
     backgroundColor: 'transparent',
-    // color: '#fff',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -120,18 +119,11 @@ const useGame = (name) => {
             ? 'http://localhost:3001'
             : 'https://im-only-rating.fly.dev';
 
-        const response = await axios.get(
-          // 'https://im-only-rating.fly.dev/api/games/search-game',
-          // 'http://localhost:3001/api/games/search-game',
-          `${baseURL}/api/games/search-game`,
-          // 'http://localhost:3001/api/games/search-game-isbndb',
-
-          {
-            params: {
-              name: name,
-            },
-          }
-        );
+        const response = await axios.get(`${baseURL}/api/games/search-game`, {
+          params: {
+            name: name,
+          },
+        });
         setGameSearched(response.data);
       } catch (error) {
         console.error(error);
@@ -154,9 +146,6 @@ const Game = ({ gameSearched, createGame }) => {
 
   const dispatch = useDispatch();
 
-  // const [addedGames, setAddedGames] = useState([]);
-  // const [ratings, setRatings] = useState({});
-
   const createNew = async ({ game }) => {
     const newGame = await createGame({
       type: 'game',
@@ -171,15 +160,11 @@ const Game = ({ gameSearched, createGame }) => {
       genres: game.genres.map((genre) => genre.name).join(', '),
       igdb_id: game.id,
     });
-    // newGame && setAddedGames((prevGames) => [...prevGames, newGame]);
+
     return newGame;
   };
 
   const changeRating = async (newRating, addedGame) => {
-    // setRatings((prevRatings) => ({
-    //   ...prevRatings,
-    //   [addedGame.id]: newRating,
-    // }));
     if (!addedGame) return;
 
     try {
@@ -192,19 +177,12 @@ const Game = ({ gameSearched, createGame }) => {
       );
 
       dispatch(setGames(updatedGames));
-      // setAddedGames((prevGames) =>
-      //   prevGames.map((game) =>
-      //     game.id === updatedGame.id ? updatedGame : game
-      //   )
-      // );
     } catch (error) {
       console.error(error);
     }
   };
 
   const popUpWindow = ({ game, gameFounded }) => {
-    console.log('game founded', gameFounded);
-
     return (
       <Popup
         trigger={
@@ -293,15 +271,6 @@ const Game = ({ gameSearched, createGame }) => {
                     />
                   )}
                 </Link>
-                {/* {game.cover && (
-                  <img
-                    src={`https:${game.cover.url.replace(
-                      /t_thumb/,
-                      't_cover_big'
-                    )}`}
-                    style={styles.thumbnail}
-                  />
-                )} */}
                 <div style={styles.GameInfoAndButtons}>
                   <div style={styles.gameInfo}>
                     <Link
@@ -312,7 +281,6 @@ const Game = ({ gameSearched, createGame }) => {
                     >
                       <p>{game.name}</p>
                     </Link>
-                    {/* <p>{game.name}</p> */}
                     {game.first_release_date && (
                       <p>
                         Released:{' '}
@@ -351,72 +319,6 @@ const Game = ({ gameSearched, createGame }) => {
                     {gameFounded ? (
                       popUpWindow({ game, gameFounded })
                     ) : (
-                      // <Popup
-                      //   trigger={<button className="button-text">Rate</button>}
-                      //   modal
-                      //   nested
-                      //   contentStyle={{ maxWidth: '95vw', width: '600px' }}
-                      // >
-                      //   {(close) => (
-                      //     <div className="modal-container">
-                      //       <div className="modal-header">{game.name}</div>
-                      //       {game_rating && ratings[game_rating.id] ? (
-                      //         <div style={styles.circle}>
-                      //           <span style={styles.circleText}>
-                      //             {ratings[game_rating.id]}
-                      //           </span>
-                      //         </div>
-                      //       ) : null}
-                      //       <div className="modal-content">
-                      //         <div style={styles.sliderContainer}>
-                      //           <label htmlFor="rating-slider">
-                      //             Your Rating
-                      //           </label>
-                      //           <input
-                      //             type="range"
-                      //             min="0"
-                      //             max="10"
-                      //             step="0.1"
-                      //             value={
-                      //               (game_rating && ratings[game_rating.id]) ||
-                      //               0
-                      //             }
-                      //             onChange={(e) =>
-                      //               changeRating(
-                      //                 parseFloat(e.target.value),
-                      //                 addedGames.find(
-                      //                   (added) => added.title === game.name
-                      //                 )
-                      //               )
-                      //             }
-                      //             style={styles.slider}
-                      //           />
-                      //           <div style={styles.silderNumbers}>
-                      //             <span>0</span>
-                      //             <span>1</span>
-                      //             <span>2</span>
-                      //             <span>3</span>
-                      //             <span>4</span>
-                      //             <span>5</span>
-                      //             <span>6</span>
-                      //             <span>7</span>
-                      //             <span>8</span>
-                      //             <span>9</span>
-                      //             <span>10</span>
-                      //           </div>
-                      //         </div>
-                      //       </div>
-                      //       <div className="modal-actions">
-                      //         <button
-                      //           className="close-btn"
-                      //           onClick={() => close()}
-                      //         >
-                      //           Close
-                      //         </button>
-                      //       </div>
-                      //     </div>
-                      //   )}
-                      // </Popup>
                       <button
                         style={{ width: '100px' }}
                         onClick={() => createNew({ game })}
@@ -458,22 +360,18 @@ const GameSearch = ({ createGame }) => {
         import.meta.env.MODE === 'development'
           ? 'http://localhost:3001'
           : 'https://im-only-rating.fly.dev';
-      const response = await axios.get(
-        // 'https://im-only-rating.fly.dev/api/games/search-game',
-        `${baseURL}/api/games/search-game`,
-        {
-          params: {
-            advancedName: searchParams.advancedName || '',
-            genre: searchParams.genre || '',
-            platform: searchParams.platform || '',
-            startYear: searchParams.startYear || '',
-            endYear: searchParams.endYear || '',
-            company: searchParams.company || '',
-            rating: searchParams.rating || '',
-            sortBy: searchParams.sortBy || '',
-          },
-        }
-      );
+      const response = await axios.get(`${baseURL}/api/games/search-game`, {
+        params: {
+          advancedName: searchParams.advancedName || '',
+          genre: searchParams.genre || '',
+          platform: searchParams.platform || '',
+          startYear: searchParams.startYear || '',
+          endYear: searchParams.endYear || '',
+          company: searchParams.company || '',
+          rating: searchParams.rating || '',
+          sortBy: searchParams.sortBy || '',
+        },
+      });
 
       setGameSearched(response.data);
     } catch (error) {

@@ -8,7 +8,6 @@ import commentService from '../services/comments';
 import NewComment from './CommentForm';
 
 const GroupComments = () => {
-  // const [comments, setComments] = useState('');
   const { id } = useParams();
 
   const comments = useSelector((state) => state.comments);

@@ -16,7 +16,7 @@ router.get('/', async (req, res, next) => {
 router.post('/', tokenExtractor, async (req, res, next) => {
   try {
     const user = await User.findByPk(req.decodedToken.id);
-    console.log('posting group', req.body);
+
     const group = await Group.create({
       ...req.body,
     });
@@ -28,7 +28,6 @@ router.post('/', tokenExtractor, async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
   try {
-    // const user = await User.findByPk(req.decodedToken.id);
     const group = await Group.findByPk(req.params.id, {
       include: [
         {
@@ -51,8 +50,6 @@ router.get('/:id', async (req, res, next) => {
 
 router.get('/:id/members', async (req, res, next) => {
   try {
-    // const user = await User.findByPk(req.decodedToken.id);
-    console.log('aksjdnf', req.params.id);
     const group = await GroupMember.findAll({
       where: { group_id: req.params.id },
     });
@@ -67,12 +64,8 @@ router.get('/:id/members', async (req, res, next) => {
 
 router.post('/:id/members', tokenExtractor, async (req, res, next) => {
   try {
-    console.log('what is here', req.params.id);
-
     const groupId = req.params.id;
     const { userId } = req.body;
-
-    console.log('why', groupId);
 
     const group = await Group.findByPk(groupId);
     if (!group) {

@@ -46,7 +46,6 @@ router.get('/search-book-isbndb', async (req, res) => {
     subject,
     isbn,
   } = req.query;
-  console.log('something?', req.query);
 
   try {
     let headers = {
@@ -54,26 +53,16 @@ router.get('/search-book-isbndb', async (req, res) => {
       Authorization: process.env.ISBNDB_KEY,
     };
     let baseUrl = 'https://api2.isbndb.com';
-
-    // // if (name) params.q = name;
-    // // if (title) params.title = title;
-    // if (author)
-    //   url = `https://api2.isbndb.com/author/${encodeURIComponent(author)}`;
-    // // if (isbn) params.isbn = isbn;
-    // // if (subject) params.subject = subject;
     let params = {};
     let url = '';
 
     if (isbn) {
       url = `${baseUrl}/book/${encodeURIComponent(isbn)}`;
     } else if (query) {
-      console.log('here?');
       params = {
         page: 1,
         pageSize: 20,
       };
-
-      // params.query = query;
       params.column = column;
       params.year = year;
       params.edition = edition;
@@ -82,16 +71,6 @@ router.get('/search-book-isbndb', async (req, res) => {
     }
 
     if (name) url = `https://api2.isbndb.com/books/${encodeURIComponent(name)}`;
-
-    // if (author) params.author = author;
-
-    // if (name) url = `${baseUrl}/books/${encodeURIComponent(name)}`
-    // if (title) params.title = title;
-
-    // if (subject) params.subject = subject;
-    // if (isbn) params.isbn = isbn;
-
-    console.log('urli', url);
 
     const response = await axios.get(url, { headers, params });
 
@@ -122,13 +101,11 @@ router.post('/', tokenExtractor, async (req, res, next) => {
     res.json(book);
   } catch (error) {
     next(error);
-    // return res.status(400).json({ error });
   }
 });
 
 router.get('/:id', async (req, res, next) => {
   try {
-    // const user = await User.findByPk(req.decodedToken.id);
     const book = await Book.findByPk(req.params.id);
 
     res.json(book);

@@ -15,10 +15,6 @@ import isbndbLogo from '../assets/isbndb.png';
 import igdbLogo from '../assets/IGDB_logo.svg.png';
 
 const styles = {
-  // albumContainer: {
-  //   display: 'flex',
-  //   alignItems: 'center',
-  // },
   containerInfo: {
     display: 'flex',
     alignItems: 'center',
@@ -44,21 +40,12 @@ const styles = {
     height: '200px',
     marginRight: '1rem',
   },
-  // buttonContainer: {
-  //   display: 'flex',
-  //   flexDirection: 'column',
-  //   gap: '8px',
-  // },
+
   separator: {
     border: 'px solid #ccc',
     margin: '10px 0',
   },
   circle: {
-    // position: 'absolute',
-    // bottom: '20px',
-    // top: '150%',
-    // left: '20%',
-    // transform: 'translate(-50%, -50%)',
     width: '65px',
     height: '65px',
     borderRadius: '50%',
@@ -67,7 +54,6 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    // marginLeft: 'px',
     fontSize: '15px',
     fontWeight: 'bold',
   },
@@ -114,7 +100,6 @@ const Profile = ({ createObject }) => {
             <div>
               <DropdownButton
                 id="dropdown-secondary-button"
-                // data-testid="dropdown-list"
                 title={
                   albums
                     ? 'Albums'

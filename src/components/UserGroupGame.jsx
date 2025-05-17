@@ -145,8 +145,6 @@ const UserGroupGame = ({ onUpdateGroup, createGame }) => {
     groupUserGames.push(groupUserGame);
   }
 
-  console.log('group data', groupData);
-
   if (groupData) {
     return (
       <div>
@@ -176,7 +174,6 @@ const UserGroupGame = ({ onUpdateGroup, createGame }) => {
                     backgroundColor: '#fff8dc',
                     padding: '10px',
                     borderRadius: '10px',
-                    // boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
                     marginTop: '10px',
                     marginBottom: '10px',
                     width: '80%',
@@ -366,7 +363,6 @@ const styles = {
     borderRadius: '50%',
     border: '4px solid #646cff',
     backgroundColor: 'transparent',
-    // color: '#fff',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

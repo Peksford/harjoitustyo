@@ -60,12 +60,7 @@ const Book = ({ onUpdateBook, createBook }) => {
       try {
         if (bookData.source === 'openLibrary') {
           const data = await axios.get(
-            `https://openlibrary.org${bookData.url}.json`,
-            {
-              //   headers: {
-              //     Authorization: `Discogs token=${token}`,
-              //   },
-            }
+            `https://openlibrary.org${bookData.url}.json`
           );
           const fetchedDescription = data?.data?.description || '';
           setDescription(fetchedDescription);
@@ -366,7 +361,6 @@ const Book = ({ onUpdateBook, createBook }) => {
         <div style={styles.thumbNailContainer}>
           {bookData.rating ? (
             <div>
-              {/* {bookData.user_id}'s rating */}
               <div style={styles.circle}>
                 <span style={styles.circleText}>{bookData.rating}</span>
               </div>
@@ -434,7 +428,6 @@ const styles = {
   thumbnail: {
     width: '240px',
     height: '300px',
-    // objectFit: 'cover',
     marginBottom: '8px',
   },
   buttonContainer: {
@@ -467,7 +460,6 @@ const styles = {
     borderRadius: '50%',
     border: '4px solid #646cff',
     backgroundColor: 'transparent',
-    // color: '#fff',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

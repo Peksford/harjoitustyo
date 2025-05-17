@@ -18,7 +18,6 @@ export const { setComments, appendComment } = commentSlice.actions;
 
 export const addComment = (groupId, content) => {
   return async (dispatch) => {
-    console.log('wadadp', content);
     const comment = await commentService.create(groupId, content);
     dispatch(appendComment(comment));
     const comments = await commentService.getComments(groupId);

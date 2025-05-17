@@ -26,8 +26,6 @@ const create = async (groupId, comment) => {
   const config = {
     headers: { Authorization: token },
   };
-  console.log('group id: ', groupId);
-  console.log('comment: ', comment);
 
   const response = await axios.post(
     baseUrl,

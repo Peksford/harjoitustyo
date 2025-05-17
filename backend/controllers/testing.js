@@ -10,7 +10,6 @@ router.post('/reset', async (request, response) => {
   const user = await User.findOne({ where: { username: 'kayttaja' } });
 
   if (!user) {
-    console.log('User kayttaja not found');
     return response.status(400).json({ error: 'User not found' });
   }
 

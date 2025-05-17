@@ -39,7 +39,6 @@ const styles = {
     borderRadius: '50%',
     border: '2px solid rgb(255, 255, 255)',
     backgroundColor: 'transparent',
-    // color: '#fff',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -148,7 +147,6 @@ const MyListBooks = () => {
   if (userData) {
     return (
       <>
-        {/* <UserMenu user={user} /> */}
         <div style={{ marginTop: '20px' }}>
           <DropdownButton
             id="dropdown-secondary-button"
@@ -251,8 +249,6 @@ const MyListBooks = () => {
                     style={styles.thumbnail}
                   />
                 )}
-
-                {/* <img src={book.thumbnail} style={styles.thumbnail} /> */}
               </Link>
               <Link to={`/${userData.username}/books/${book.id}`}>
                 <div>{book.title}</div>

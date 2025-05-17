@@ -15,8 +15,6 @@ router.post('/', async (request, response) => {
     },
   });
 
-  // const passwordCorrect = body.password === 'salainen';
-
   const passwordCorrect =
     user === null ? false : await bcrypt.compare(password, user.password_hash);
 
@@ -28,7 +26,6 @@ router.post('/', async (request, response) => {
 
   if (user.disabled) {
     await Session.update({ session: false }, { where: { userId: user.id } });
-    // await Session.destroy({ where: { userId: user.id } })
 
     return response.status(401).json({
       error: 'account disabled, please contact admin',
