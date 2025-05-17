@@ -1,6 +1,6 @@
-Link to application: https://im-only-rating.fly.dev/
+## Link to application: https://im-only-rating.fly.dev/
 
-Description of the app:
+## Description of the app
 Website is intent for users to create an account and build personal lists of music albums, movies/tv, books and games. Users can rate each item on a scale from 1 to 10. They can follow other users to see what they have added and compare mutual items.
 
 The homepage includes activity feed which shows what followed users have added and rated. The lists of other users (and own lists) can be filtered by date, alphabetical order, rating, or they can be searched by title.
