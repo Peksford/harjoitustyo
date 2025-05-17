@@ -188,7 +188,7 @@ describe('when logged in', () => {
     await page.locator('text=My books').click();
 
     await page.waitForSelector(
-      "text=Harry Potter and the Philosopher's Stone",
+      'text=Harry Potter and the Prisoner of Azkaban',
       {
         timeout: 50000,
       }
@@ -197,7 +197,7 @@ describe('when logged in', () => {
     await page.getByTestId('bookTest').click();
     await expect(
       page.getByRole('heading', {
-        name: "Rowling J.K. - Harry Potter and the Philosopher's Stone",
+        name: 'J.K. Rowling - Harry Potter and the Prisoner of Azkaban',
       })
     ).toBeVisible();
 
