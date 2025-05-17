@@ -296,12 +296,21 @@ const UserGroupAlbum = ({ onUpdateGroup, createAlbum }) => {
                   {member.rating ? (
                     <>
                       <div>
-                        {
-                          groupData.group_members.find(
-                            (group_member) =>
-                              group_member.user_id === member.user_id
-                          ).user.username
-                        }{' '}
+                        <Link
+                          to={`/${
+                            groupData.group_members.find(
+                              (group_member) =>
+                                group_member.user_id === member.user_id
+                            ).user.username
+                          }`}
+                        >
+                          {
+                            groupData.group_members.find(
+                              (group_member) =>
+                                group_member.user_id === member.user_id
+                            ).user.username
+                          }
+                        </Link>{' '}
                         gave this
                       </div>
                       <div style={styles.circle}>

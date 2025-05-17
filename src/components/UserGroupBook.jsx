@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import groupService from '../services/groups';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
@@ -180,7 +180,13 @@ const UserGroupBook = ({ onUpdateGroup, createBook }) => {
                 >
                   Club members:
                   {groupData.group_members.map((member) => (
-                    <div key={member.id}>{member.user.username}</div>
+                    <div key={member.id}>
+                      {
+                        <Link to={`/${member.user.username}`}>
+                          {member.user.username}
+                        </Link>
+                      }
+                    </div>
                   ))}
                 </div>
                 {books &&
@@ -281,12 +287,21 @@ const UserGroupBook = ({ onUpdateGroup, createBook }) => {
                   {member.rating ? (
                     <>
                       <div>
-                        {
-                          groupData.group_members.find(
-                            (group_member) =>
-                              group_member.user_id === member.user_id
-                          ).user.username
-                        }{' '}
+                        <Link
+                          to={`/${
+                            groupData.group_members.find(
+                              (group_member) =>
+                                group_member.user_id === member.user_id
+                            ).user.username
+                          }`}
+                        >
+                          {
+                            groupData.group_members.find(
+                              (group_member) =>
+                                group_member.user_id === member.user_id
+                            ).user.username
+                          }
+                        </Link>{' '}
                         gave this
                       </div>
                       <div style={styles.circle}>
