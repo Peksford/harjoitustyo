@@ -67,6 +67,7 @@ jobs:
           OPEN_LIBRARY: ${{ secrets.OPEN_LIBRARY }}
           VITE_TWITCH_CLIENT_ID: ${{ secrets.VITE_TWITCH_CLIENT_ID }}
           VITE_TWITCH_CLIENT_SECRET: ${{ secrets.VITE_TWITCH_CLIENT_SECRET }}
+          ISBNDB_KEY: ${{ secrets.ISBNDB_KEY }}
       - name: Copy Frontend Built to Backend
         run: |
           rm -rf backend/dist
