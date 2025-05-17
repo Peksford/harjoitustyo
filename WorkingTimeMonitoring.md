@@ -39,4 +39,4 @@
 | 11.4.       | 3        | Added comment-section for groups.                                                                                                                                                                               |
 | 15.4.       | 4        | Improved state management in groups, so that comments and invitations show immediately. Groups are now also available for every item.                                                                           |
 | 16.4 ->     | 15       | Modified styling, fixed e2e tests. Completed Working Hours Monitoring and wrote README. Also did the final minor changes.                                                                                       |
-| Total       | 200      |
+| Total       | 193      |

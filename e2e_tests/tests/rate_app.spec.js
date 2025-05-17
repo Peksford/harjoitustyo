@@ -87,36 +87,36 @@ describe('when logged in', () => {
     console.log('Movie added!');
   });
 
-  // test('a new book can be added', async ({ page }) => {
-  //   await searchObject(
-  //     page,
-  //     'book',
-  //     "Harry Potter and the Philosopher's Stone"
-  //   );
+  test('a new book can be added', async ({ page }) => {
+    await searchObject(
+      page,
+      'book',
+      "Harry Potter and the Philosopher's Stone"
+    );
 
-  //   await page.waitForSelector(
-  //     "text=Harry Potter and the Philosopher's Stone",
-  //     {
-  //       timeout: 50000,
-  //     }
-  //   );
-  //   await page.getByRole('button', { name: 'Add' }).first().click();
-  //   await expect(
-  //     page.getByText(
-  //       "Harry Potter and the Philosopher's Stone added on your list"
-  //     )
-  //   ).toBeVisible();
+    await page.waitForSelector(
+      "text=Harry Potter and the Philosopher's Stone",
+      {
+        timeout: 50000,
+      }
+    );
+    await page.getByRole('button', { name: 'Add' }).first().click();
+    await expect(
+      page.getByText(
+        "Harry Potter and the Philosopher's Stone added on your list"
+      )
+    ).toBeVisible();
 
-  //   await page.locator('#dropdown-secondary-button').click();
+    await page.locator('#dropdown-secondary-button').click();
 
-  //   await page.locator('text=My books').click();
-  //   // await expect(page.getByRole('heading', { name: 'Books' })).toBeVisible();
-  //   await expect(
-  //     page.getByText("Harry Potter and the Philosopher's Stone")
-  //   ).toBeVisible();
-  //   await expect(page.getByTestId('bookTest')).toBeVisible();
-  //   console.log('Book added!');
-  // });
+    await page.locator('text=My books').click();
+    // await expect(page.getByRole('heading', { name: 'Books' })).toBeVisible();
+    await expect(
+      page.getByText("Harry Potter and the Philosopher's Stone")
+    ).toBeVisible();
+    await expect(page.getByTestId('bookTest')).toBeVisible();
+    console.log('Book added!');
+  });
 
   test('a new game can be added', async ({ page }) => {
     await searchObject(page, 'game', 'Rocket League');
@@ -183,34 +183,34 @@ describe('when logged in', () => {
     console.log('Movie deleted!');
   });
 
-  // test('book can be deleted', async ({ page }) => {
-  //   await page.getByRole('button', { name: 'kayttaja' }).click();
-  //   await page.locator('text=My books').click();
+  test('book can be deleted', async ({ page }) => {
+    await page.getByTestId('dropdown-list').click();
+    await page.locator('text=My books').click();
 
-  //   await page.waitForSelector(
-  //     "text=Harry Potter and the Philosopher's Stone",
-  //     {
-  //       timeout: 100000,
-  //     }
-  //   );
+    await page.waitForSelector(
+      "text=Harry Potter and the Philosopher's Stone",
+      {
+        timeout: 50000,
+      }
+    );
 
-  //   await page.getByTestId('bookTest').click();
-  //   await expect(
-  //     page.getByRole('heading', {
-  //       name: "J. K. Rowling - Harry Potter and the Philosopher's Stone",
-  //     })
-  //   ).toBeVisible();
+    await page.getByTestId('bookTest').click();
+    await expect(
+      page.getByRole('heading', {
+        name: "Rowling J.K. - Harry Potter and the Philosopher's Stone",
+      })
+    ).toBeVisible();
 
-  //   await page.getByRole('button', { name: 'remove' }).click();
-  //   await page.getByRole('button', { name: 'YES' }).click();
+    await page.getByRole('button', { name: 'remove' }).click();
+    await page.getByRole('button', { name: 'YES' }).click();
 
-  //   await expect(
-  //     page.getByText(
-  //       "Harry Potter and the Philosopher's Stone was removed from your list"
-  //     )
-  //   ).toBeVisible();
-  //   console.log('Book deleted!');
-  // });
+    await expect(
+      page.getByText(
+        "Harry Potter and the Philosopher's Stone was removed from your list"
+      )
+    ).toBeVisible();
+    console.log('Book deleted!');
+  });
 
   test('game can be deleted', async ({ page }) => {
     await page.getByTestId('dropdown-list').click();
