@@ -193,73 +193,60 @@ const Album = ({ onUpdateAlbum, createAlbum }) => {
         </div>
         <div>
           <div style={styles.albumInfo}>
-            <h2>{albumData.whole_title}</h2>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <h2>{albumData.whole_title}</h2>{' '}
+              <div
+                data-testid="heart"
+                style={{
+                  width: '3.5rem',
+                  position: 'relative',
+                  marginRight: '15px',
+                  // display: 'inline-block',
+                }}
+              >
+                <Heart
+                  isActive={active || false}
+                  onClick={() => {
+                    if (!albums.find((album) => album.heart === true)) {
+                      handleClickHeartOpen();
+                    } else {
+                      dispatch(
+                        setNotification(
+                          `You have already selected album of the week`,
+                          5
+                        )
+                      );
+                    }
+                  }}
+                  style={{
+                    fontSize: '3rem',
+                    display: 'block',
+                    textAlign: 'cenSorrter',
+                  }}
+                />
+                <Dialog
+                  open={openHeart}
+                  onClose={handleHeartClose}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">
+                    {`Do you want to make ${albumData.title} your album of the week?`}
+                  </DialogTitle>
+                  <DialogActions>
+                    <Button onClick={handleHeartClose}>No</Button>
+                    <Button onClick={handleHeartClick} autoFocus>
+                      {' '}
+                      Yes
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </div>
+            </div>
             <div>
               {username} added this on{' '}
               {new Date(albumData.createdAt).toLocaleDateString()}
             </div>
-
-            <p
-              data-testid="heart"
-              style={{
-                width: '7rem',
-                position: 'relative',
-                display: 'inline-block',
-              }}
-            >
-              <Heart
-                isActive={active || false}
-                onClick={() => {
-                  if (!albums.find((album) => album.heart === true)) {
-                    handleClickHeartOpen();
-                  } else {
-                    dispatch(
-                      setNotification(
-                        `You have already selected album of the week`,
-                        5
-                      )
-                    );
-                  }
-                }}
-                style={{
-                  fontSize: '3rem',
-                  display: 'block',
-                  textAlign: 'cenSorrter',
-                }}
-              />
-              <Dialog
-                open={openHeart}
-                onClose={handleHeartClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-              >
-                <DialogTitle id="alert-dialog-title">
-                  {`Do you want to make ${albumData.title} your album of the week?`}
-                </DialogTitle>
-                <DialogActions>
-                  <Button onClick={handleHeartClose}>No</Button>
-                  <Button onClick={handleHeartClick} autoFocus>
-                    {' '}
-                    Yes
-                  </Button>
-                </DialogActions>
-              </Dialog>
-              <span
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  color: 'white',
-                  fontSize: '0.8rem',
-                  textAlign: 'center',
-                  fontWeight: 'bold',
-                  padding: '0 5px',
-                }}
-              >
-                {active ? 'Pick of the week' : ''}
-              </span>
-            </p>
             <h3>{albumData.year}</h3>
             <ol>
               {tracklist.map((track) => (
@@ -280,7 +267,14 @@ const Album = ({ onUpdateAlbum, createAlbum }) => {
                 />
                 <div style={styles.silderNumbers}>
                   <span>1</span>
+                  <span>2</span>
+                  <span>3</span>
+                  <span>4</span>
                   <span>5</span>
+                  <span>6</span>
+                  <span>7</span>
+                  <span>8</span>
+                  <span>9</span>
                   <span>10</span>
                 </div>
               </div>
@@ -375,7 +369,6 @@ const styles = {
   albumInfo: {
     display: 'flex',
     flexDirection: 'column',
-    marginRight: '100px',
   },
   thumbNailContainer: {
     display: 'flex',
@@ -423,6 +416,7 @@ const styles = {
     justifyContent: 'center',
     fontSize: '18px',
     fontWeight: 'bold',
+    marginBottom: '10px',
   },
   circleText: {
     margin: 0,
