@@ -102,8 +102,12 @@ const Album = ({ onUpdateAlbum, createAlbum }) => {
       const token = import.meta.env.VITE_TOKEN;
       try {
         if (albumData) {
+          const type = albumData.url.includes('master')
+            ? 'masters'
+            : 'releases';
+
           const data = await axios.get(
-            `https://api.discogs.com/masters/${albumData.discogs_id}`,
+            `https://api.discogs.com/${type}/${albumData.discogs_id}`,
             {
               headers: {
                 Authorization: `Discogs token=${token}`,
