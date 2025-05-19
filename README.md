@@ -30,8 +30,8 @@ Users can view their personal lists by clicking the <em>menu icon</em> in the to
 * Give or modify rating of the item.
 * Remove the item from the Remove button at the bottom of the page.
 
-### 4. 
+### 4. Finding and follow other users
+Other users can be searched using the main search bar. However, the exact username must be entered. Once username is selected, you'll be directed in to their Profile page, where you can click Follow and see their activity in the Home page. Followed users will appear in the Following tab on your own Profile page, and you will appear in their Followers list.
 
-Other users can be searched from the same search bar as other items. Here the exact username of the user must be known. When username is typed, the user can be clicked, and the page directs into the user's profile page. In the profile page, users can be followed and then their activity is shown in the home-page. Username then appears into the 'following'-tab in the logged-in user's profile page, and the logged-in user is shown in 'followers' of the user. 
-
-When clicking the group-icon in the top right corner, user can create a 'Rating Club'. Here the search bar is similar, but it shows only the items added by the user. The user can also search for groups where they are already a member. Here by searching for example, 'Abbey Road', we can create a club for that item by clicking 'Create a Club'. This opens up a pop-up window where followed users can be added to the club. When club is created, user can navigate there by clicking 'Into Da Club'. Here members can give a rating for the item and also leave a pre-defined comments.
+### 5. Rating Clubs
+Click the group-icon in the top-right corner to create a <em>Rating Club</em>. The search bar shows only items added by the user. The user can also search for existing groups where they are a member of. To create a new club, e.g. for 'Abbey Road', search for the item and then click <em>Create a Club</em>. This opens up a pop-up window allowing you to invite followed users. After creationg, user can navigate to the club by clicking <em>Into Da Club</em>. Inside, members can rate the item and also leave predefined comments.
