@@ -25,7 +25,12 @@ To get started, user needs to create an account via the /signup-page. After sign
 On the Home page, users can search for albums, movies, books, games or other users using the search bar. For example, selecting Albums and searching for <em>Abbey Road</em>, will display results by relevance (Discogs arranges the results). To add an item to a personal list, click 'Add'. User can give a rating for the album immeadiately by pressing 'Rate' or alternatively go into Album-page by clicking the name of the album, which is linkable after adding. This same process applies to the other content types. An Advanced Search option is also available, which utilizes the Discogs API search options. Advanced search also exists for other content types depending on the third-party API. 
 
 ### 3. Personal Lists
-Users can view their personal lists by clicking the <em>menu icon</em> in the top-right corner and selecting the list. Within a list, user can filter the items using different criterias (A-Ö, Highest rating, Release year, Mutual ratings with other user)). By clicking the thumbnail of an item it directs into the Album-page. In here user can click the heart-icon, which sets the album as the 'Pick of the Week'. This puts the album into the user's profile page. User can also give or modify rating of the album. Album can also be removed from the button in the bottom of the page.
+Users can view their personal lists by clicking the <em>menu icon</em> in the top-right corner and selecting the list. Within a list, user can filter the items using different criterias (A-Ö, highest rating, release year and mutual ratings with other user). By clicking the thumbnail of an item, it opens up the Album-page. Here users can:
+* Click the heart-icon, which sets the item as the 'Pick of the Week'. Item is displayed in user's Profile page.
+* Give or modify rating of the item.
+* Remove the item from the Remove button at the bottom of the page.
+
+### 4. 
 
 Other users can be searched from the same search bar as other items. Here the exact username of the user must be known. When username is typed, the user can be clicked, and the page directs into the user's profile page. In the profile page, users can be followed and then their activity is shown in the home-page. Username then appears into the 'following'-tab in the logged-in user's profile page, and the logged-in user is shown in 'followers' of the user. 
 
