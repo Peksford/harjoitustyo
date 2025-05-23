@@ -369,6 +369,7 @@ const styles = {
     alignItems: 'center',
     padding: '16px',
     gap: '20px',
+    //testing
   },
   albumInfo: {
     display: 'flex',
