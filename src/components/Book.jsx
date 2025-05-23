@@ -196,16 +196,19 @@ const Book = ({ onUpdateBook, createBook }) => {
       </div>
       <div>
         <div style={styles.bookInfo}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
             <h2>{bookData?.whole_title}</h2>
 
             <div
               data-testid="heart"
               style={{
                 width: '3.5rem',
-                position: 'relative',
-                marginLeft: '15px',
-                marginRight: '10px',
+                marginLeft: '10px',
               }}
             >
               <Heart

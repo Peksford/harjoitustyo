@@ -193,16 +193,19 @@ const Album = ({ onUpdateAlbum, createAlbum }) => {
         </div>
         <div>
           <div style={styles.albumInfo}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
               <h2>{albumData.whole_title}</h2>{' '}
               <div
                 data-testid="heart"
                 style={{
                   width: '3.5rem',
-                  position: 'relative',
-                  marginLeft: '15px',
-                  marginRight: '10px',
-                  // display: 'inline-block',
+                  marginLeft: '10px',
+                  display: 'inline-block',
                 }}
               >
                 <Heart

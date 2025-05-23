@@ -156,109 +156,68 @@ const Movie = ({ onUpdateMovie, createMovie }) => {
         </div>
         <div>
           <div style={styles.movieInfo}>
-            <h2>{movieData.whole_title}</h2>
-            <div>
-              {username} added this on{' '}
-              {new Date(movieData.createdAt).toLocaleDateString()}
-            </div>
-            <p
-              data-testid="heart"
+            <div
               style={{
-                width: '7rem',
-                position: 'relative',
-                display: 'inline-block',
+                display: 'flex',
+                alignItems: 'center',
               }}
             >
-              <Heart
-                isActive={active || false}
-                onClick={() => {
-                  if (!movies.find((movie) => movie.heart === true)) {
-                    handleClickHeartOpen();
-                  } else {
-                    dispatch(
-                      setNotification(
-                        `You have already selected movie of the week`,
-                        5
-                      )
-                    );
-                  }
-                }}
+              <h2>{movieData.whole_title}</h2>
+
+              <div
+                data-testid="heart"
                 style={{
-                  fontSize: '3rem',
-                  display: 'block',
-                  textAlign: 'cenSorrter',
-                }}
-              />
-              <Dialog
-                open={openHeart}
-                onClose={handleHeartClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-              >
-                <DialogTitle id="alert-dialog-title">
-                  {`Do you want to make ${movieData.title} your movie of the week?`}
-                </DialogTitle>
-                <DialogActions>
-                  <Button onClick={handleHeartClose}>No</Button>
-                  <Button onClick={handleHeartClick} autoFocus>
-                    {' '}
-                    Yes
-                  </Button>
-                </DialogActions>
-              </Dialog>
-              <span
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  color: 'white',
-                  fontSize: '0.8rem',
-                  textAlign: 'center',
-                  fontWeight: 'bold',
-                  padding: '0 5px',
+                  width: '2rem',
+                  marginLeft: '10px',
+                  display: 'inline-block',
                 }}
               >
-                {active ? 'Pick of the week' : ''}
-              </span>
-            </p>
+                <Heart
+                  isActive={active || false}
+                  onClick={() => {
+                    if (!movies.find((movie) => movie.heart === true)) {
+                      handleClickHeartOpen();
+                    } else {
+                      dispatch(
+                        setNotification(
+                          `You have already selected movie of the week`,
+                          5
+                        )
+                      );
+                    }
+                  }}
+                  style={{
+                    fontSize: '3rem',
+                    display: 'block',
+                    textAlign: 'cenSorrter',
+                  }}
+                />
+                <Dialog
+                  open={openHeart}
+                  onClose={handleHeartClose}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">
+                    {`Do you want to make ${movieData.title} your movie of the week?`}
+                  </DialogTitle>
+                  <DialogActions>
+                    <Button onClick={handleHeartClose}>No</Button>
+                    <Button onClick={handleHeartClick} autoFocus>
+                      {' '}
+                      Yes
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </div>
+            </div>
             <h3>
               {movieData.release_date && (
-                <p>{formatDate(movieData.release_date)}</p>
+                <div>
+                  <i>{formatDate(movieData.release_date)}</i>
+                </div>
               )}
             </h3>
-            {movieData.overview && (
-              <p
-                style={{
-                  fontSize: '14px',
-                  maxWidth: '400px',
-                  wordWrap: 'break-word',
-                }}
-              >
-                {movieData.overview}
-              </p>
-            )}
-            {movieData.user_id === (user?.id || 0) ? (
-              <div style={styles.sliderContainer}>
-                <label htmlFor="rating-slider">Your Rating</label>
-                <input
-                  type="range"
-                  min="0"
-                  max="10"
-                  step="0.1"
-                  value={rating || 0}
-                  onChange={(e) => changeRating(parseFloat(e.target.value))}
-                  style={styles.slider}
-                />
-                <div style={styles.silderNumbers}>
-                  <span>1</span>
-                  <span>5</span>
-                  <span>10</span>
-                </div>
-              </div>
-            ) : null}
-          </div>
-          <div style={styles.thumbNailContainer}>
             {movieData.type === 'movie' ? (
               <p>
                 <a
@@ -304,6 +263,45 @@ const Movie = ({ onUpdateMovie, createMovie }) => {
               src={`https://www.themoviedb.org/t/p/w1280/${movieData.thumbnail}`}
               style={styles.thumbnail}
             />
+            {movieData.overview && (
+              <p
+                style={{
+                  fontSize: '14px',
+                  maxWidth: '400px',
+                  wordWrap: 'break-word',
+                }}
+              >
+                {movieData.overview}
+              </p>
+            )}
+            {movieData.user_id === (user?.id || 0) ? (
+              <div style={styles.sliderContainer}>
+                <label htmlFor="rating-slider">Your Rating</label>
+                <input
+                  type="range"
+                  min="0"
+                  max="10"
+                  step="0.1"
+                  value={rating || 0}
+                  onChange={(e) => changeRating(parseFloat(e.target.value))}
+                  style={styles.slider}
+                />
+                <div style={styles.silderNumbers}>
+                  <span>1</span>
+                  <span>2</span>
+                  <span>3</span>
+                  <span>4</span>
+                  <span>5</span>
+                  <span>6</span>
+                  <span>7</span>
+                  <span>8</span>
+                  <span>9</span>
+                  <span>10</span>
+                </div>
+              </div>
+            ) : null}
+          </div>
+          <div style={styles.thumbNailContainer}>
             {movieData.rating ? (
               <div>
                 <div style={styles.circle}>
@@ -311,40 +309,43 @@ const Movie = ({ onUpdateMovie, createMovie }) => {
                 </div>
               </div>
             ) : null}
-            <div style={styles.buttonContainer}></div>
-            <div>
-              {user && user.id === movieData.user_id ? (
-                <>
-                  <button onClick={handleClickOpen}>Remove</button>
-                  <Dialog
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                  >
-                    <DialogTitle id="alert-dialog-title">
-                      {`Do you want to remove ${movieData.title} from your list?`}
-                    </DialogTitle>
-                    <DialogActions>
-                      <Button onClick={handleClose}>No</Button>
-                      <Button onClick={handleRemoveConfirm} autoFocus>
-                        {' '}
-                        Yes
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
-                </>
-              ) : (
-                <>
-                  <button
-                    onClick={() => createNew({ movieData })}
-                    className="button-text"
-                  >
-                    Add to your list
-                  </button>
-                </>
-              )}
-            </div>
+          </div>
+          <div>
+            {username} added this on{' '}
+            {new Date(movieData.createdAt).toLocaleDateString()}
+          </div>
+          <div>
+            {user && user.id === movieData.user_id ? (
+              <>
+                <button onClick={handleClickOpen}>Remove</button>
+                <Dialog
+                  open={open}
+                  onClose={handleClose}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">
+                    {`Do you want to remove ${movieData.title} from your list?`}
+                  </DialogTitle>
+                  <DialogActions>
+                    <Button onClick={handleClose}>No</Button>
+                    <Button onClick={handleRemoveConfirm} autoFocus>
+                      {' '}
+                      Yes
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => createNew({ movieData })}
+                  className="button-text"
+                >
+                  Add to your list
+                </button>
+              </>
+            )}
           </div>
         </div>
       </>
@@ -364,7 +365,6 @@ const styles = {
   movieInfo: {
     display: 'flex',
     flexDirection: 'column',
-    marginRight: '100px',
   },
   thumbNailContainer: {
     display: 'flex',
@@ -375,7 +375,7 @@ const styles = {
     width: '300px',
     height: '450px',
     objectFit: 'cover',
-    marginBottom: '8px',
+    marginBottom: '10px',
   },
   buttonContainer: {
     display: 'flex',
