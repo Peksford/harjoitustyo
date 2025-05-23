@@ -196,73 +196,58 @@ const Book = ({ onUpdateBook, createBook }) => {
       </div>
       <div>
         <div style={styles.bookInfo}>
-          <h2>{bookData?.whole_title}</h2>
-          <div>
-            {username} added this on{' '}
-            {new Date(bookData.createdAt).toLocaleDateString()}
-          </div>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <h2>{bookData?.whole_title}</h2>
 
-          <p
-            data-testid="heart"
-            style={{
-              width: '7rem',
-              position: 'relative',
-              display: 'inline-block',
-            }}
-          >
-            <Heart
-              isActive={active || false}
-              onClick={() => {
-                if (!books.find((album) => album.heart === true)) {
-                  handleClickHeartOpen();
-                } else {
-                  dispatch(
-                    setNotification(
-                      `You have already selected book of the week`,
-                      5
-                    )
-                  );
-                }
-              }}
+            <div
+              data-testid="heart"
               style={{
-                fontSize: '3rem',
-                display: 'block',
-                textAlign: 'cenSorrter',
-              }}
-            />
-            <Dialog
-              open={openHeart}
-              onClose={handleHeartClose}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle id="alert-dialog-title">
-                {`Do you want to make ${bookData.title} your book of the week?`}
-              </DialogTitle>
-              <DialogActions>
-                <Button onClick={handleHeartClose}>No</Button>
-                <Button onClick={handleHeartClick} autoFocus>
-                  {' '}
-                  Yes
-                </Button>
-              </DialogActions>
-            </Dialog>
-            <span
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                color: 'white',
-                fontSize: '0.8rem',
-                textAlign: 'center',
-                fontWeight: 'bold',
-                padding: '0 5px',
+                width: '3.5rem',
+                position: 'relative',
+                marginLeft: '15px',
+                marginRight: '10px',
               }}
             >
-              {active ? 'Pick of the week' : ''}
-            </span>
-          </p>
+              <Heart
+                isActive={active || false}
+                onClick={() => {
+                  if (!books.find((album) => album.heart === true)) {
+                    handleClickHeartOpen();
+                  } else {
+                    dispatch(
+                      setNotification(
+                        `You have already selected book of the week`,
+                        5
+                      )
+                    );
+                  }
+                }}
+                style={{
+                  fontSize: '3rem',
+                  display: 'block',
+                  textAlign: 'cenSorrter',
+                }}
+              />
+              <Dialog
+                open={openHeart}
+                onClose={handleHeartClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">
+                  {`Do you want to make ${bookData.title} your book of the week?`}
+                </DialogTitle>
+                <DialogActions>
+                  <Button onClick={handleHeartClose}>No</Button>
+                  <Button onClick={handleHeartClick} autoFocus>
+                    {' '}
+                    Yes
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </div>
+          </div>
+          <h3>{<i>{bookData.year}</i>}</h3>
           {bookData?.source === 'openLibrary' ? (
             <>
               <p>
@@ -275,7 +260,7 @@ const Book = ({ onUpdateBook, createBook }) => {
                     src={openLibraryLogo}
                     style={{
                       width: '100%',
-                      maxWidth: '120px',
+                      maxWidth: '100px',
                       height: 'auto',
                       backgroundColor: 'white',
                       padding: '8px',
@@ -301,7 +286,7 @@ const Book = ({ onUpdateBook, createBook }) => {
                     src={isbndbLogo}
                     style={{
                       width: '100%',
-                      maxWidth: '150px',
+                      maxWidth: '100px',
                       height: 'auto',
                       backgroundColor: 'black',
                       padding: '8px',
@@ -314,7 +299,6 @@ const Book = ({ onUpdateBook, createBook }) => {
             </>
           )}
 
-          <h3>{bookData.year}</h3>
           {description.value || bookData.synopsis ? (
             <p
               style={{
@@ -352,7 +336,14 @@ const Book = ({ onUpdateBook, createBook }) => {
               />
               <div style={styles.silderNumbers}>
                 <span>1</span>
+                <span>2</span>
+                <span>3</span>
+                <span>4</span>
                 <span>5</span>
+                <span>6</span>
+                <span>7</span>
+                <span>8</span>
+                <span>9</span>
                 <span>10</span>
               </div>
             </div>
@@ -366,42 +357,45 @@ const Book = ({ onUpdateBook, createBook }) => {
               </div>
             </div>
           ) : null}
+        </div>
+        <div>
+          {username} added this on{' '}
+          {new Date(bookData.createdAt).toLocaleDateString()}
+        </div>
 
-          <div style={styles.buttonContainer}></div>
-          <div>
-            {user && user.id === bookData.user_id ? (
-              <>
-                <button onClick={handleClickOpen}>Remove</button>
+        <div>
+          {user && user.id === bookData.user_id ? (
+            <>
+              <button onClick={handleClickOpen}>Remove</button>
 
-                <Dialog
-                  open={open}
-                  onClose={handleClose}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                >
-                  <DialogTitle id="alert-dialog-title">
-                    {`Do you want to remove ${bookData.title} from your list?`}
-                  </DialogTitle>
-                  <DialogActions>
-                    <Button onClick={handleClose}>No</Button>
-                    <Button onClick={handleRemoveConfirm} autoFocus>
-                      {' '}
-                      Yes
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-              </>
-            ) : (
-              <>
-                <button
-                  onClick={() => createNew({ bookData })}
-                  className="button-text"
-                >
-                  Add to your list
-                </button>
-              </>
-            )}
-          </div>
+              <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">
+                  {`Do you want to remove ${bookData.title} from your list?`}
+                </DialogTitle>
+                <DialogActions>
+                  <Button onClick={handleClose}>No</Button>
+                  <Button onClick={handleRemoveConfirm} autoFocus>
+                    {' '}
+                    Yes
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => createNew({ bookData })}
+                className="button-text"
+              >
+                Add to your list
+              </button>
+            </>
+          )}
         </div>
       </div>
     </>
@@ -418,7 +412,6 @@ const styles = {
   bookInfo: {
     display: 'flex',
     flexDirection: 'column',
-    marginRight: '100px',
   },
   thumbNailContainer: {
     display: 'flex',
