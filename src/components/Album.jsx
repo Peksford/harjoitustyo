@@ -200,7 +200,8 @@ const Album = ({ onUpdateAlbum, createAlbum }) => {
                 style={{
                   width: '3.5rem',
                   position: 'relative',
-                  marginRight: '15px',
+                  marginLeft: '15px',
+                  marginRight: '10px',
                   // display: 'inline-block',
                 }}
               >
@@ -243,44 +244,10 @@ const Album = ({ onUpdateAlbum, createAlbum }) => {
                 </Dialog>
               </div>
             </div>
-            <div>
-              {username} added this on{' '}
-              {new Date(albumData.createdAt).toLocaleDateString()}
-            </div>
-            <h3>{albumData.year}</h3>
-            <ol>
-              {tracklist.map((track) => (
-                <li key={track.title}>{track.title}</li>
-              ))}
-            </ol>
-            {albumData.user_id === (user?.id || 0) ? (
-              <div style={styles.sliderContainer}>
-                <label htmlFor="rating-slider">Your Rating</label>
-                <input
-                  type="range"
-                  min="0"
-                  max="10"
-                  step="0.1"
-                  value={rating || 0}
-                  onChange={(e) => changeRating(parseFloat(e.target.value))}
-                  style={styles.slider}
-                />
-                <div style={styles.silderNumbers}>
-                  <span>1</span>
-                  <span>2</span>
-                  <span>3</span>
-                  <span>4</span>
-                  <span>5</span>
-                  <span>6</span>
-                  <span>7</span>
-                  <span>8</span>
-                  <span>9</span>
-                  <span>10</span>
-                </div>
-              </div>
-            ) : null}
-          </div>
-          <div style={styles.thumbNailContainer}>
+            <h3>
+              <i>{albumData.year}</i>
+            </h3>
+            <img src={albumData.thumbnail} style={styles.thumbnail} />
             <p>
               <a
                 href={`https://www.discogs.com${albumData.url}`}
@@ -305,14 +272,51 @@ const Album = ({ onUpdateAlbum, createAlbum }) => {
                 </button>
               </a>
             </p>
-            <img src={albumData.thumbnail} style={styles.thumbnail} />
-            {albumData.rating ? (
-              <div>
+            <ol>
+              {tracklist.map((track) => (
+                <li key={track.title}>{track.title}</li>
+              ))}
+            </ol>
+            <div style={styles.thumbNailContainer}>
+              {albumData.rating ? (
                 <div style={styles.circle}>
                   <span style={styles.circleText}>{albumData.rating}</span>
                 </div>
-              </div>
-            ) : null}
+              ) : null}
+
+              {albumData.user_id === (user?.id || 0) ? (
+                <div style={styles.sliderContainer}>
+                  <label htmlFor="rating-slider">Your Rating</label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="10"
+                    step="0.1"
+                    value={rating || 0}
+                    onChange={(e) => changeRating(parseFloat(e.target.value))}
+                    style={styles.slider}
+                  />
+                  <div style={styles.silderNumbers}>
+                    <span>1</span>
+                    <span>2</span>
+                    <span>3</span>
+                    <span>4</span>
+                    <span>5</span>
+                    <span>6</span>
+                    <span>7</span>
+                    <span>8</span>
+                    <span>9</span>
+                    <span>10</span>
+                  </div>
+                </div>
+              ) : null}
+            </div>
+
+            <div>
+              {username} added this on{' '}
+              {new Date(albumData.createdAt).toLocaleDateString()}
+            </div>
+
             <div style={styles.buttonContainer}></div>
             <div>
               {user && user.id === albumData.user_id ? (
@@ -388,6 +392,7 @@ const styles = {
   },
   sliderContainer: {
     marginTop: '10px',
+    width: '90%',
   },
   slider: {
     width: '100%',
