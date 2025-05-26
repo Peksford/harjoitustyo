@@ -35,3 +35,5 @@ Other users can be searched using the main search bar. However, the exact userna
 
 ### 5. Rating Clubs
 Click the group-icon in the top-right corner to create a <em>Rating Club</em>. The search bar shows only items added by the user. The user can also search for existing groups where they are a member of. To create a new club, e.g. for 'Abbey Road', search for the item and then click <em>Create a Club</em>. This opens up a pop-up window allowing you to invite followed users. After creationg, user can navigate to the club by clicking <em>Into Da Club</em>. Inside, members can rate the item and also leave predefined comments.
+
+## Link to Work Hour Log: https://github.com/Peksford/harjoitustyo/blob/master/WorkHourLogging.md
