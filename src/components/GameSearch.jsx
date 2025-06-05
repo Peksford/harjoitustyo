@@ -273,14 +273,19 @@ const Game = ({ gameSearched, createGame }) => {
                 </Link>
                 <div style={styles.GameInfoAndButtons}>
                   <div style={styles.gameInfo}>
-                    <Link
-                      to={
-                        gameFounded &&
-                        `/${user.username}/games/${gameFounded.id}`
-                      }
-                    >
+                    {gameFounded ? (
+                      <Link
+                        to={
+                          gameFounded &&
+                          `/${user.username}/games/${gameFounded.id}`
+                        }
+                      >
+                        <p>{game.name}</p>
+                      </Link>
+                    ) : (
                       <p>{game.name}</p>
-                    </Link>
+                    )}
+
                     {game.first_release_date && (
                       <p>
                         Released:{' '}
