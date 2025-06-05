@@ -114,7 +114,7 @@ const Movie = ({ onUpdateMovie, createMovie }) => {
         release_date: movieData.release_date,
         thumbnail: movieData.thumbnail,
         whole_title: movieData.whole_title,
-        tmdb_id: movieData.tmbd_id,
+        tmdb_id: movieData.tmdb_id,
         type: movieData.type,
         overview: movieData.overview,
         heart: false,

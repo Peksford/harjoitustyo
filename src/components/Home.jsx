@@ -36,12 +36,12 @@ const styles = {
   },
   thumbnailBook: {
     width: '150px',
-    height: '200px',
+    height: '220px',
     objectFit: 'cover',
     padding: '10px',
   },
   thumbnailMovie: {
-    width: '180px',
+    width: '190px',
     height: '270px',
     padding: '15px',
     objectFit: 'cover',
@@ -119,22 +119,22 @@ const Home = () => {
 
   const sortedByDateAlbums = userData?.albums
     ?.filter((album) => album.rating !== null)
-    ?.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+    ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     ?.slice(0, 5);
 
   const sortedByDateBooks = userData?.books
     ?.filter((book) => book.rating !== null)
-    ?.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+    ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     ?.slice(0, 4);
 
   const sortedByDateMovies = userData?.movies
     ?.filter((movie) => movie.rating !== null)
-    ?.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+    ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     ?.slice(0, 4);
 
   const sortedByDateGame = userData?.games
     ?.filter((game) => game.rating !== null)
-    ?.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+    ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     ?.slice(0, 4);
 
   if (userData) {

@@ -202,29 +202,14 @@ const App = () => {
       const alreadyExists = userObjects.some((object) => {
         let sameId = '';
         if (newObject.type === 'album') {
-          sameId = object.discogs_id === newObject.id;
+          sameId = object.discogs_id === newObject.discogs_id;
         } else if (newObject.type === 'movie' || newObject.type === 'tv') {
           sameId = object.tmbd_id === newObject.tmdb_id;
         } else if (newObject.type === 'book') {
           sameId = object.key === newObject.key;
-          // const sameTitle =
-          //   object.title.toLowerCase() === newObject.title.toLowerCase();
-
-          // const sameYear =
-          //   object.year !== undefined &&
-          //   newObject.year !== undefined &&
-          //   Number(object.year) === Number(newObject.year);
-
-          // return (
-          //   sameTitle &&
-          //   (object.year === undefined ||
-          //     newObject.year === undefined ||
-          //     sameYear)
-          // );
         } else if (newObject.type === 'game') {
-          sameId = object.igdb_id === newObject.id;
+          sameId = object.igdb_id === newObject.igdb_id;
         }
-
         return sameId;
       });
       if (alreadyExists) {

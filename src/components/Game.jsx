@@ -114,6 +114,7 @@ const Game = ({ onUpdateGame, createGame }) => {
         heart: false,
         summary: gameData.summary,
         genres: gameData.genres,
+        igdb_id: gameData.igdb_id,
       });
       return newGame;
     } catch (error) {

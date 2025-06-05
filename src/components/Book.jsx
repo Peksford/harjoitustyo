@@ -167,7 +167,7 @@ const Book = ({ onUpdateBook, createBook }) => {
         return newBook;
       } else {
         const newBook = await createBook({
-          type: 'bookData',
+          type: 'book',
           source: 'ISBNDB',
           author: bookData.author || 'Unknown',
           title: bookData.title || 'Untitled',
