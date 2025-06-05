@@ -1,7 +1,7 @@
 ## Link to application: https://im-only-rating.fly.dev/
 
 ## Description of the app
-Website is intent for users to create an account and build personal lists of music albums, movies/tv, books and games. Users can rate each item on a scale from 1 to 10. They can follow other users to see what they have added and compare mutual items.
+Website is designed for users who want to create their personal lists of music albums, movies/tv, books and games. Users can rate each item on a scale from 1 to 10 and follow other users to see their lists, plus compare shared items.
 
 The homepage includes activity feed which shows what followed users have added and rated. The lists of other users (and own lists) can be filtered by date, alphabetical order, rating, or they can be searched by title.
 
@@ -35,3 +35,5 @@ Other users can be searched using the main search bar. However, the exact userna
 
 ### 5. Rating Clubs
 Click the group-icon in the top-right corner to create a <em>Rating Club</em>. The search bar shows only items added by the user. The user can also search for existing groups where they are a member of. To create a new club, e.g. for 'Abbey Road', search for the item and then click <em>Create a Club</em>. This opens up a pop-up window allowing you to invite followed users. After creationg, user can navigate to the club by clicking <em>Into Da Club</em>. Inside, members can rate the item and also leave predefined comments.
+
+## Link to Work Hour Log: https://github.com/Peksford/harjoitustyo/blob/master/WorkHourLogging.md
