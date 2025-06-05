@@ -86,8 +86,10 @@ const UserGroupBook = ({ onUpdateGroup, createBook }) => {
   const changeRating = async (newRating) => {
     setRating(newRating);
 
+    const bookId = userBooks.flat().find((item) => item.key === book.key);
+
     try {
-      const updatedRating = await bookService.updatedBook(book.id, {
+      const updatedRating = await bookService.updatedBook(bookId.id, {
         ...groupData,
         rating: newRating,
       });

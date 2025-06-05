@@ -86,8 +86,12 @@ const UserGroupGame = ({ onUpdateGroup, createGame }) => {
   const changeRating = async (newRating) => {
     setRating(newRating);
 
+    const gameId = userGames
+      .flat()
+      .find((item) => item.igdb_id === game.igdb_id);
+
     try {
-      const updatedRating = await gameService.updatedGame(game.id, {
+      const updatedRating = await gameService.updatedGame(gameId.id, {
         ...groupData,
         rating: newRating,
       });

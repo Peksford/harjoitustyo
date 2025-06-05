@@ -97,8 +97,12 @@ const UserGroupAlbum = ({ onUpdateGroup, createAlbum }) => {
   const changeRating = async (newRating) => {
     setRating(newRating);
 
+    const albumId = userAlbums
+      .flat()
+      .find((item) => item.discogs_id === album.discogs_id);
+
     try {
-      const updatedRating = await albumService.updatedAlbum(album.id, {
+      const updatedRating = await albumService.updatedAlbum(albumId.id, {
         ...groupData,
         rating: newRating,
       });

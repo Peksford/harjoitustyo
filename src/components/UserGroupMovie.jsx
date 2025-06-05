@@ -86,8 +86,12 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
   const changeRating = async (newRating) => {
     setRating(newRating);
 
+    const movieId = userMovies
+      .flat()
+      .find((item) => item.tmdb_id === movie.tmdb_id);
+
     try {
-      const updatedRating = await movieService.updatedMovie(movie.id, {
+      const updatedRating = await movieService.updatedMovie(movieId.id, {
         ...groupData,
         rating: newRating,
       });
