@@ -99,7 +99,10 @@ const UserGroupAlbum = ({ onUpdateGroup, createAlbum }) => {
 
     const albumId = userAlbums
       .flat()
-      .find((item) => item.discogs_id === album.discogs_id);
+      .find(
+        (item) =>
+          item.discogs_id === album.discogs_id && item.user_id === user.id
+      );
 
     try {
       const updatedRating = await albumService.updatedAlbum(albumId.id, {

@@ -88,7 +88,9 @@ const UserGroupGame = ({ onUpdateGroup, createGame }) => {
 
     const gameId = userGames
       .flat()
-      .find((item) => item.igdb_id === game.igdb_id);
+      .find(
+        (item) => item.igdb_id === game.igdb_id && item.user_id === user.id
+      );
 
     try {
       const updatedRating = await gameService.updatedGame(gameId.id, {

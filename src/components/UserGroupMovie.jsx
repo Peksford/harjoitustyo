@@ -88,7 +88,9 @@ const UserGroupMovie = ({ onUpdateGroup, createMovie }) => {
 
     const movieId = userMovies
       .flat()
-      .find((item) => item.tmdb_id === movie.tmdb_id);
+      .find(
+        (item) => item.tmdb_id === movie.tmdb_id && item.user_id === user.id
+      );
 
     try {
       const updatedRating = await movieService.updatedMovie(movieId.id, {
