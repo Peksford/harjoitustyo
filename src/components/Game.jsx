@@ -172,6 +172,7 @@ const Game = ({ onUpdateGame, createGame }) => {
                 <Heart
                   isActive={active || false}
                   onClick={() => {
+                    if (gameData.user_id !== user.id) return;
                     if (!games.find((game) => game.heart === true)) {
                       handleClickHeartOpen();
                     } else {

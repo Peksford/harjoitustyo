@@ -214,6 +214,7 @@ const Book = ({ onUpdateBook, createBook }) => {
               <Heart
                 isActive={active || false}
                 onClick={() => {
+                  if (bookData.user_id !== user.id) return;
                   if (!books.find((album) => album.heart === true)) {
                     handleClickHeartOpen();
                   } else {

@@ -175,6 +175,7 @@ const Movie = ({ onUpdateMovie, createMovie }) => {
                 <Heart
                   isActive={active || false}
                   onClick={() => {
+                    if (movieData.user_id !== user.id) return;
                     if (!movies.find((movie) => movie.heart === true)) {
                       handleClickHeartOpen();
                     } else {

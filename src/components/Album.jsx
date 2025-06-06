@@ -211,6 +211,7 @@ const Album = ({ onUpdateAlbum, createAlbum }) => {
                 <Heart
                   isActive={active || false}
                   onClick={() => {
+                    if (albumData.user_id !== user.id) return;
                     if (!albums.find((album) => album.heart === true)) {
                       handleClickHeartOpen();
                     } else {
