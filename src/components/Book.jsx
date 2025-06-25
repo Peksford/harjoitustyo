@@ -191,7 +191,7 @@ const Book = ({ onUpdateBook, createBook }) => {
     <>
       <div>
         <div>
-          back to <Link to={`/${username}`}>{username}</Link> Home page
+          Back to <Link to={`/${username}`}>{username}</Link> Home page
         </div>
       </div>
       <div>

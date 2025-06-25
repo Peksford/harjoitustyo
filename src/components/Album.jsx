@@ -184,7 +184,7 @@ const Album = ({ onUpdateAlbum, createAlbum }) => {
       <>
         <div>
           <div>
-            back to{' '}
+            Back to{' '}
             <Link data-testid="homePage" to={`/${username}`}>
               {username}
             </Link>{' '}

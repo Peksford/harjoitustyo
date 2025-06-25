@@ -151,7 +151,7 @@ const Movie = ({ onUpdateMovie, createMovie }) => {
       <>
         <div>
           <div>
-            back to <Link to={`/${username}`}>{username}</Link> home page
+            Back to <Link to={`/${username}`}>{username}</Link> home page
           </div>
         </div>
         <div>
