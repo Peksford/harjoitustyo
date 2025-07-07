@@ -264,9 +264,11 @@ const App = () => {
           </Link>
         )}
         <div style={styles.rightSection}>
-          <Link style={styles.padding} to="/search">
-            <BsSearch data-testid="search-button" />
-          </Link>
+          {user && (
+            <Link style={styles.padding} to="/search">
+              <BsSearch data-testid="search-button" />
+            </Link>
+          )}
           <Link style={styles.padding} to="/clubs">
             {user ? <GrGroup /> : null}
           </Link>
